@@ -21,6 +21,9 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.ViewLibraryDetails}"
             Executed="OnViewLibraryDetails" />
+        <CommandBinding
+            Command="{x:Static local:CustomCommands.ShowAbout}"
+            Executed="OnShowAbout" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -48,7 +51,7 @@
                 <MenuItem Header="Library Details..." Command="local:CustomCommands.ViewLibraryDetails"/>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Command="ApplicationCommands.Help"/>
+                <MenuItem Header="About..." Command="local:CustomCommands.ShowAbout"/>
             </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">

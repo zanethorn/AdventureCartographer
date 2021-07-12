@@ -36,7 +36,7 @@
         
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Scan Path:" />
         <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly="True" Text="" />
-        <Button Grid.Row="0" Grid.Column="2" Content="..." />
+        <Button Grid.Row="0" Grid.Column="2" Content="..." Click="Button_Click" />
         
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Subfolders:" />
         <CheckBox Grid.Row="1" Grid.Column="1" />

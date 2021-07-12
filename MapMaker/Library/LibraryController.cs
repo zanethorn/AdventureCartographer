@@ -20,8 +20,9 @@ namespace MapMaker.Library
         private LibraryDbContext? _context;
         private bool _isLoaded;
         private string _libraryName;
+        private ImageCollection _selectedCollection;
         private ObservableCollection<ImageCollection> _imageCollections = new ObservableCollection<ImageCollection>();
-        private ObservableCollection<ImageFile> _allFiles = new ObservableCollection<ImageFile>();
+        private ObservableCollection<ImageFile> _allImages = new ObservableCollection<ImageFile>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         
@@ -35,7 +36,7 @@ namespace MapMaker.Library
             }
         }
 
-        public bool IsEmpty => ImageCollections.Count == 0;
+        public bool IsEmpty => AllImages.Count == 0;
 
         public string LibraryName
         {
@@ -57,17 +58,27 @@ namespace MapMaker.Library
             }
         }
         
-        public ObservableCollection<ImageFile> AllFiles
+        public ObservableCollection<ImageFile> AllImages
         {
-            get => _allFiles;
+            get => _allImages;
             private set
             {
-                _allFiles = value;
+                _allImages = value;
                 OnPropertyChanged();
             }
         }
 
-        public async Task LoadLibrary(string? libraryName = null)
+        public ImageCollection SelectedCollection
+        {
+            get => _selectedCollection;
+            set
+            {
+                _selectedCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public async Task LoadLibraryAsync(string? libraryName = null)
         {
             var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly()!.Location);
             Debug.Assert(versionInfo.CompanyName != null, "versionInfo.CompanyName != null");
@@ -99,12 +110,34 @@ namespace MapMaker.Library
             ImageCollections = new ObservableCollection<ImageCollection>(_context.ImageCollections.Local);
 
             await _context.ImageFiles.LoadAsync();
-            AllFiles = new ObservableCollection<ImageFile>(_context.ImageFiles.Local);
+            AllImages = new ObservableCollection<ImageFile>(_context.ImageFiles.Local);
 
             IsLoaded = true;
+            
+            if (ImageCollections.Count == 0)
+            {
+                await AddCollectionAsync("Default");
+            }
         }
 
-        public void ScanImageFolder(string folderPath, bool recursive = false)
+        public async Task AddCollectionAsync(string name)
+        {
+            LoadCheck();
+            
+            var newCollection = new ImageCollection
+            {
+                Name = name
+            };
+
+            
+            await _context.ImageCollections.AddAsync(newCollection);
+            await _context.SaveChangesAsync();
+            ImageCollections.Add(newCollection);
+
+            SelectedCollection = newCollection;
+        }
+
+        public async Task ScanImageFolderAsync(string folderPath, bool recursive = false)
         {
             if (folderPath == null) throw new ArgumentNullException(nameof(folderPath));
             
@@ -113,12 +146,23 @@ namespace MapMaker.Library
                 var ext = Path.GetExtension(file);
                 if (FileExtensions.Contains(ext))
                 {
-                    AddImageToLibrary(file);
+                    await AddImageToCollectionAsync(file, SelectedCollection);
                 }
+            }
+
+            if (recursive)
+            {
+                var currentCollection = SelectedCollection;
+                foreach (var directory in Directory.GetDirectories(folderPath))
+                {
+                    await ScanImageFolderAsync(directory, recursive = true);
+                }
+
+                SelectedCollection = currentCollection;
             }
         }
 
-        public void AddImageToLibrary(string imagePath)
+        public async Task AddImageToCollectionAsync(string imagePath, ImageCollection collection)
         {
             Debug.Assert(_context != null, nameof(_context) + " != null");
             
@@ -126,11 +170,11 @@ namespace MapMaker.Library
             {
                 Path = imagePath
             };
-
             
-            _context.ImageFiles.Add(imgFile);
-
-            //_context.SaveChanges();
+            await _context.ImageFiles.AddAsync(imgFile);
+            await _context.SaveChangesAsync();
+            
+            collection.Images.Add(imgFile);
         }
 
         public void CloseLibrary()
@@ -141,6 +185,12 @@ namespace MapMaker.Library
                 _context.Dispose();
                 _context = null;
             }
+        }
+
+        private void LoadCheck()
+        {
+            if (!IsLoaded)
+                throw new ApplicationException("No Library Loaded!");
         }
         
         protected void OnPropertyChanged([CallerMemberName] string name = null)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MapMaker.Library
 {
@@ -7,6 +8,6 @@ namespace MapMaker.Library
         public int Id { get; set; }
         public string Name { get; set; }
         
-        public IList<ImageFile> Files { get; set; } = new List<ImageFile>();
+        public ObservableCollection<ImageFile> Images { get; set; } = new ObservableCollection<ImageFile>();
     }
 }

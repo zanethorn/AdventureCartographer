@@ -43,6 +43,12 @@ namespace MapMaker
 
         }
         
+        private void OnShowAbout(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SplashDialog();
+            dialog.ShowDialog();
+        }
+        
         private void OnViewLibraryDetails(object sender, RoutedEventArgs e)
         {
             var dialog = new LibraryDetailsDialog();
@@ -57,7 +63,7 @@ namespace MapMaker
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
             // TODO: Show Loading Screen Here
-            _libraryController.LoadLibrary();
+            _libraryController.LoadLibraryAsync().Wait();
             // TODO: Hide Loading Screen
 
             if (_libraryController.IsEmpty)
