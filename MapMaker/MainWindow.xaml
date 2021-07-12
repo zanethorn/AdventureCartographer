@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MapMaker"
         mc:Ignorable="d"
-        Title="Map Maker" Height="450" Width="800">
+        Title="Map Maker" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.InputBindings>
         <KeyBinding
             Key="ESC"
@@ -15,6 +15,12 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.Exit}"
             Executed="OnExit" />
+        <CommandBinding
+            Command="{x:Static local:CustomCommands.ScanDirectory}"
+            Executed="OnScanDirectory" />
+        <CommandBinding
+            Command="{x:Static local:CustomCommands.ViewLibraryDetails}"
+            Executed="OnViewLibraryDetails" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -35,6 +41,11 @@
                 <MenuItem Command="ApplicationCommands.Paste"/>
                 <Separator/>
                 <MenuItem Command="ApplicationCommands.Delete"/>
+            </MenuItem>
+            <MenuItem Header="_Library">
+                <MenuItem Header="Scan Directory..." Command="local:CustomCommands.ScanDirectory"/>
+                <Separator/>
+                <MenuItem Header="Library Details..." Command="local:CustomCommands.ViewLibraryDetails"/>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Command="ApplicationCommands.Help"/>

@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MapMaker"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+             d:DesignHeight="300" d:DesignWidth="300"
+             DataContext="{StaticResource LibraryController}">
+    <ListView ItemsSource="{Binding ImageCollections}">
         
-    </Grid>
+    </ListView>
 </UserControl>

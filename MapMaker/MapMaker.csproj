@@ -4,10 +4,33 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net5.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
+        <Authors>Zane Thorn</Authors>
+        <Company>ThornSoft</Company>
+        <Copyright>Zane Thorn 2021</Copyright>
+        <PackageProjectUrl>https://github.com/zanethorn/MapMaker</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/zanethorn/MapMaker.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <AssemblyVersion>0.1.1.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
+      <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Properties\Settings.Designer.cs">
+        <DesignTimeSharedInput>True</DesignTimeSharedInput>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Settings.settings</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Properties\Settings.settings">
+        <Generator>SettingsSingleFileGenerator</Generator>
+        <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      </None>
     </ItemGroup>
 
 </Project>

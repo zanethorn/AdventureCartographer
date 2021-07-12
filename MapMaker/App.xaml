@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MapMaker"
+             xmlns:library="clr-namespace:MapMaker.Library"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+         <library:LibraryController x:Key="LibraryController" />
     </Application.Resources>
 </Application>

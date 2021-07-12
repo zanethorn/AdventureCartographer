@@ -2,11 +2,11 @@
 
 namespace MapMaker.Library
 {
-    public class ImageSet
+    public class ImageCollection
     {
         public int Id { get; set; }
         public string Name { get; set; }
         
-        public IList<ImageFile> Tags { get; set; } = new List<ImageFile>();
+        public IList<ImageFile> Files { get; set; } = new List<ImageFile>();
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MapMaker.Library
 {
-    public class LibraryBuilder
+    public class ScanParameters
     {
         
     }
