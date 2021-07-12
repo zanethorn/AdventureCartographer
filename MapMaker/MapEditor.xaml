@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MapMaker"
       mc:Ignorable="d"
       Title="MapEditor" Height="450" Width="800">
-    <Grid>
+    <Canvas>
         
-    </Grid>
+    </Canvas>
 </Page>

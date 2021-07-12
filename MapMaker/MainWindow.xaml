@@ -16,8 +16,8 @@
             Command="{x:Static local:CustomCommands.Exit}"
             Executed="OnExit" />
     </Window.CommandBindings>
-    <Grid>
-        <Menu>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Command="ApplicationCommands.New"/>
                 <MenuItem Command="ApplicationCommands.Open"/>
@@ -40,5 +40,14 @@
                 <MenuItem Command="ApplicationCommands.Help"/>
             </MenuItem>
         </Menu>
-    </Grid>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="lblCursorPosition" />
+            </StatusBarItem>
+        </StatusBar>
+        <local:ToolSelector DockPanel.Dock="Left" />
+        <local:LibraryPanel DockPanel.Dock="Right" />
+        <Frame Source="MapEditor.xaml">
+        </Frame>
+    </DockPanel>
 </Window>
