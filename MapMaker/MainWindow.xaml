@@ -61,7 +61,6 @@
         </StatusBar>
         <local:ToolSelector DockPanel.Dock="Left" />
         <local:LibraryPanel DockPanel.Dock="Right" />
-        <Frame Source="MapEditor.xaml">
-        </Frame>
+        <Frame Source="MapEditor.xaml" />
     </DockPanel>
 </Window>

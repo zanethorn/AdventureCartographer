@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MapMaker"
              xmlns:library="clr-namespace:MapMaker.Library"
+             xmlns:file="clr-namespace:MapMaker.File"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -11,6 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
             
             <library:LibraryController x:Key="LibraryController" />
+            <file:MapController x:Key="MapController" />
             
             <BitmapImage x:Key="PlusIcon" UriSource="Assets/Icons/plus-box.png" />
             <BitmapImage x:Key="MinusIcon" UriSource="Assets/Icons/minus-box.png" />

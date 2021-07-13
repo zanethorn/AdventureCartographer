@@ -4,12 +4,41 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MapMaker"
+      xmlns:file="clr-namespace:MapMaker.File"
       mc:Ignorable="d"
-      Title="MapEditor" Height="450" Width="800">
-    <Canvas>
-        <Canvas.Background>
-            
-        </Canvas.Background>
+      Title="MapEditor" 
+      DataContext="{StaticResource MapController}">
+    <DockPanel>
+        <DockPanel.Background>
+            <DrawingBrush TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <!-- checkerboard background -->
+                        <GeometryDrawing Brush="LightGray">
+                            <GeometryDrawing.Geometry>
+                                <RectangleGeometry Rect="0,0,2,2" />
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+
+                        <!-- two checkerboard foreground tiles -->
+                        <GeometryDrawing Brush="Gray">
+                            <GeometryDrawing.Geometry>
+                                <GeometryGroup>
+                                    <RectangleGeometry Rect="0,0,1,1" />
+                                    <RectangleGeometry Rect="1,1,1,1" />
+                                </GeometryGroup>
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </DockPanel.Background>
         
-    </Canvas>
+        <Slider DockPanel.Dock="Right" Maximum="4" Minimum="0.05" Value="{Binding Scale, Mode=TwoWay}" Orientation="Vertical" />
+        
+        <file:MapFileView />
+
+        
+    </DockPanel>
 </Page>
