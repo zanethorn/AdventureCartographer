@@ -10,7 +10,31 @@
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
         <Image Width="70" Height="70" Stretch="Uniform" Source="{Binding Path}"/>
         <StackPanel>
-            <TextBlock Text="{Binding ShortName}"/>
+            <TextBlock FontWeight="Bold" Text="{Binding ShortName}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>
+                <Run Text="Units: " />
+                <Run Text="{Binding PixelWidth}" />
+                <Run Text="x" />
+                <Run Text="{Binding PixelHeight}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Text="Pixels: " />
+                <Run Text="{Binding PixelWidth}" />
+                <Run Text="x" />
+                <Run Text="{Binding PixelHeight}" />
+            </TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>
+                    <Run Text="File Type: " />
+                    <Run Text="{Binding FileExtension}" />
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="File Size: " />
+                    <Run Text="{Binding FileSize}" />
+                </TextBlock>
+            </StackPanel>
         </StackPanel>
         
     </StackPanel>

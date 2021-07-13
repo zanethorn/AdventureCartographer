@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using MapMaker.Annotations;
 using MapMaker.File;
 using Microsoft.EntityFrameworkCore;
+using Image = System.Drawing.Image;
 
 namespace MapMaker.Library
 {
@@ -241,14 +242,23 @@ namespace MapMaker.Library
         {
             LoadCheck();
 
+            await using var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+            using var img = Image.FromStream(fileStream);
+            
             var name = Path.GetFileNameWithoutExtension(imagePath);
+            
             var imgFile = new ImageFile()
             {
                 Path = imagePath,
                 FullName = name,
                 ShortName = name,
-                
+                PixelHeight = img.Height,
+                PixelWidth = img.Width,
+                FileExtension = Path.GetExtension(imagePath).Substring(1).ToUpper(),
+                FileSize = fileStream.Length
             };
+            
+            
 
             await _context.ImageFiles.AddAsync(imgFile);
             collection.Images.Add(imgFile);
