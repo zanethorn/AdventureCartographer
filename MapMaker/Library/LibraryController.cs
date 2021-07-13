@@ -9,28 +9,35 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using MapMaker.Annotations;
 using MapMaker.File;
 using Microsoft.EntityFrameworkCore;
 
 namespace MapMaker.Library
 {
-    public class LibraryController:INotifyPropertyChanged
+    public class LibraryController : INotifyPropertyChanged
     {
         public static readonly string[] FileExtensions = new[] {".png", ".jpg", ".bmp"};
         private LibraryDbContext? _context;
         private bool _isLoaded;
         private string _libraryName;
         private ImageCollection _selectedCollection;
+        private ImageCollection _defaultCollection;
+        private string _scanPath;
+        private bool _scanSubfolders;
+        private CollectionModes _collectionMode = CollectionModes.DefaultCollection;
         private ObservableCollection<ImageCollection> _imageCollections = new ObservableCollection<ImageCollection>();
         private ObservableCollection<ImageFile> _allImages = new ObservableCollection<ImageFile>();
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         public bool IsLoaded
         {
             get => _isLoaded;
             private set
             {
+                if (value == _isLoaded) return;
                 _isLoaded = value;
                 OnPropertyChanged();
             }
@@ -43,6 +50,7 @@ namespace MapMaker.Library
             get => _libraryName;
             private set
             {
+                if (value == _libraryName) return;
                 _libraryName = value;
                 OnPropertyChanged();
             }
@@ -53,16 +61,18 @@ namespace MapMaker.Library
             get => _imageCollections;
             private set
             {
+                if (value == _imageCollections) return;
                 _imageCollections = value;
                 OnPropertyChanged();
             }
         }
-        
+
         public ObservableCollection<ImageFile> AllImages
         {
             get => _allImages;
             private set
             {
+                if (value == _allImages) return;
                 _allImages = value;
                 OnPropertyChanged();
             }
@@ -73,7 +83,53 @@ namespace MapMaker.Library
             get => _selectedCollection;
             set
             {
+                if (value == _selectedCollection) return;
                 _selectedCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ImageCollection DefaultCollection
+        {
+            get => _defaultCollection;
+            private set
+            {
+                if (Equals(value, _defaultCollection)) return;
+                _defaultCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public string ScanPath
+        {
+            get => _scanPath;
+            set
+            {
+                if (value == _scanPath) return;
+                _scanPath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ScanSubfolders
+        {
+            get => _scanSubfolders;
+            set
+            {
+                if (value == _scanSubfolders) return;
+                _scanSubfolders = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CollectionModes CollectionMode
+        {
+            get => _collectionMode;
+            set
+            {
+                if (value == _collectionMode) return;
+                _collectionMode = value;
                 OnPropertyChanged();
             }
         }
@@ -83,14 +139,14 @@ namespace MapMaker.Library
             var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly()!.Location);
             Debug.Assert(versionInfo.CompanyName != null, "versionInfo.CompanyName != null");
             Debug.Assert(versionInfo.ProductName != null, "versionInfo.ProductName != null");
-            
+
             if (string.IsNullOrWhiteSpace(libraryName))
             {
                 libraryName = Properties.Settings.Default.DefaultLibraryName;
             }
 
             LibraryName = libraryName;
-            
+
             libraryName = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 versionInfo.CompanyName,
@@ -105,7 +161,7 @@ namespace MapMaker.Library
 
             _context = new LibraryDbContext(libraryName);
             await _context.Database.EnsureCreatedAsync();
-            
+
             await _context.ImageCollections.LoadAsync();
             ImageCollections = new ObservableCollection<ImageCollection>(_context.ImageCollections.Local);
 
@@ -113,68 +169,91 @@ namespace MapMaker.Library
             AllImages = new ObservableCollection<ImageFile>(_context.ImageFiles.Local);
 
             IsLoaded = true;
-            
+
             if (ImageCollections.Count == 0)
             {
                 await AddCollectionAsync("Default");
             }
+
+            DefaultCollection = ImageCollections[0];
+            SelectedCollection = DefaultCollection;
         }
 
-        public async Task AddCollectionAsync(string name)
+        public async Task<ImageCollection> AddCollectionAsync(string? name)
         {
             LoadCheck();
-            
+
             var newCollection = new ImageCollection
             {
                 Name = name
             };
 
-            
+
             await _context.ImageCollections.AddAsync(newCollection);
             await _context.SaveChangesAsync();
             ImageCollections.Add(newCollection);
 
-            SelectedCollection = newCollection;
+            return newCollection;
         }
 
-        public async Task ScanImageFolderAsync(string folderPath, bool recursive = false)
+        public async Task ScanImageFolderAsync()
+        {
+            var collection = CollectionMode switch
+            {
+                CollectionModes.DefaultCollection => DefaultCollection,
+                CollectionModes.NewCollection => await AddCollectionAsync($"New Collection {ImageCollections.Count}"),
+                CollectionModes.PerFolder => null,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            await ScanImageFolderAsync(ScanPath, ScanSubfolders, collection);
+        }
+
+        private async Task ScanImageFolderAsync(string folderPath, bool recursive, ImageCollection? collection)
         {
             if (folderPath == null) throw new ArgumentNullException(nameof(folderPath));
-            
-            foreach (var file in Directory.GetFiles(folderPath))
+
+            var files = Directory
+                .GetFiles(folderPath)
+                .Where(i => FileExtensions.Contains(Path.GetExtension(i)))
+                .ToList();
+
+            if (files.Count > 0)
             {
-                var ext = Path.GetExtension(file);
-                if (FileExtensions.Contains(ext))
+                var saveCollection = collection ?? await AddCollectionAsync(folderPath[(folderPath.LastIndexOf(Path.PathSeparator)+1)..]);
+
+                foreach (var file in files)
                 {
-                    await AddImageToCollectionAsync(file, SelectedCollection);
+                    await AddImageToCollectionAsync(file, saveCollection);
                 }
             }
-
+            
             if (recursive)
             {
-                var currentCollection = SelectedCollection;
                 foreach (var directory in Directory.GetDirectories(folderPath))
                 {
-                    await ScanImageFolderAsync(directory, recursive = true);
+                    await ScanImageFolderAsync(directory, recursive, collection);
                 }
-
-                SelectedCollection = currentCollection;
             }
         }
 
         public async Task AddImageToCollectionAsync(string imagePath, ImageCollection collection)
         {
-            Debug.Assert(_context != null, nameof(_context) + " != null");
-            
+            LoadCheck();
+
+            var name = Path.GetFileNameWithoutExtension(imagePath);
             var imgFile = new ImageFile()
             {
-                Path = imagePath
+                Path = imagePath,
+                FullName = name,
+                ShortName = name,
+                
             };
-            
+
             await _context.ImageFiles.AddAsync(imgFile);
-            await _context.SaveChangesAsync();
-            
             collection.Images.Add(imgFile);
+            await _context.SaveChangesAsync();
+            AllImages.Add(imgFile);
         }
 
         public void CloseLibrary()
@@ -192,7 +271,8 @@ namespace MapMaker.Library
             if (!IsLoaded)
                 throw new ApplicationException("No Library Loaded!");
         }
-        
+
+        [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MapMaker.Library"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance local:ImageFile}">
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-        <Image Width="100">
-            <Image.Source>
-                <BitmapImage UriSource="{Binding Path}" />
-            </Image.Source>
-        </Image>
-        <TextBlock Text="{Binding ShortName}"/>
+        <Image Width="70" Height="70" Stretch="Uniform" Source="{Binding Path}"/>
+        <StackPanel>
+            <TextBlock Text="{Binding ShortName}"/>
+        </StackPanel>
+        
     </StackPanel>
 </UserControl>

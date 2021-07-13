@@ -2,9 +2,9 @@
 
 namespace MapMaker.Library
 {
-    public partial class ImageLibrary : UserControl
+    public partial class ImageLibraryView : UserControl
     {
-        public ImageLibrary()
+        public ImageLibraryView()
         {
             InitializeComponent();
         }

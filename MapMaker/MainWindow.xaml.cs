@@ -38,7 +38,16 @@ namespace MapMaker
             var dialog = new ScanDirectoryDialog();
             if (dialog.ShowDialog() == true)
             {
+                var oldFileCount = _libraryController.AllImages.Count;
+                var oldCollectionCount = _libraryController.ImageCollections.Count;
+                _libraryController.ScanImageFolderAsync().Wait();
+                var newFileCount = _libraryController.AllImages.Count;
+                var newCollectionCount = _libraryController.ImageCollections.Count;
                 
+                var addFileCount = newFileCount - oldFileCount;
+                var addCollectionCount = newCollectionCount - oldCollectionCount;
+                
+                MessageBox.Show(this, $"{addFileCount} Files Added To Library in {Math.Max(1,addCollectionCount)} collections.", "Scan Files");
             }
 
         }

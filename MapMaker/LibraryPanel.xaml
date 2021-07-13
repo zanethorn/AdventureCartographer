@@ -9,7 +9,9 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <TabControl>
         <TabItem Header="Collections">
-            <library:ImageLibrary />
+            <ScrollViewer>
+                <library:ImageLibraryView />
+            </ScrollViewer>
         </TabItem>
         <TabItem Header="Properties" />
     </TabControl>

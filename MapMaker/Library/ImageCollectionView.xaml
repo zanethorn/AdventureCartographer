@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MapMaker.Library"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance local:ImageCollection}">
     <UserControl.Resources>
         <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource {x:Type ListBox}}">
             <Style.Triggers>
@@ -28,15 +29,21 @@
                 <StackPanel HorizontalAlignment="Stretch">
                     <StackPanel Orientation="Horizontal">
                         <Image x:Name="checkboxImage" Source="{StaticResource PlusIcon}" Width="12" />
-                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock FontWeight="Bold" Text="{Binding Name}" />
                     </StackPanel>
-                    <ListView x:Name="checkboxList" ItemsSource="{Binding Images}" Visibility="Collapsed">
+                    <ListView x:Name="checkboxList" 
+                              ItemsSource="{Binding Images}" 
+                              Visibility="Collapsed">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel>
+                                </VirtualizingStackPanel>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
                         <ListView.Template>
                             <ControlTemplate>
                                 <StackPanel>
-                                    <ScrollViewer x:Name="scroller">
-                                        <ItemsPresenter />
-                                    </ScrollViewer>
+                                    <ItemsPresenter x:Name="items" />
                                     <TextBlock x:Name="emptyText" Text="(This collection has no files)"
                                                Visibility="Hidden" />
                                 </StackPanel>
@@ -44,7 +51,7 @@
                                     <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" 
                                                  Value="0">
                                         <Setter TargetName="emptyText" Property="Visibility" Value="Visible" />
-                                        <Setter TargetName="scroller" Property="Visibility" Value="Hidden" />
+                                        <Setter TargetName="items" Property="Visibility" Value="Hidden" />
                                     </DataTrigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
