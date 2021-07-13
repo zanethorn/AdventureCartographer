@@ -5,6 +5,16 @@
              xmlns:library="clr-namespace:MapMaker.Library"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <library:LibraryController x:Key="LibraryController" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Assets/Themes/aero.normalcolor.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <library:LibraryController x:Key="LibraryController" />
+            
+            <BitmapImage x:Key="PlusIcon" UriSource="Assets/Icons/plus-box.png" />
+            <BitmapImage x:Key="MinusIcon" UriSource="Assets/Icons/minus-box.png" />
+            <BitmapImage x:Key="CursorDefault" UriSource="Assets/Icons/cursor-default.png" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

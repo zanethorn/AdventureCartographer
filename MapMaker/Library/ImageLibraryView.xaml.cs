@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace MapMaker
+namespace MapMaker.Library
 {
     public partial class ImageLibrary : UserControl
     {

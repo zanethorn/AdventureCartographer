@@ -6,7 +6,21 @@
              xmlns:local="clr-namespace:MapMaker"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel>
-        <Button Content="Arrow" />
-    </StackPanel>
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Gainsboro" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Height" Value="24" />
+            
+        </Style>
+    </UserControl.Resources>
+    <Border Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
+        <StackPanel Margin="3">
+            <Button Width="24" Height="24">
+                <Image Source="{StaticResource CursorDefault}" />
+            </Button>
+        </StackPanel>
+    </Border>
 </UserControl>

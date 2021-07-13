@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="MapMaker.Library.ImageCollectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MapMaker.Library"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource {x:Type ListBox}}">
+            <Style.Triggers>
+                <Trigger Property="HasItems" Value="False">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <TextBlock Text="This collection has no files" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <CheckBox BorderThickness="1" BorderBrush="Gainsboro" Background="White" HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Stretch" MinWidth="250">
+        <CheckBox.Template>
+            <ControlTemplate TargetType="{x:Type CheckBox}">
+                <StackPanel HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="checkboxImage" Source="{StaticResource PlusIcon}" Width="12" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                    <ListView x:Name="checkboxList" ItemsSource="{Binding Images}" Visibility="Collapsed">
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <ScrollViewer x:Name="scroller">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                    <TextBlock x:Name="emptyText" Text="(This collection has no files)"
+                                               Visibility="Hidden" />
+                                </StackPanel>
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" 
+                                                 Value="0">
+                                        <Setter TargetName="emptyText" Property="Visibility" Value="Visible" />
+                                        <Setter TargetName="scroller" Property="Visibility" Value="Hidden" />
+                                    </DataTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <local:ImageFileView />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter TargetName="checkboxImage" Property="Source" Value="{StaticResource MinusIcon}" />
+                        <Setter TargetName="checkboxList" Property="Visibility" Value="Visible" />
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </CheckBox.Template>
+    </CheckBox>
+</UserControl>
