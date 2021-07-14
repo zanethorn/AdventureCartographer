@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MapMaker.Library
 {
@@ -12,7 +14,11 @@ namespace MapMaker.Library
         public ImageFile File
         {
             get => (ImageFile) DataContext;
-            set => DataContext = value;
+        }
+
+        private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            
         }
     }
 }

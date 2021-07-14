@@ -7,6 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:ImageCollection}">
+    <!--
     <UserControl.Resources>
         <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource {x:Type ListBox}}">
             <Style.Triggers>
@@ -72,4 +73,8 @@
             </ControlTemplate>
         </CheckBox.Template>
     </CheckBox>
+    -->
+    <Expander Header="{Binding Name}">
+        <ListView ItemsSource="{Binding Images}"></ListView>
+    </Expander>
 </UserControl>

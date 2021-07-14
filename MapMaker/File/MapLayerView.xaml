@@ -15,7 +15,10 @@
         </ListView.ItemsPanel>
         <ListView.ItemTemplate>
             <DataTemplate>
-                <local:MapObjectView />
+                <local:MapObjectView Canvas.Left="{Binding OffsetX}" 
+                                     Canvas.Top="{Binding OffsetY}" 
+                                     Width="{Binding PixelWidth}" 
+                                     Height="{Binding PixelHeight}"/>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

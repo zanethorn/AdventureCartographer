@@ -5,5 +5,20 @@
     <Setting Name="DefaultLibraryName" Type="System.String" Scope="User">
       <Value Profile="(Default)">default</Value>
     </Setting>
+    <Setting Name="GridCellWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">70</Value>
+    </Setting>
+    <Setting Name="GridPenWidth" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0.05</Value>
+    </Setting>
+    <Setting Name="GridPenColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF00FFFF</Value>
+    </Setting>
+    <Setting Name="TransparentGridColor1" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TransparentGridColor2" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

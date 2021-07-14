@@ -6,9 +6,9 @@
       xmlns:local="clr-namespace:MapMaker"
       xmlns:file="clr-namespace:MapMaker.File"
       mc:Ignorable="d"
-      Title="MapEditor" 
+      Title="Map Editor" 
       DataContext="{StaticResource MapController}">
-    <DockPanel>
+    <DockPanel Drop="OnDrop">
         <DockPanel.Background>
             <DrawingBrush TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
                 <DrawingBrush.Drawing>

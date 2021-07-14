@@ -14,7 +14,13 @@ namespace MapMaker.File
         private int _cellsHigh = 25;
         private int _cellDisplayWidth = 70;
         private int _cellDisplayHeight = 70;
-        private ObservableCollection<MapLayer> _layers;
+        private ObservableCollection<MapLayer> _layers = new()
+        {
+            new MapLayer
+            {
+                Name="Untitled_Layer_1"
+            }
+        };
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string Name

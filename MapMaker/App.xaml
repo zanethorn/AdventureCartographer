@@ -4,19 +4,19 @@
              xmlns:local="clr-namespace:MapMaker"
              xmlns:library="clr-namespace:MapMaker.Library"
              xmlns:file="clr-namespace:MapMaker.File"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Assets/Themes/aero.normalcolor.xaml" />
+                <ResourceDictionary Source="Resources/Cursors/Cursors.xaml" />
+                <ResourceDictionary Source="Resources/Icons/Icons.xaml" />
+                <ResourceDictionary Source="Converters/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
             <library:LibraryController x:Key="LibraryController" />
             <file:MapController x:Key="MapController" />
             
-            <BitmapImage x:Key="PlusIcon" UriSource="Assets/Icons/plus-box.png" />
-            <BitmapImage x:Key="MinusIcon" UriSource="Assets/Icons/minus-box.png" />
-            <BitmapImage x:Key="CursorDefault" UriSource="Assets/Icons/cursor-default.png" />
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -13,7 +13,7 @@ namespace MapMaker.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
         
@@ -32,6 +32,66 @@ namespace MapMaker.Properties {
             }
             set {
                 this["DefaultLibraryName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        public int GridCellWidth {
+            get {
+                return ((int)(this["GridCellWidth"]));
+            }
+            set {
+                this["GridCellWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
+        public float GridPenWidth {
+            get {
+                return ((float)(this["GridPenWidth"]));
+            }
+            set {
+                this["GridPenWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF00FFFF")]
+        public string GridPenColor {
+            get {
+                return ((string)(this["GridPenColor"]));
+            }
+            set {
+                this["GridPenColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TransparentGridColor1 {
+            get {
+                return ((string)(this["TransparentGridColor1"]));
+            }
+            set {
+                this["TransparentGridColor1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TransparentGridColor2 {
+            get {
+                return ((string)(this["TransparentGridColor2"]));
+            }
+            set {
+                this["TransparentGridColor2"] = value;
             }
         }
     }

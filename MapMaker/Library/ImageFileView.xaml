@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:ImageFile}">
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" MouseDown="UIElement_OnMouseDown">
         <Image Width="70" Height="70" Stretch="Uniform" Source="{Binding Path}"/>
         <StackPanel>
             <TextBlock FontWeight="Bold" Text="{Binding ShortName}"/>

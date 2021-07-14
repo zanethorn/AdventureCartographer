@@ -10,6 +10,7 @@ namespace MapMaker.File
         private float _scale = 0.5f;
         private int _offsetX;
         private int _offsetY;
+        private MapLayer _selectedLayer;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public float Scale
@@ -53,6 +54,17 @@ namespace MapMaker.File
             {
                 if (Equals(value, _mapFile)) return;
                 _mapFile = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public MapLayer SelectedLayer
+        {
+            get => _selectedLayer;
+            set
+            {
+                if (Equals(value, _selectedLayer)) return;
+                _selectedLayer = value;
                 OnPropertyChanged();
             }
         }

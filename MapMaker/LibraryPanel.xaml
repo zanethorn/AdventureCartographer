@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MapMaker"
              xmlns:library="clr-namespace:MapMaker.Library"
+             xmlns:file="clr-namespace:MapMaker.File"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <TabControl>
@@ -13,6 +14,8 @@
                 <library:ImageLibraryView />
             </ScrollViewer>
         </TabItem>
-        <TabItem Header="Properties" />
+        <TabItem Header="Layers" >
+            <file:LayerPanel />
+        </TabItem>
     </TabControl>
 </UserControl>

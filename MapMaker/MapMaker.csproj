@@ -17,6 +17,7 @@
       <None Remove="Assets\Icons\cursor-default.png" />
       <None Remove="Assets\Icons\minus-box.png" />
       <None Remove="Assets\Icons\plus-box.png" />
+      <None Remove="Resources\Cursors\cursor-default.cur" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,9 +26,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Assets\Icons\cursor-default.png" />
-      <Resource Include="Assets\Icons\minus-box.png" />
-      <Resource Include="Assets\Icons\plus-box.png" />
+      <Resource Include="Resources\Cursors\cursor-default.cur" />
+      <Resource Include="Resources\Icons\cursor-default.png" />
+      <Resource Include="Resources\Icons\minus-box.png" />
+      <Resource Include="Resources\Icons\plus-box.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,7 +42,7 @@
 
     <ItemGroup>
       <None Update="Properties\Settings.settings">
-        <Generator>SettingsSingleFileGenerator</Generator>
+        <Generator>PublicSettingsSingleFileGenerator</Generator>
         <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       </None>
     </ItemGroup>
