@@ -21,6 +21,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
+      <PackageReference Include="Infragistics.Themes.MetroLight.Wpf" Version="1.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
       <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
     </ItemGroup>
@@ -45,6 +47,10 @@
         <Generator>PublicSettingsSingleFileGenerator</Generator>
         <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\Themes" />
     </ItemGroup>
 
 </Project>
