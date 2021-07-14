@@ -25,6 +25,7 @@
       <PackageReference Include="Infragistics.Themes.MetroLight.Wpf" Version="1.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
       <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
+      <PackageReference Include="PixiEditor.ColorPicker" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>

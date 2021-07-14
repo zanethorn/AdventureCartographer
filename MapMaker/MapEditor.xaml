@@ -15,14 +15,14 @@
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <!-- checkerboard background -->
-                        <GeometryDrawing Brush="{Binding Source={x:Static properties:Settings.Default}, Path=TransparentGridColor1, Converter={StaticResource BrushConverter}}">
+                        <GeometryDrawing Brush="{Binding Source={x:Static properties:Settings.Default}, Path=BackgroundGridColor1, Converter={StaticResource BrushConverter}}">
                             <GeometryDrawing.Geometry>
                                 <RectangleGeometry Rect="0,0,2,2" />
                             </GeometryDrawing.Geometry>
                         </GeometryDrawing>
 
                         <!-- two checkerboard foreground tiles -->
-                        <GeometryDrawing Brush="{Binding Source={x:Static properties:Settings.Default}, Path=TransparentGridColor2, Converter={StaticResource BrushConverter}}">
+                        <GeometryDrawing Brush="{Binding Source={x:Static properties:Settings.Default}, Path=BackgroundGridColor2, Converter={StaticResource BrushConverter}}">
                             <GeometryDrawing.Geometry>
                                 <GeometryGroup>
                                     <RectangleGeometry Rect="0,0,1,1" />

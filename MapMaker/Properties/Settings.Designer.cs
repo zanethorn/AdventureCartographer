@@ -12,7 +12,7 @@ namespace MapMaker.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -73,25 +73,25 @@ namespace MapMaker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TransparentGridColor1 {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFD3D3D3")]
+        public string BackgroundGridColor1 {
             get {
-                return ((string)(this["TransparentGridColor1"]));
+                return ((string)(this["BackgroundGridColor1"]));
             }
             set {
-                this["TransparentGridColor1"] = value;
+                this["BackgroundGridColor1"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TransparentGridColor2 {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF808080")]
+        public string BackgroundGridColor2 {
             get {
-                return ((string)(this["TransparentGridColor2"]));
+                return ((string)(this["BackgroundGridColor2"]));
             }
             set {
-                this["TransparentGridColor2"] = value;
+                this["BackgroundGridColor2"] = value;
             }
         }
     }
