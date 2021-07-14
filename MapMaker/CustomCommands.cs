@@ -11,6 +11,9 @@ namespace MapMaker
         public static RoutedCommand ViewLibraryDetails { get; } =
             new RoutedCommand(nameof(ViewLibraryDetails), typeof(CustomCommands));
         
+        public static RoutedCommand ShowPreferences { get; } =
+            new RoutedCommand(nameof(ShowPreferences), typeof(CustomCommands));
+        
         public static RoutedCommand ShowAbout { get; } =
             new RoutedCommand(nameof(ShowAbout), typeof(CustomCommands));
     }

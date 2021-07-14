@@ -3,4 +3,5 @@
                     xmlns:converters="clr-namespace:MapMaker.Converters">
     <converters:ViewPortConverter x:Key="ViewPortConverter" />
     <converters:HalvingConverter x:Key="HalvingConverter" />
+    <converters:StringToBrushConverter x:Key="BrushConverter" />
 </ResourceDictionary>

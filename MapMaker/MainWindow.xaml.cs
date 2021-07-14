@@ -52,6 +52,12 @@ namespace MapMaker
 
         }
         
+        private void OnShowPreferences(object sender, RoutedEventArgs e)
+        {
+            var dialog = new PreferencesDialog();
+            dialog.ShowDialog();
+        }
+        
         private void OnShowAbout(object sender, RoutedEventArgs e)
         {
             var dialog = new SplashDialog();

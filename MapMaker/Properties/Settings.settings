@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MapMaker.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
@@ -15,10 +15,11 @@
       <Value Profile="(Default)">#FF00FFFF</Value>
     </Setting>
     <Setting Name="TransparentGridColor1" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">#FFD3D3D3</Value>
     </Setting>
     <Setting Name="TransparentGridColor2" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">#FF808080</Value>
     </Setting>
   </Settings>
 </SettingsFile>
+

@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MapMaker"
         mc:Ignorable="d"
-        Title="Map Maker" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Adventure Cartographer" 
+        Height="450" Width="800" 
+        WindowState="Maximized"
+        Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.InputBindings>
         <KeyBinding
             Key="ESC"
@@ -24,6 +27,9 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.ShowAbout}"
             Executed="OnShowAbout" />
+        <CommandBinding
+            Command="{x:Static local:CustomCommands.ShowPreferences}"
+            Executed="OnShowPreferences" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -44,6 +50,8 @@
                 <MenuItem Command="ApplicationCommands.Paste"/>
                 <Separator/>
                 <MenuItem Command="ApplicationCommands.Delete"/>
+                <Separator/>
+                <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences"/>
             </MenuItem>
             <MenuItem Header="_Library">
                 <MenuItem Header="Scan Directory..." Command="local:CustomCommands.ScanDirectory"/>

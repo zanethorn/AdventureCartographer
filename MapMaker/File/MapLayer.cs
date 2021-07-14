@@ -11,10 +11,32 @@ namespace MapMaker.File
     {
         private string _name;
         private ObservableCollection<MapObject> _mapObjects = new ObservableCollection<MapObject>();
+        private bool _isVisible = true;
+        private bool _isLocked =false;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool IsVisible { get; set; }
-        
+        public bool IsLocked
+        {
+            get => _isLocked ;
+            set
+            {
+                if (value == _isLocked ) return;
+                _isLocked  = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                if (value == _isVisible) return;
+                _isVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string Name
         {
             get => _name;

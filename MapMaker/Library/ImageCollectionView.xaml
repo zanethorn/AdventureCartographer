@@ -75,6 +75,12 @@
     </CheckBox>
     -->
     <Expander Header="{Binding Name}">
-        <ListView ItemsSource="{Binding Images}"></ListView>
+        <ListView ItemsSource="{Binding Images}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:ImageFileView />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Expander>
 </UserControl>
