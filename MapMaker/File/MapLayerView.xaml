@@ -7,19 +7,24 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:MapLayer}">
-    <ListView Background="Transparent" ItemsSource="{Binding MapObjects}">
-        <ListView.ItemsPanel>
+    <ItemsControl Background="Transparent" 
+                  BorderBrush="Chartreuse" 
+                  ItemsSource="{Binding MapObjects}">
+        <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <Canvas></Canvas>
+                <Canvas />
             </ItemsPanelTemplate>
-        </ListView.ItemsPanel>
-        <ListView.ItemTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemContainerStyle>
+            <Style TargetType="ContentPresenter">
+                <Setter Property="Canvas.Left" Value="{Binding OffsetX}" />
+                <Setter Property="Canvas.Top" Value="{Binding OffsetY}" />
+            </Style>
+        </ItemsControl.ItemContainerStyle>
+        <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <local:MapObjectView Canvas.Left="{Binding OffsetX}" 
-                                     Canvas.Top="{Binding OffsetY}" 
-                                     Width="{Binding PixelWidth}" 
-                                     Height="{Binding PixelHeight}"/>
+                <local:MapObjectView Height="Auto" Width="Auto"/>
             </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>

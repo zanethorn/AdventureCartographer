@@ -7,33 +7,25 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:ImageFile}">
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" MouseDown="UIElement_OnMouseDown">
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" MouseDown="OnMouseDown">
         <Image Width="70" Height="70" Stretch="Uniform" Source="{Binding Path}"/>
         <StackPanel>
             <TextBlock FontWeight="Bold" Text="{Binding ShortName}"/>
             <StackPanel Orientation="Horizontal">
-                <TextBlock>
-                <Run Text="Units: " />
-                <Run Text="{Binding PixelWidth}" />
-                <Run Text="x" />
-                <Run Text="{Binding PixelHeight}" />
-            </TextBlock>
-            <TextBlock>
-                <Run Text="Pixels: " />
-                <Run Text="{Binding PixelWidth}" />
-                <Run Text="x" />
-                <Run Text="{Binding PixelHeight}" />
-            </TextBlock>
+                <TextBlock Text="Units: " />
+                <TextBlock Text="{Binding PixelWidth}" />
+                <TextBlock Text="x" />
+                <TextBlock Text="{Binding PixelHeight}" />
+                <TextBlock Text="  Pixels: " />
+                <TextBlock Text="{Binding PixelWidth}" />
+                <TextBlock Text="x" />
+                <TextBlock Text="{Binding PixelHeight}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock>
-                    <Run Text="File Type: " />
-                    <Run Text="{Binding FileExtension}" />
-                </TextBlock>
-                <TextBlock>
-                    <Run Text="File Size: " />
-                    <Run Text="{Binding FileSize}" />
-                </TextBlock>
+                <TextBlock Text="File Type: " />
+                <TextBlock Text="{Binding FileExtension}" />
+                <TextBlock Text="  File Size: " />
+                <TextBlock Text="{Binding FileSize}" />
             </StackPanel>
         </StackPanel>
         

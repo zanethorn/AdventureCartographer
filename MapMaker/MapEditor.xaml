@@ -4,12 +4,40 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MapMaker"
+      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:file="clr-namespace:MapMaker.File"
       xmlns:properties="clr-namespace:MapMaker.Properties"
       mc:Ignorable="d"
       Title="Map Editor" 
-      DataContext="{StaticResource MapController}">
-    <DockPanel Drop="OnDrop">
+      DataContext="{StaticResource MapController}"
+      AllowDrop="True"
+      
+      Drop="OnDrop"
+      Cursor="{Binding SelectedTool.Cursor}"
+      x:Name="editor"
+      >
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="MouseDown" 
+                        SourceObject="{Binding ElementName=editor}">
+            <b:InvokeCommandAction 
+                Command="{Binding SelectedTool}"
+                CommandParameter="{Binding SelectedTool.TargetObject}"/>
+        </b:EventTrigger>
+        <!--
+        <b:EventTrigger EventName="MouseUp" 
+                        SourceObject="{Binding ElementName=editor}">
+            <b:ChangePropertyAction TargetObject="{Binding Source={StaticResource MapController}, Path=SelectedTool}" 
+                                    PropertyName="IsDown" 
+                                    Value="False"/>
+        </b:EventTrigger>
+        <b:EventTrigger EventName="MouseMove" 
+                        SourceObject="{Binding ElementName=editor}">
+            <b:InvokeCommandAction 
+                Command="{Binding Source={StaticResource MapController}, Path=SelectedTool}" />
+        </b:EventTrigger>
+        -->
+    </b:Interaction.Triggers>
+    <DockPanel >
         <DockPanel.Background>
             <DrawingBrush TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
                 <DrawingBrush.Drawing>
@@ -38,7 +66,7 @@
         
         <Slider DockPanel.Dock="Right" Maximum="4" Minimum="0.05" Value="{Binding Scale, Mode=TwoWay}" Orientation="Vertical" />
         
-        <file:MapFileView />
+        <file:MapFileView x:Name="FileView" />
 
         
     </DockPanel>

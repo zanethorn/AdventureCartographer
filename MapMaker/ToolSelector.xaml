@@ -5,22 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MapMaker"
              mc:Ignorable="d"
+             DataContext="{StaticResource MapController}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        <Style TargetType="Button">
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="Gainsboro" />
-            <Setter Property="Background" Value="White" />
-            <Setter Property="Width" Value="24" />
-            <Setter Property="Height" Value="24" />
-            
-        </Style>
-    </UserControl.Resources>
-    <Border Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
-        <StackPanel Margin="3">
-            <Button Width="24" Height="24">
-                <Image Source="{StaticResource CursorDefault}" />
-            </Button>
-        </StackPanel>
-    </Border>
+    <ListView Background="GhostWhite" 
+              BorderBrush="Gainsboro" 
+              BorderThickness="1" 
+              ItemsSource="{Binding Tools}"
+              SelectedItem="{Binding SelectedTool, Mode=TwoWay}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <Image Source="{Binding IconName, Converter={StaticResource BindingResourceConverter}}" />
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+    
 </UserControl>

@@ -16,9 +16,12 @@ namespace MapMaker.Library
             get => (ImageFile) DataContext;
         }
 
-        private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragDrop.DoDragDrop(this, File, DragDropEffects.Link);
+            }
         }
     }
 }

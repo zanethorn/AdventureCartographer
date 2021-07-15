@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace MapMaker.File
 {
@@ -8,5 +11,8 @@ namespace MapMaker.File
         {
             InitializeComponent();
         }
+
+        public MapObject MapObject => (MapObject) DataContext;
+        
     }
 }

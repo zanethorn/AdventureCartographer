@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MapMaker"
+        xmlns:properties="clr-namespace:MapMaker.Properties"
         mc:Ignorable="d"
         Title="Adventure Cartographer" 
         Height="450" Width="800" 
@@ -52,6 +53,9 @@
                 <MenuItem Command="ApplicationCommands.Delete"/>
                 <Separator/>
                 <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences"/>
+            </MenuItem>
+            <MenuItem Header="_Map">
+                <MenuItem Header="Show Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=GridPenColor, Mode=TwoWay}" />    
             </MenuItem>
             <MenuItem Header="_Library">
                 <MenuItem Header="Scan Directory..." Command="local:CustomCommands.ScanDirectory"/>

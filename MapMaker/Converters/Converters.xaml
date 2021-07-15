@@ -4,4 +4,6 @@
     <converters:ViewPortConverter x:Key="ViewPortConverter" />
     <converters:HalvingConverter x:Key="HalvingConverter" />
     <converters:StringToBrushConverter x:Key="BrushConverter" />
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <converters:BindingResourceConverter x:Key="BindingResourceConverter" />
 </ResourceDictionary>

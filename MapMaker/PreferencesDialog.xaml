@@ -24,21 +24,29 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     
-                    <Label Grid.Row="0" Grid.Column="0" Target="{Binding ElementName=gridSize}">Grid Size (px):</Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="gridSize" 
+                    <Label Grid.Row="0" Grid.Column="0" Target="{Binding ElementName=ShowGrid}">Show Grid</Label>
+                    <CheckBox Grid.Row="0" Grid.Column="1" x:Name="ShowGrid" 
+                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ShowGrid, Mode=TwoWay}"/> 
+                    
+                    <Label Grid.Row="1" Grid.Column="0" Target="{Binding ElementName=GridSize}">Grid Size (px):</Label>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="GridSize" 
                              Text="{Binding Source={x:Static properties:Settings.Default}, Path=GridCellWidth, Mode=TwoWay}"
                              PreviewTextInput="GridSize_OnPreviewTextInput"/> 
                     
-                    <Label Grid.Row="1" Grid.Column="0">Line Color:</Label>
-                    <local:ColorPickerButton Grid.Row="1" Grid.Column="1" Color="{Binding Source={x:Static properties:Settings.Default}, Path=GridPenColor, Mode=TwoWay}" />
+                    <Label Grid.Row="2" Grid.Column="0" Target="{Binding ElementName=GridLineColor}">Line Color:</Label>
+                    <local:ColorPickerButton Grid.Row="2" Grid.Column="1" x:Name="GridLineColor"
+                                             Color="{Binding Source={x:Static properties:Settings.Default}, Path=GridPenColor, Mode=TwoWay}" />
 
-                    <Label Grid.Row="2" Grid.Column="0">Background Color 1:</Label>
-                    <local:ColorPickerButton Grid.Row="2" Grid.Column="1" Color="{Binding Source={x:Static properties:Settings.Default}, Path=BackgroundGridColor1, Converter={StaticResource BrushConverter}}" />
+                    <Label Grid.Row="3" Grid.Column="0" Target="{Binding ElementName=GridBackground1}">Background Color 1:</Label>
+                    <local:ColorPickerButton Grid.Row="3" Grid.Column="1" x:Name="GridBackground1"
+                                             Color="{Binding Source={x:Static properties:Settings.Default}, Path=BackgroundGridColor1, Mode=TwoWay}" />
                     
-                    <Label Grid.Row="3" Grid.Column="0">Background Color 2:</Label>
-                    <local:ColorPickerButton Grid.Row="3" Grid.Column="1" Color="{Binding Source={x:Static properties:Settings.Default}, Path=BackgroundGridColor2, Converter={StaticResource BrushConverter}}" />
+                    <Label Grid.Row="4" Grid.Column="0" Target="{Binding ElementName=GridBackground2}">Background Color 2:</Label>
+                    <local:ColorPickerButton Grid.Row="4" Grid.Column="1" x:Name="GridBackground2"
+                                             Color="{Binding Source={x:Static properties:Settings.Default}, Path=BackgroundGridColor2, Mode=TwoWay}" />
 
                 </Grid>
             </TabItem>

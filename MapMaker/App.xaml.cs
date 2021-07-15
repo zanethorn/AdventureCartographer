@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms.VisualStyles;
+using MapMaker.Properties;
 
 namespace MapMaker
 {
@@ -17,7 +18,7 @@ namespace MapMaker
 	{
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
-			
+			Settings.Default.Upgrade();
 		}
 	}
 }

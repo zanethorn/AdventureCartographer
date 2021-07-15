@@ -20,5 +20,8 @@
     <Setting Name="BackgroundGridColor2" Type="System.String" Scope="User">
       <Value Profile="(Default)">#FF808080</Value>
     </Setting>
+    <Setting Name="ShowGrid" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
