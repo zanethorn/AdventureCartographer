@@ -9,19 +9,18 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:MapController}"
-             Height="{Binding MapFile.PixelHeight}"
-             Width="{Binding MapFile.PixelWidth}">
+             >
+    <UserControl.RenderTransform>
+        <TransformGroup>
+            <ScaleTransform
+                CenterX="{Binding Width, Converter={StaticResource HalvingConverter}}"
+                CenterY="{Binding Height, Converter={StaticResource HalvingConverter}}"
+                ScaleX="{Binding Scale}"
+                ScaleY="{Binding Scale}" />
+        </TransformGroup>
+    </UserControl.RenderTransform>
     <Grid>
-        <Grid.RenderTransform>
-            <TransformGroup>
-                <ScaleTransform
-                    CenterX="{Binding MapFile.PixelWidth, Converter={StaticResource HalvingConverter}}"
-                    CenterY="{Binding MapFile.PixelHeight, Converter={StaticResource HalvingConverter}}"
-                    ScaleX="{Binding Scale}"
-                    ScaleY="{Binding Scale}" />
-                <TranslateTransform X="{Binding OffsetX}" Y="{Binding OffsetY}" />
-            </TransformGroup>
-        </Grid.RenderTransform>
+        
 
         <Border BorderThickness="2"
                 Grid.ZIndex="{Binding Source={x:Static system:Int32.MaxValue}, Mode=OneTime}"

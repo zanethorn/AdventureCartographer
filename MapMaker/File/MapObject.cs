@@ -8,8 +8,8 @@ namespace MapMaker.File
     {
         private int _pixelWidth;
         private int _pixelHeight;
-        private int _offsetX;
-        private int _offsetY;
+        private double _offsetX;
+        private double _offsetY;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int PixelWidth
@@ -34,7 +34,7 @@ namespace MapMaker.File
             }
         }
 
-        public int OffsetX
+        public double OffsetX
         {
             get => _offsetX;
             set
@@ -45,7 +45,7 @@ namespace MapMaker.File
             }
         }
 
-        public int OffsetY
+        public double OffsetY
         {
             get => _offsetY;
             set

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MapMaker.File"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance local:MapLayer}">
+             d:DataContext="{d:DesignInstance local:MapLayer}" >
     <ItemsControl Background="Transparent" 
                   BorderBrush="Chartreuse" 
                   ItemsSource="{Binding MapObjects}">

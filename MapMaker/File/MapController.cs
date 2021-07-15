@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using MapMaker.Annotations;
 
 namespace MapMaker.File
@@ -9,11 +10,12 @@ namespace MapMaker.File
     public class MapController : INotifyPropertyChanged
     {
         private MapFile _mapFile;
-        private float _scale = 0.5f;
-        private int _offsetX;
-        private int _offsetY;
+        private double _scale = 0.5;
+        private double _offsetX;
+        private double _offsetY;
         private MapLayer _selectedLayer;
-        private bool _isToolActive;
+        private MapObject? _selectedObject;
+        
         private Tool _selectedTool;
         private IList<Tool> _tools;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -42,18 +44,20 @@ namespace MapMaker.File
             }
         }
 
-        public bool IsToolActive
+        
+
+        public MapObject? SelectedObject
         {
-            get => _isToolActive;
+            get => _selectedObject;
             set
             {
-                if (value == _isToolActive) return;
-                _isToolActive = value;
+                if (Equals(value, _selectedObject)) return;
+                _selectedObject = value;
                 OnPropertyChanged();
             }
         }
 
-        public float Scale
+        public double Scale
         {
             get => _scale;
             set
@@ -64,7 +68,7 @@ namespace MapMaker.File
             }
         }
 
-        public int OffsetX
+        public double OffsetX
         {
             get => _offsetX;
             set
@@ -75,7 +79,7 @@ namespace MapMaker.File
             }
         }
 
-        public int OffsetY
+        public double OffsetY
         {
             get => _offsetY;
             set
@@ -85,7 +89,7 @@ namespace MapMaker.File
                 OnPropertyChanged();
             }
         }
-
+        
 
         public MapFile MapFile
         {

@@ -68,7 +68,24 @@
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Name="lblCursorPosition" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Name}" />
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.X}" />
+                    <TextBlock Text="," />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.Y}" />
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Offset:  " />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=OffsetX}" />
+                    <TextBlock Text="," />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=OffsetY}" />
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
         <local:ToolSelector DockPanel.Dock="Left" />

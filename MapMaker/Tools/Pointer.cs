@@ -1,3 +1,4 @@
+using System.Windows.Forms.VisualStyles;
 using MapMaker.Annotations;
 using MapMaker.File;
 
@@ -9,14 +10,18 @@ namespace MapMaker
         {
         }
 
-        protected override bool OnCanExecute(object? parameter)
+        protected override ToolState GetToolState()
         {
-            return TargetObject!=null;
+            if (Controller.SelectedObject == null) return ToolState.Inactive;
+            return IsDown ? ToolState.Active : ToolState.Inactive;
         }
 
-        protected override void OnExecute(object? parameter)
+        protected override void OnUseTool()
         {
-            
+            var offset = Position - DownPosition;
+            DownPosition = Position;
+            Controller.SelectedObject.OffsetX += offset.X;
+            Controller.SelectedObject.OffsetY += offset.Y;
         }
     }
 }

@@ -11,6 +11,15 @@ namespace MapMaker
         public MapEditor()
         {
             InitializeComponent();
+
+            
+        }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+            Controller.OffsetX = (ActualWidth / 2.0) - (Controller.MapFile.PixelWidth* Controller.Scale / 2.0 );
+            Controller.OffsetY = (ActualHeight / 2.0) - (Controller.MapFile.PixelHeight* Controller.Scale / 2.0 );
         }
 
         public MapController Controller
@@ -23,12 +32,12 @@ namespace MapMaker
             var data = e.Data.GetData(typeof(ImageFile));
             if (data is ImageFile imgFile)
             {
-                var pos = e.GetPosition(FileView);
+                var pos = e.GetPosition(fileView);
                 var imgObject = new MapImage()
                 {
                     Image = imgFile,
-                    OffsetX = (int)pos.X,
-                    OffsetY = (int)pos.Y,
+                    OffsetX = pos.X,
+                    OffsetY = pos.Y,
                     PixelWidth = imgFile.PixelWidth,
                     PixelHeight = imgFile.PixelHeight
                 };
@@ -40,6 +49,21 @@ namespace MapMaker
         {
             
         }
-        
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            Controller.SelectedTool.Move(e.GetPosition(fileView));
+        }
+
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Controller.SelectedTool.Down(e.GetPosition(fileView));
+        }
+
+        private void OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Controller.SelectedTool.Up(e.GetPosition(fileView));
+        }
+
     }
 }

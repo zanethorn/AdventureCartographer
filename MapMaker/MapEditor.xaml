@@ -11,34 +11,15 @@
       Title="Map Editor" 
       DataContext="{StaticResource MapController}"
       AllowDrop="True"
-      
+      MouseMove="OnMouseMove"
+      MouseDown="OnMouseDown"
+      MouseUp="OnMouseUp"
       Drop="OnDrop"
       Cursor="{Binding SelectedTool.Cursor}"
       x:Name="editor"
       >
-    <b:Interaction.Triggers>
-        <b:EventTrigger EventName="MouseDown" 
-                        SourceObject="{Binding ElementName=editor}">
-            <b:InvokeCommandAction 
-                Command="{Binding SelectedTool}"
-                CommandParameter="{Binding SelectedTool.TargetObject}"/>
-        </b:EventTrigger>
-        <!--
-        <b:EventTrigger EventName="MouseUp" 
-                        SourceObject="{Binding ElementName=editor}">
-            <b:ChangePropertyAction TargetObject="{Binding Source={StaticResource MapController}, Path=SelectedTool}" 
-                                    PropertyName="IsDown" 
-                                    Value="False"/>
-        </b:EventTrigger>
-        <b:EventTrigger EventName="MouseMove" 
-                        SourceObject="{Binding ElementName=editor}">
-            <b:InvokeCommandAction 
-                Command="{Binding Source={StaticResource MapController}, Path=SelectedTool}" />
-        </b:EventTrigger>
-        -->
-    </b:Interaction.Triggers>
-    <DockPanel >
-        <DockPanel.Background>
+    <Canvas >
+        <Canvas.Background>
             <DrawingBrush TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
@@ -62,12 +43,17 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </DockPanel.Background>
+        </Canvas.Background>
         
-        <Slider DockPanel.Dock="Right" Maximum="4" Minimum="0.05" Value="{Binding Scale, Mode=TwoWay}" Orientation="Vertical" />
+        <Slider Canvas.Right="0" Maximum="4" Minimum="0.05" Value="{Binding Scale, Mode=TwoWay}" Orientation="Vertical" />
         
-        <file:MapFileView x:Name="FileView" />
-
+        <file:MapFileView x:Name="fileView" 
+                          Background="Chocolate"
+                          Canvas.ZIndex="0"
+                          Canvas.Left="{Binding OffsetX}"
+                          Canvas.Right="{Binding OffsetY}" 
+                          Height="{Binding MapFile.PixelWidth}"
+                          Width="{Binding MapFile.PixelHeight}"/>
         
-    </DockPanel>
+    </Canvas>
 </Page>
