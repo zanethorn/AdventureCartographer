@@ -106,5 +106,17 @@ namespace MapMaker.Properties {
                 this["ShowGrid"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SnapToGrid {
+            get {
+                return ((bool)(this["SnapToGrid"]));
+            }
+            set {
+                this["SnapToGrid"] = value;
+            }
+        }
     }
 }

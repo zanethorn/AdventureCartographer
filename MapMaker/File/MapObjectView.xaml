@@ -9,23 +9,115 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:MapObject}"
-             >
+             MouseEnter="OnMouseEnter"
+             MouseLeave="OnMouseLeave">
+    <UserControl.Resources>
+        <Style TargetType="Thumb">
+            <Setter Property="Width" Value="10" />
+            <Setter Property="Height" Value="10" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform
+                        ScaleX="{Binding  Source={StaticResource MapController}, Path=Scale, Converter={StaticResource InvertDoubleConverter}}"
+                        ScaleY="{Binding  Source={StaticResource MapController}, Path=Scale, Converter={StaticResource InvertDoubleConverter}}" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border BorderBrush="Blue" BorderThickness="1" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="{Binding PixelWidth}" />
-            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="{Binding PixelHeight}" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
-        <Rectangle Grid.Row="1" Grid.Column="1" x:Name="content" 
-                   StrokeThickness="1" 
-                   MouseEnter="OnMouseEnter"
-                   MouseLeave="OnMouseLeave">
+
+        <Thumb Grid.Row="0"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Cursor="SizeNWSE"
+               DragStarted="OnDragStartedNW"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted"/>
+
+        <Thumb Grid.Row="0"
+               Grid.Column="1"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Bottom"
+               Cursor="SizeNS"
+               DragStarted="OnDragStartedN"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted"/>
+
+        <Thumb Grid.Row="0"
+               Grid.Column="2"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Cursor="SizeNESW"
+               DragStarted="OnDragStartedNE"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Thumb Grid.Row="1"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Center"
+               Cursor="SizeWE"
+               DragStarted="OnDragStartedW"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Thumb Grid.Row="1"
+               Grid.Column="2"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"
+               Cursor="SizeWE"
+               DragStarted="OnDragStartedE"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted"/>
+
+        <Thumb Grid.Row="2"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Cursor="SizeNESW"
+               DragStarted="OnDragStartedSW"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Thumb Grid.Row="2"
+               Grid.Column="1"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               Cursor="SizeNS" 
+               DragStarted="OnDragStartedS"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Thumb Grid.Row="2"
+               Grid.Column="2"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Cursor="SizeNWSE"
+               DragStarted="OnDragStartedSE"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Rectangle Grid.Row="1" Grid.Column="1" x:Name="content"
+                   Width="{Binding PixelWidth}"
+                   Height="{Binding PixelHeight}">
             <Rectangle.Fill>
                 <ImageBrush ImageSource="{Binding Image.Path}" />
             </Rectangle.Fill>

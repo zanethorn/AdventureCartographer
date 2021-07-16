@@ -7,4 +7,6 @@
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:BindingResourceConverter x:Key="BindingResourceConverter" />
     <converters:ToIntConverter x:Key="ToIntConverter" />
+    <converters:InvertDoubleConverter x:Key="InvertDoubleConverter" />
+    <converters:SubtractingConverter x:Key="SubtractingConverter" />
 </ResourceDictionary>

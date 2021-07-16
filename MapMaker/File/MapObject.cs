@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using MapMaker.Annotations;
 
 namespace MapMaker.File
 {
     public abstract class MapObject: INotifyPropertyChanged
     {
-        private int _pixelWidth;
-        private int _pixelHeight;
-        private double _offsetX;
-        private double _offsetY;
+        private double _pixelWidth;
+        private double _pixelHeight;
+        private Point _offset;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int PixelWidth
+        public double PixelWidth
         {
             get => _pixelWidth;
             set
@@ -23,7 +23,7 @@ namespace MapMaker.File
             }
         }
 
-        public int PixelHeight
+        public double PixelHeight
         {
             get => _pixelHeight;
             set
@@ -34,24 +34,13 @@ namespace MapMaker.File
             }
         }
 
-        public double OffsetX
+        public Point Offset
         {
-            get => _offsetX;
+            get => _offset;
             set
             {
-                if (value == _offsetX) return;
-                _offsetX = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public double OffsetY
-        {
-            get => _offsetY;
-            set
-            {
-                if (value == _offsetY) return;
-                _offsetY = value;
+                if (value == _offset) return;
+                _offset = value;
                 OnPropertyChanged();
             }
         }

@@ -12,6 +12,8 @@ namespace MapMaker.Library
         public int PixelWidth { get; set; }
         public int PixelHeight { get; set; }
         
+        
+        
         public string FileExtension { get; set; }
         
         public long FileSize { get; set; }

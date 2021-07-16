@@ -2,6 +2,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using MapMaker.Annotations;
 using MapMaker.File;
+using MapMaker.Properties;
 
 namespace MapMaker
 {
@@ -21,9 +22,18 @@ namespace MapMaker
         protected override void OnUseTool()
         {
             var offset = Position - DownPosition;
-            Controller.SelectedObject.OffsetX += offset.X;
-            Controller.SelectedObject.OffsetY += offset.Y;
+            Controller.SelectedObject.Offset +=offset;
             DownPosition = Position;
+        }
+
+        protected override void OnUp()
+        {
+            if (Controller.SelectedObject != null)
+            {
+                Controller.SelectedObject.Offset = Controller.SnapToGrid(Controller.SelectedObject.Offset);
+            }
+
+            base.OnUp();
         }
     }
 }

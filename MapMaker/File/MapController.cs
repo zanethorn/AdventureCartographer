@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using MapMaker.Annotations;
+using MapMaker.Properties;
 
 namespace MapMaker.File
 {
@@ -103,6 +104,25 @@ namespace MapMaker.File
                 _selectedLayer = value;
                 OnPropertyChanged();
             }
+        }
+
+        public Point SnapToGrid(Point input)
+        {
+            return Settings.Default.ShowGrid && Settings.Default.SnapToGrid 
+                ? ClosestGridPoint(input) 
+                : input;
+        }
+        
+        public Point ClosestGridPoint(Point input)
+        {
+            var w = Settings.Default.GridCellWidth;
+            var modX = input.X % w;
+            var modY = input.Y % w;
+            var baseX = input.X - modX;
+            var baseY = input.Y - modY;
+            return new Point(
+                modX / w > 0.5 ? baseX + w : baseX, 
+                modY / w > 0.5 ? baseY + w : baseY);
         }
 
         [NotifyPropertyChangedInvocator]

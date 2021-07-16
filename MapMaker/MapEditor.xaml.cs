@@ -38,8 +38,7 @@ namespace MapMaker
                 var imgObject = new MapImage()
                 {
                     Image = imgFile,
-                    OffsetX = pos.X,
-                    OffsetY = pos.Y,
+                    Offset=pos,
                     PixelWidth = imgFile.PixelWidth,
                     PixelHeight = imgFile.PixelHeight
                 };
