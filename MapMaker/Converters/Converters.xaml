@@ -6,4 +6,5 @@
     <converters:StringToBrushConverter x:Key="BrushConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:BindingResourceConverter x:Key="BindingResourceConverter" />
+    <converters:ToIntConverter x:Key="ToIntConverter" />
 </ResourceDictionary>

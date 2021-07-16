@@ -10,6 +10,8 @@
     <ListView Background="GhostWhite" 
               BorderBrush="Gainsboro" 
               BorderThickness="1" 
+              VerticalAlignment="Stretch"
+              DataContext="{StaticResource MapController}"
               ItemsSource="{Binding Tools}"
               SelectedItem="{Binding SelectedTool, Mode=TwoWay}">
         <ListView.ItemTemplate>

@@ -11,13 +11,12 @@ namespace MapMaker.File
     {
         private MapFile _mapFile;
         private double _scale = 0.5;
-        private double _offsetX;
-        private double _offsetY;
+        private Point _offset;
         private MapLayer _selectedLayer;
         private MapObject? _selectedObject;
         
         private Tool _selectedTool;
-        private IList<Tool> _tools;
+        private readonly IList<Tool> _tools;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public MapController()
@@ -27,7 +26,8 @@ namespace MapMaker.File
             SelectedTool = new Pointer(this);
             _tools = new List<Tool>
             {
-                SelectedTool
+                SelectedTool,
+                new Pan(this)
             };
         }
 
@@ -68,28 +68,17 @@ namespace MapMaker.File
             }
         }
 
-        public double OffsetX
+        public Point Offset
         {
-            get => _offsetX;
+            get => _offset;
             set
             {
-                if (value == _offsetX) return;
-                _offsetX = value;
+                if (value == _offset) return;
+                _offset = value;
                 OnPropertyChanged();
             }
         }
 
-        public double OffsetY
-        {
-            get => _offsetY;
-            set
-            {
-                if (value == _offsetY) return;
-                _offsetY = value;
-                OnPropertyChanged();
-            }
-        }
-        
 
         public MapFile MapFile
         {

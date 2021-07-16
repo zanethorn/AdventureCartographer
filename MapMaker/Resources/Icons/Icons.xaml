@@ -3,4 +3,5 @@
     <BitmapImage x:Key="PlusIcon" UriSource="plus-box.png" />
     <BitmapImage x:Key="MinusIcon" UriSource="minus-box.png" />
     <BitmapImage x:Key="Pointer" UriSource="cursor-default.png" />
+    <BitmapImage x:Key="Pan" UriSource="cursor-pointer.png" />
 </ResourceDictionary>

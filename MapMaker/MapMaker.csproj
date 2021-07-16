@@ -15,13 +15,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Assets\Icons\cursor-default.png" />
-      <None Remove="Assets\Icons\minus-box.png" />
-      <None Remove="Assets\Icons\plus-box.png" />
-      <None Remove="Resources\Cursors\cursor-default.cur" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
       <PackageReference Include="Infragistics.Themes.MetroLight.Wpf" Version="1.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
@@ -31,10 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Resources\Cursors\cursor-default.cur" />
-      <Resource Include="Resources\Icons\cursor-default.png" />
-      <Resource Include="Resources\Icons\minus-box.png" />
-      <Resource Include="Resources\Icons\plus-box.png" />
+      <Resource Include="Resources\Cursors\*.cur" />
+      <Resource Include="Resources\Icons\*.png" />
     </ItemGroup>
 
     <ItemGroup>

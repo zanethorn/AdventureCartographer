@@ -17,12 +17,12 @@ namespace MapMaker
         private bool _isDown;
         private Point _position;
         private Point _downPosition;
-        private Cursor _cursor = Cursors.No;
+        private Cursor _cursor;
+        private ToolState _toolState ;
 
         protected Cursor _activeCursor = Cursors.Hand;
         protected Cursor _inactiveCursor = Cursors.Arrow;
-        private ToolState _toolState = ToolState.Inactive;
-
+        
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -31,6 +31,9 @@ namespace MapMaker
             Name = name;
             IconName = iconName;
             Controller = controller;
+            Controller.PropertyChanged += OnControllerPropertyChanged;
+            ToolState = ToolState.Invalid;
+            Cursor = Cursors.No;
         }
 
         public string Name { get; }
@@ -153,6 +156,14 @@ namespace MapMaker
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected virtual void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MapController.SelectedObject))
+            {
+                CheckAndUseTool();
+            }
         }
     }
 }

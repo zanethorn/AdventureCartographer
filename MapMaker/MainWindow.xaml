@@ -74,22 +74,39 @@
             </StatusBarItem>
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.X}" />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.X, Converter={StaticResource ToIntConverter}}" />
                     <TextBlock Text="," />
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.Y}" />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.Y, Converter={StaticResource ToIntConverter}}" />
                 </StackPanel>
             </StatusBarItem>
+            <Separator />
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Offset:  " />
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=OffsetX}" />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=Offset.X, Converter={StaticResource ToIntConverter}}" />
                     <TextBlock Text="," />
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=OffsetY}" />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=Offset.Y, Converter={StaticResource ToIntConverter}}" />
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
-        <local:ToolSelector DockPanel.Dock="Left" />
+    
+        <ListView DockPanel.Dock="Left"
+                  Background="GhostWhite" 
+                  BorderBrush="Gainsboro" 
+                  BorderThickness="1" 
+                  VerticalAlignment="Stretch"
+                  DataContext="{StaticResource MapController}"
+                  ItemsSource="{Binding Tools}"
+                  SelectedItem="{Binding SelectedTool, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Image Height="24"
+                           Width="24"
+                           Source="{Binding IconName, Converter={StaticResource BindingResourceConverter}}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <local:LibraryPanel DockPanel.Dock="Right" />
-        <Frame Source="MapEditor.xaml" />
+        <local:MapEditor DockPanel.ZIndex="-1" />
     </DockPanel>
 </Window>

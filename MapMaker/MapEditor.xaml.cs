@@ -6,7 +6,7 @@ using MapMaker.Library;
 
 namespace MapMaker
 {
-    public partial class MapEditor : Page
+    public partial class MapEditor : UserControl
     {
         public MapEditor()
         {
@@ -18,8 +18,10 @@ namespace MapMaker
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             base.OnRenderSizeChanged(sizeInfo);
-            Controller.OffsetX = (ActualWidth / 2.0) - (Controller.MapFile.PixelWidth* Controller.Scale / 2.0 );
-            Controller.OffsetY = (ActualHeight / 2.0) - (Controller.MapFile.PixelHeight* Controller.Scale / 2.0 );
+            Controller.Offset = new Point(
+                (ActualWidth / 2.0) - (Controller.MapFile.PixelWidth * Controller.Scale / 2.0),
+                (ActualHeight / 2.0) - (Controller.MapFile.PixelHeight * Controller.Scale / 2.0)
+            );
         }
 
         public MapController Controller
@@ -65,5 +67,9 @@ namespace MapMaker
             Controller.SelectedTool.Up(e.GetPosition(fileView));
         }
 
+        private void OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            Controller.SelectedTool.Up(e.GetPosition(fileView));
+        }
     }
 }
