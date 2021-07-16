@@ -13,9 +13,9 @@
             <TextBlock FontWeight="Bold" Text="{Binding ShortName}"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Units: " />
-                <TextBlock Text="{Binding PixelWidth}" />
+                <TextBlock Text="{Binding PixelWidth, Converter={StaticResource GridConverter}}" />
                 <TextBlock Text="x" />
-                <TextBlock Text="{Binding PixelHeight}" />
+                <TextBlock Text="{Binding PixelHeight, Converter={StaticResource GridConverter}}" />
                 <TextBlock Text="  Pixels: " />
                 <TextBlock Text="{Binding PixelWidth}" />
                 <TextBlock Text="x" />

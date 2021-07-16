@@ -9,4 +9,5 @@
     <converters:ToIntConverter x:Key="ToIntConverter" />
     <converters:InvertDoubleConverter x:Key="InvertDoubleConverter" />
     <converters:SubtractingConverter x:Key="SubtractingConverter" />
+    <converters:GridConverter x:Key="GridConverter" />
 </ResourceDictionary>
