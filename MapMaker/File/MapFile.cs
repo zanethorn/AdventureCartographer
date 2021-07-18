@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Xml.Serialization;
 using MapMaker.Annotations;
 using MapMaker.Library;
 
@@ -10,10 +11,9 @@ namespace MapMaker.File
     public class MapFile: INotifyPropertyChanged
     {
         private string _name;
-        private int _cellsWide = 25;
-        private int _cellsHigh = 25;
-        private int _cellDisplayWidth = 70;
-        private int _cellDisplayHeight = 70;
+        private int _pixelWidth=1750;
+        private int _pixelHeight=1750;
+
         private ObservableCollection<MapLayer> _layers = new()
         {
             new MapLayer
@@ -21,8 +21,11 @@ namespace MapMaker.File
                 Name="Untitled_Layer_1"
             }
         };
+
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [XmlAttribute]
         public string Name
         {
             get => _name;
@@ -34,54 +37,33 @@ namespace MapMaker.File
             }
         }
 
-        public int PixelWidth => CellsWide * CellDisplayWidth;
-
-        public int PixelHeight => CellsHigh * CellDisplayHeight;
-        
-        public int CellsWide
+        [XmlIgnore]
+        public int PixelWidth
         {
-            get => _cellsWide;
+            get => _pixelWidth;
             set
             {
-                if (value == _cellsWide) return;
-                _cellsWide = value;
+                if (value == _pixelWidth) return;
+                _pixelWidth = value;
                 OnPropertyChanged();
             }
         }
 
-        public int CellsHigh
+
+        [XmlIgnore]
+        public int PixelHeight
         {
-            get => _cellsHigh;
+            get => _pixelHeight;
             set
             {
-                if (value == _cellsHigh) return;
-                _cellsHigh = value;
+                if (value == _pixelHeight) return;
+                _pixelHeight = value;
                 OnPropertyChanged();
             }
         }
 
-        public int CellDisplayWidth
-        {
-            get => _cellDisplayWidth;
-            set
-            {
-                if (value == _cellDisplayWidth) return;
-                _cellDisplayWidth = value;
-                OnPropertyChanged();
-            }
-        }
 
-        public int CellDisplayHeight
-        {
-            get => _cellDisplayHeight;
-            set
-            {
-                if (value == _cellDisplayHeight) return;
-                _cellDisplayHeight = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [XmlArray(nameof(Layers))]
         public ObservableCollection<MapLayer> Layers
         {
             get => _layers;
@@ -93,7 +75,8 @@ namespace MapMaker.File
             }
         }
 
-        public IList<ImageFile> SourceFiles { get; set; } = new List<ImageFile>();
+        [XmlArray(nameof(SourceFiles), IsNullable = true)]
+        public ObservableCollection<ImageFile> SourceFiles { get; set; } = new ObservableCollection<ImageFile>();
         
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

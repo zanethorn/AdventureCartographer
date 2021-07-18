@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Serialization;
+using MapMaker.File;
 using MapMaker.Library;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
@@ -25,12 +28,14 @@ namespace MapMaker
     public partial class MainWindow : Window
     {
         private readonly LibraryController _libraryController;
-        
+        private readonly MapController _mapController;
+        private string? _lastFileSaveName = null;
         
         public MainWindow()
         {
             InitializeComponent();
             _libraryController = (LibraryController) FindResource(nameof(LibraryController));
+            _mapController = (MapController) FindResource(nameof(MapController));
         }
 
         private void OnScanDirectory(object sender, RoutedEventArgs e)
@@ -100,5 +105,44 @@ namespace MapMaker
 		{
             _libraryController.CloseLibrary();
         }
-	}
+        
+        private void OnSave(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(_lastFileSaveName))
+            {
+                OnSaveAs(sender, e);
+            }
+            else
+            {
+                using var file = System.IO.File.Create(_lastFileSaveName);
+                var serializer = new XmlSerializer(typeof(MapFile));
+                serializer.Serialize(file,_mapController.MapFile);
+            }
+        }
+
+        private void OnSaveAs(object sender, ExecutedRoutedEventArgs e)
+        {
+            var dialog = new SaveFileDialog();
+            dialog.OverwritePrompt = true;
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _lastFileSaveName = dialog.FileName;
+                OnSave(sender, e);
+            }
+        }
+
+        private void OnOpen(object sender, ExecutedRoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _lastFileSaveName = dialog.FileName;
+                using var file = System.IO.File.OpenRead(_lastFileSaveName);
+                var serializer = new XmlSerializer(typeof(MapFile));
+                _mapController.MapFile=(MapFile)serializer.Deserialize(file);
+            }
+        }
+
+        
+    }
 }

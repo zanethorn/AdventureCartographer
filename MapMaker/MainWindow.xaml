@@ -31,6 +31,15 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.ShowPreferences}"
             Executed="OnShowPreferences" />
+        <CommandBinding 
+            Command="{x:Static ApplicationCommands.SaveAs}"
+            Executed="OnSaveAs"/>
+        <CommandBinding 
+            Command="{x:Static ApplicationCommands.Save}"
+            Executed="OnSave" />
+        <CommandBinding 
+            Command="{x:Static ApplicationCommands.Open}"
+            Executed="OnOpen"/>
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">

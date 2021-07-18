@@ -3,10 +3,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using System.Xml.Serialization;
 using MapMaker.Annotations;
 
 namespace MapMaker.File
 {
+    
+    [XmlType(nameof(MapLayer))]
     public class MapLayer: INotifyPropertyChanged
     {
         private string _name;
@@ -15,6 +18,7 @@ namespace MapMaker.File
         private bool _isLocked =false;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [XmlAttribute]
         public bool IsLocked
         {
             get => _isLocked ;
@@ -26,6 +30,7 @@ namespace MapMaker.File
             }
         }
 
+        [XmlAttribute]
         public bool IsVisible
         {
             get => _isVisible;
@@ -37,6 +42,7 @@ namespace MapMaker.File
             }
         }
 
+        [XmlAttribute]
         public string Name
         {
             get => _name;
@@ -48,6 +54,7 @@ namespace MapMaker.File
             }
         }
 
+        [XmlElement]
         public ObservableCollection<MapObject> MapObjects
         {
             get => _mapObjects;

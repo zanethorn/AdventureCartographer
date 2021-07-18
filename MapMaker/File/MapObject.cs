@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Xml.Serialization;
 using MapMaker.Annotations;
 
 namespace MapMaker.File
 {
+    
+
+    [XmlInclude(typeof(MapImage))]
     public abstract class MapObject: INotifyPropertyChanged
     {
         private double _pixelWidth;
@@ -12,6 +16,7 @@ namespace MapMaker.File
         private Point _offset;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [XmlAttribute]
         public double PixelWidth
         {
             get => _pixelWidth;
@@ -23,6 +28,7 @@ namespace MapMaker.File
             }
         }
 
+        [XmlAttribute]
         public double PixelHeight
         {
             get => _pixelHeight;
@@ -34,6 +40,7 @@ namespace MapMaker.File
             }
         }
 
+        [XmlElement]
         public Point Offset
         {
             get => _offset;
