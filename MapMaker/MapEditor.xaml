@@ -55,7 +55,6 @@
         <Slider Canvas.Right="0" Maximum="4" Minimum="0.05" Value="{Binding Scale, Mode=TwoWay}" Orientation="Vertical" />
         
         <file:MapFileView x:Name="fileView" 
-                          Background="Chocolate"
                           Canvas.ZIndex="0"
                           Canvas.Left="{Binding Offset.X}"
                           Canvas.Top="{Binding Offset.Y}" 
