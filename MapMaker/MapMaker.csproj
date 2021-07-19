@@ -11,23 +11,21 @@
         <RepositoryUrl>https://github.com/zanethorn/MapMaker.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <AssemblyVersion>0.1.1.0</AssemblyVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Assets\Icons\cursor-default.png" />
-      <None Remove="Assets\Icons\minus-box.png" />
-      <None Remove="Assets\Icons\plus-box.png" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
+      <PackageReference Include="Infragistics.Themes.MetroLight.Wpf" Version="1.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
+      <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
       <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
+      <PackageReference Include="PixiEditor.ColorPicker" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Assets\Icons\cursor-default.png" />
-      <Resource Include="Assets\Icons\minus-box.png" />
-      <Resource Include="Assets\Icons\plus-box.png" />
+      <Resource Include="Resources\Cursors\*.cur" />
+      <Resource Include="Resources\Icons\*.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,9 +38,13 @@
 
     <ItemGroup>
       <None Update="Properties\Settings.settings">
-        <Generator>SettingsSingleFileGenerator</Generator>
+        <Generator>PublicSettingsSingleFileGenerator</Generator>
         <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\Themes" />
     </ItemGroup>
 
 </Project>

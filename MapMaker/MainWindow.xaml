@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MapMaker"
+        xmlns:properties="clr-namespace:MapMaker.Properties"
         mc:Ignorable="d"
-        Title="Map Maker" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Adventure Cartographer" 
+        Height="450" Width="800" 
+        WindowState="Maximized"
+        Loaded="OnWindowLoaded" Closing="Window_Closing">
     <Window.InputBindings>
         <KeyBinding
             Key="ESC"
@@ -24,9 +28,39 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.ShowAbout}"
             Executed="OnShowAbout" />
+        
+        <CommandBinding 
+            Command="{x:Static ApplicationCommands.SaveAs}"
+            Executed="OnSaveAs"/>
+        <CommandBinding 
+            Command="{x:Static ApplicationCommands.Save}"
+            Executed="OnSave" />
+        <CommandBinding 
+            Command="{x:Static ApplicationCommands.Open}"
+            Executed="OnOpen"/>
+        
+        <CommandBinding 
+            Command="ApplicationCommands.Copy"
+            Executed="OnCopy"
+            CanExecute="OnCanCopy"/>
+        <CommandBinding 
+            Command="ApplicationCommands.Cut"
+            Executed="OnCut"
+            CanExecute="OnCanCut"/>
+        <CommandBinding 
+            Command="ApplicationCommands.Paste"
+            Executed="OnPaste"
+            CanExecute="OnCanPaste"/>
+        <CommandBinding 
+            Command="ApplicationCommands.Delete"
+            Executed="OnDelete"
+            CanExecute="OnCanDelete"/>
+        <CommandBinding
+            Command="{x:Static local:CustomCommands.ShowPreferences}"
+            Executed="OnShowPreferences" />
     </Window.CommandBindings>
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" IsMainMenu="True">
             <MenuItem Header="_File">
                 <MenuItem Command="ApplicationCommands.New"/>
                 <MenuItem Command="ApplicationCommands.Open"/>
@@ -39,11 +73,19 @@
                 <MenuItem Command="ApplicationCommands.Undo"/>
                 <MenuItem Command="ApplicationCommands.Redo"/>
                 <Separator/>
-                <MenuItem Command="ApplicationCommands.Copy"/>
-                <MenuItem Command="ApplicationCommands.Cut"/>
+                <MenuItem Command="ApplicationCommands.Copy" 
+                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
+                <MenuItem Command="ApplicationCommands.Cut" 
+                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
                 <MenuItem Command="ApplicationCommands.Paste"/>
                 <Separator/>
-                <MenuItem Command="ApplicationCommands.Delete"/>
+                <MenuItem Command="ApplicationCommands.Delete"
+                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
+                <Separator/>
+                <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences"/>
+            </MenuItem>
+            <MenuItem Header="_Map">
+                <MenuItem Header="Show Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=GridPenColor, Mode=TwoWay}" />    
             </MenuItem>
             <MenuItem Header="_Library">
                 <MenuItem Header="Scan Directory..." Command="local:CustomCommands.ScanDirectory"/>
@@ -56,12 +98,45 @@
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Name="lblCursorPosition" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Name}" />
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.X, Converter={StaticResource ToIntConverter}}" />
+                    <TextBlock Text="," />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.Y, Converter={StaticResource ToIntConverter}}" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Offset:  " />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=Offset.X, Converter={StaticResource ToIntConverter}}" />
+                    <TextBlock Text="," />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=Offset.Y, Converter={StaticResource ToIntConverter}}" />
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
-        <local:ToolSelector DockPanel.Dock="Left" />
+    
+        <ListView DockPanel.Dock="Left"
+                  Background="GhostWhite" 
+                  BorderBrush="Gainsboro" 
+                  BorderThickness="1" 
+                  VerticalAlignment="Stretch"
+                  DataContext="{StaticResource MapController}"
+                  ItemsSource="{Binding Tools}"
+                  SelectedItem="{Binding SelectedTool, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Image Height="24"
+                           Width="24"
+                           Source="{Binding IconName, Converter={StaticResource BindingResourceConverter}}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <local:LibraryPanel DockPanel.Dock="Right" />
-        <Frame Source="MapEditor.xaml">
-        </Frame>
+        <local:MapEditor DockPanel.ZIndex="-1" />
     </DockPanel>
 </Window>

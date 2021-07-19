@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="MapMaker.File.MapObjectView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MapMaker.File"
+             xmlns:mapMaker="clr-namespace:MapMaker"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance local:MapObject}"
+             MouseEnter="OnMouseEnter"
+             MouseLeave="OnMouseLeave">
+    <UserControl.Resources>
+        <Style TargetType="Thumb">
+            <Setter Property="Width" Value="10" />
+            <Setter Property="Height" Value="10" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform
+                        ScaleX="{Binding  Source={StaticResource MapController}, Path=Scale, Converter={StaticResource InvertDoubleConverter}}"
+                        ScaleY="{Binding  Source={StaticResource MapController}, Path=Scale, Converter={StaticResource InvertDoubleConverter}}" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border BorderBrush="Blue" BorderThickness="1" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="ApplicationCommands.Copy" 
+                      CommandParameter="{Binding }" />
+            <MenuItem Command="ApplicationCommands.Cut" 
+                      CommandParameter="{Binding}"/>
+            <MenuItem Command="ApplicationCommands.Delete" 
+                      CommandParameter="{Binding}" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="{Binding PixelWidth}" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="{Binding PixelHeight}" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Thumb Grid.Row="0"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Cursor="SizeNWSE"
+               DragStarted="OnDragStartedNW"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted"/>
+
+        <Thumb Grid.Row="0"
+               Grid.Column="1"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Bottom"
+               Cursor="SizeNS"
+               DragStarted="OnDragStartedN"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted"/>
+
+        <Thumb Grid.Row="0"
+               Grid.Column="2"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Cursor="SizeNESW"
+               DragStarted="OnDragStartedNE"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Thumb Grid.Row="1"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Center"
+               Cursor="SizeWE"
+               DragStarted="OnDragStartedW"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Thumb Grid.Row="1"
+               Grid.Column="2"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"
+               Cursor="SizeWE"
+               DragStarted="OnDragStartedE"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted"/>
+
+        <Thumb Grid.Row="2"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Cursor="SizeNESW"
+               DragStarted="OnDragStartedSW"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Thumb Grid.Row="2"
+               Grid.Column="1"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               Cursor="SizeNS" 
+               DragStarted="OnDragStartedS"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Thumb Grid.Row="2"
+               Grid.Column="2"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Cursor="SizeNWSE"
+               DragStarted="OnDragStartedSE"
+               DragDelta="OnDragDelta"
+               DragCompleted="OnDragCompleted" />
+
+        <Rectangle Grid.Row="1" Grid.Column="1" x:Name="content"
+                   Width="{Binding PixelWidth}"
+                   Height="{Binding PixelHeight}">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="{Binding Image.Bitmap}" />
+            </Rectangle.Fill>
+        </Rectangle>
+
+    </Grid>
+</UserControl>

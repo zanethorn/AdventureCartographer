@@ -10,6 +10,17 @@
              DataContext="{StaticResource LibraryController}">
 
     <ListView ItemsSource="{Binding ImageCollections}">
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <VirtualizingStackPanel>
+                </VirtualizingStackPanel>
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+        <ListView.Template>
+            <ControlTemplate>
+                <ItemsPresenter /> 
+            </ControlTemplate>
+        </ListView.Template>
         <ListView.ItemTemplate>
             <DataTemplate>
                 <library:ImageCollectionView />

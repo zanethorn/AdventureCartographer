@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:MapMaker"
         mc:Ignorable="d"
-        Title="Map Maker - Library" 
+        Title="Adventure Cartographer - Library" 
         MinHeight="200" 
         MinWidth="400"
         SizeToContent="WidthAndHeight"
