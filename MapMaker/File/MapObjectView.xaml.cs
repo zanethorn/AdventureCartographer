@@ -4,6 +4,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace MapMaker.File
 {
@@ -154,5 +156,6 @@ namespace MapMaker.File
             MapObject.PixelWidth = sizer.X;
             MapObject.PixelHeight = sizer.Y;
         }
+
     }
 }

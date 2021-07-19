@@ -8,7 +8,6 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:MapLayer}" >
     <ItemsControl Background="Transparent" 
-                  BorderBrush="Chartreuse" 
                   ItemsSource="{Binding MapObjects}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
@@ -17,8 +16,10 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemContainerStyle>
             <Style TargetType="ContentPresenter">
-                <Setter Property="Canvas.Left" Value="{Binding Offset.X, Converter={StaticResource SubtractingConverter}, ConverterParameter=10}" />
-                <Setter Property="Canvas.Top" Value="{Binding Offset.Y, Converter={StaticResource SubtractingConverter}, ConverterParameter=10}" />
+                <Setter Property="Canvas.Left" 
+                        Value="{Binding Offset.X, Converter={StaticResource SubtractingConverter}, ConverterParameter=10}" />
+                <Setter Property="Canvas.Top" 
+                        Value="{Binding Offset.Y, Converter={StaticResource SubtractingConverter}, ConverterParameter=10}" />
             </Style>
         </ItemsControl.ItemContainerStyle>
         <ItemsControl.ItemTemplate>

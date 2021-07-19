@@ -54,7 +54,7 @@ namespace MapMaker.File
             }
         }
 
-        [XmlElement]
+        [XmlArray]
         public ObservableCollection<MapObject> MapObjects
         {
             get => _mapObjects;

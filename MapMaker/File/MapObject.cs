@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Xml.Serialization;
@@ -9,7 +10,7 @@ namespace MapMaker.File
     
 
     [XmlInclude(typeof(MapImage))]
-    public abstract class MapObject: INotifyPropertyChanged
+    public abstract class MapObject: INotifyPropertyChanged, ICloneable
     {
         private double _pixelWidth;
         private double _pixelHeight;
@@ -51,12 +52,21 @@ namespace MapMaker.File
                 OnPropertyChanged();
             }
         }
-
+        
+        public object Clone()
+        {
+            var clone = MemberwiseClone();
+            OnClone(clone);
+            return clone;
+        }
+        
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        protected abstract void OnClone(object clone);
     }
 }

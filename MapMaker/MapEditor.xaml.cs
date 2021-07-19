@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using MapMaker.File;
@@ -34,7 +35,7 @@ namespace MapMaker
             var data = e.Data.GetData(typeof(ImageFile));
             if (data is ImageFile imgFile)
             {
-                var pos = e.GetPosition(fileView);
+                var pos = Controller.SnapToGrid(e.GetPosition(fileView));
                 var imgObject = new MapImage()
                 {
                     Image = imgFile,
@@ -42,7 +43,7 @@ namespace MapMaker
                     PixelWidth = imgFile.PixelWidth,
                     PixelHeight = imgFile.PixelHeight
                 };
-                Controller.SelectedLayer.MapObjects.Add(imgObject);
+                Controller.AddObject(imgObject);
             }
         }
 
@@ -69,6 +70,28 @@ namespace MapMaker
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
             Controller.SelectedTool.Up(e.GetPosition(fileView));
+        }
+        
+        private void OnCanCopy(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = Controller.SelectedObject != null;
+        }
+        
+        private void OnPaste(object sender, ExecutedRoutedEventArgs e)
+        {
+            var original = (MapObject)Clipboard.GetData(nameof(MapObject));
+            var newItem = (MapObject)original.Clone();
+            Controller.SelectedLayer.MapObjects.Append(newItem);
+        }
+
+        private void OnCanPaste(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (Clipboard.ContainsData(nameof(MapObject)))
+                e.CanExecute = true;
+            else
+            {
+                e.CanExecute = false;
+            }
         }
     }
 }

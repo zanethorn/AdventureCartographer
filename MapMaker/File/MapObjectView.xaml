@@ -31,6 +31,16 @@
             </Setter>
         </Style>
     </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="ApplicationCommands.Copy" 
+                      CommandParameter="{Binding }" />
+            <MenuItem Command="ApplicationCommands.Cut" 
+                      CommandParameter="{Binding}"/>
+            <MenuItem Command="ApplicationCommands.Delete" 
+                      CommandParameter="{Binding}" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -119,7 +129,7 @@
                    Width="{Binding PixelWidth}"
                    Height="{Binding PixelHeight}">
             <Rectangle.Fill>
-                <ImageBrush ImageSource="{Binding Image.Path}" />
+                <ImageBrush ImageSource="{Binding Image.Bitmap}" />
             </Rectangle.Fill>
         </Rectangle>
 

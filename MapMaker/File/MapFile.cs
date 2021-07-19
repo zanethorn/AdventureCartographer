@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using MapMaker.Annotations;
 using MapMaker.Library;
@@ -10,7 +11,7 @@ namespace MapMaker.File
 {
     public class MapFile: INotifyPropertyChanged
     {
-        private string _name;
+        private string _name = "UntitledMap1";
         private int _pixelWidth=1750;
         private int _pixelHeight=1750;
 
@@ -75,8 +76,8 @@ namespace MapMaker.File
             }
         }
 
-        [XmlArray(nameof(SourceFiles), IsNullable = true)]
-        public ObservableCollection<ImageFile> SourceFiles { get; set; } = new ObservableCollection<ImageFile>();
+
+        public ObservableCollection<ImageFile> ImageFiles { get; set; } = new();
         
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

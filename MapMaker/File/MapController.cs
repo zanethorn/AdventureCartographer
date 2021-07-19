@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using MapMaker.Annotations;
@@ -104,6 +105,23 @@ namespace MapMaker.File
                 _selectedLayer = value;
                 OnPropertyChanged();
             }
+        }
+
+        public void AddObject(MapObject newObject)
+        {
+            if (newObject is MapImage newImage)
+            {
+                var linkedBitmap = MapFile.ImageFiles.SingleOrDefault(f => f.Id == newImage.Image.Id);
+                if (linkedBitmap == null)
+                {
+                    linkedBitmap = newImage.Image;
+                    MapFile.ImageFiles.Add(linkedBitmap);
+                }
+
+                newImage.Image = linkedBitmap;
+            }
+            
+            SelectedLayer.MapObjects.Add(newObject);
         }
 
         public Point SnapToGrid(Point input)

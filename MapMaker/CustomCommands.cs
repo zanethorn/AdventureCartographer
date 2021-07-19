@@ -6,6 +6,8 @@ namespace MapMaker
     {
         public static RoutedCommand Exit { get; }= new RoutedCommand(nameof(Exit), typeof(CustomCommands));
 
+        public static RoutedCommand Copy { get; }= new RoutedCommand(nameof(Copy), typeof(CustomCommands));
+        
         public static RoutedCommand ScanDirectory { get; } = new RoutedCommand(nameof(ScanDirectory), typeof(CustomCommands));
 
         public static RoutedCommand ViewLibraryDetails { get; } =

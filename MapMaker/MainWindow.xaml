@@ -9,7 +9,7 @@
         Title="Adventure Cartographer" 
         Height="450" Width="800" 
         WindowState="Maximized"
-        Loaded="Window_Loaded" Closing="Window_Closing">
+        Loaded="OnWindowLoaded" Closing="Window_Closing">
     <Window.InputBindings>
         <KeyBinding
             Key="ESC"
@@ -28,9 +28,7 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.ShowAbout}"
             Executed="OnShowAbout" />
-        <CommandBinding
-            Command="{x:Static local:CustomCommands.ShowPreferences}"
-            Executed="OnShowPreferences" />
+        
         <CommandBinding 
             Command="{x:Static ApplicationCommands.SaveAs}"
             Executed="OnSaveAs"/>
@@ -40,9 +38,29 @@
         <CommandBinding 
             Command="{x:Static ApplicationCommands.Open}"
             Executed="OnOpen"/>
+        
+        <CommandBinding 
+            Command="ApplicationCommands.Copy"
+            Executed="OnCopy"
+            CanExecute="OnCanCopy"/>
+        <CommandBinding 
+            Command="ApplicationCommands.Cut"
+            Executed="OnCut"
+            CanExecute="OnCanCut"/>
+        <CommandBinding 
+            Command="ApplicationCommands.Paste"
+            Executed="OnPaste"
+            CanExecute="OnCanPaste"/>
+        <CommandBinding 
+            Command="ApplicationCommands.Delete"
+            Executed="OnDelete"
+            CanExecute="OnCanDelete"/>
+        <CommandBinding
+            Command="{x:Static local:CustomCommands.ShowPreferences}"
+            Executed="OnShowPreferences" />
     </Window.CommandBindings>
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" IsMainMenu="True">
             <MenuItem Header="_File">
                 <MenuItem Command="ApplicationCommands.New"/>
                 <MenuItem Command="ApplicationCommands.Open"/>
@@ -55,11 +73,14 @@
                 <MenuItem Command="ApplicationCommands.Undo"/>
                 <MenuItem Command="ApplicationCommands.Redo"/>
                 <Separator/>
-                <MenuItem Command="ApplicationCommands.Copy"/>
-                <MenuItem Command="ApplicationCommands.Cut"/>
+                <MenuItem Command="ApplicationCommands.Copy" 
+                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
+                <MenuItem Command="ApplicationCommands.Cut" 
+                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
                 <MenuItem Command="ApplicationCommands.Paste"/>
                 <Separator/>
-                <MenuItem Command="ApplicationCommands.Delete"/>
+                <MenuItem Command="ApplicationCommands.Delete"
+                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
                 <Separator/>
                 <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences"/>
             </MenuItem>

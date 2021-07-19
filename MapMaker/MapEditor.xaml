@@ -18,6 +18,13 @@
              Cursor="{Binding SelectedTool.Cursor}"
              x:Name="editor"
 >
+    <UserControl.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Copy" 
+                        CanExecute="OnCanCopy" />
+        <CommandBinding Command="ApplicationCommands.Paste" 
+                        Executed="OnPaste"  
+                        CanExecute="OnCanPaste" />
+    </UserControl.CommandBindings>
     <Canvas >
         <Canvas.Background>
             <DrawingBrush TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">

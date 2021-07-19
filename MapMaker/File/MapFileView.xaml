@@ -10,6 +10,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:MapController}"
              >
+
     <UserControl.RenderTransform>
         <TransformGroup>
             <ScaleTransform

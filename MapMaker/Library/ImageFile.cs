@@ -1,37 +1,97 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
+using MapMaker.Annotations;
 
 namespace MapMaker.Library
 {
-    public class ImageFile
+    public class ImageFile:INotifyPropertyChanged
     {
+        private Guid _id = Guid.NewGuid();
+        private string _fullName;
+        private string _shortName;
+        private BitmapImage? _bitmap;
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         [XmlAttribute]
-        public Guid Id { get; set; } = Guid.NewGuid();
-        
+        public Guid Id
+        {
+            get => _id;
+            set
+            {
+                if (value.Equals(_id)) return;
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
+
         [XmlAttribute]
-        public string FullName { get; set; }
-        
+        public string FullName
+        {
+            get => _fullName;
+            set
+            {
+                if (value == _fullName) return;
+                _fullName = value;
+                OnPropertyChanged();
+            }
+        }
+
         [XmlAttribute]
-        public string ShortName { get; set; }
-        
-        [XmlAttribute]
+        public string ShortName
+        {
+            get => _shortName;
+            set
+            {
+                if (value == _shortName) return;
+                _shortName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [XmlIgnore]
         public string Path { get; set; }
         
-        [XmlIgnore]
+        [XmlAttribute]
         public int PixelWidth { get; set; }
         
-        [XmlIgnore]
+        [XmlAttribute]
         public int PixelHeight { get; set; }
         
         
-        [XmlIgnore]
+        [XmlAttribute]
         public string FileExtension { get; set; }
         
-        [XmlIgnore]
+        [XmlAttribute]
         public long FileSize { get; set; }
 
         [XmlIgnore]
         public IList<ImageTags> Tags { get; set; } = new List<ImageTags>();
+
+
+        [XmlIgnore]
+        [IgnoreDataMember]
+        [NotMapped]
+        public BitmapImage Bitmap
+        {
+            get => _bitmap ??= new BitmapImage(new Uri(Path));
+            set
+            {
+                if (Equals(value, _bitmap)) return;
+                _bitmap = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

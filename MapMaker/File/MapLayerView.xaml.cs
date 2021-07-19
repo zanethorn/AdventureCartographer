@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MapMaker.File
 {
@@ -8,5 +9,9 @@ namespace MapMaker.File
         {
             InitializeComponent();
         }
+
+        public MapLayer Layer => (MapLayer) DataContext;
+        
+        
     }
 }
