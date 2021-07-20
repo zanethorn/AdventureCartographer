@@ -131,6 +131,24 @@ namespace MapMaker
             _libraryController.CloseLibrary();
         }
         
+        private void OnNew(object sender, ExecutedRoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                this, 
+                "Do you wish to save the current file before creating a new one?",
+                "New File", MessageBoxButton.YesNoCancel);
+            switch (result)
+            {
+                case MessageBoxResult.Cancel:
+                    return;
+                case MessageBoxResult.Yes:
+                    OnSave(sender, e);
+                    break;
+            }
+
+            _mapController.NewMap();
+        }
+        
         private void OnSave(object sender, ExecutedRoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(_lastFileSaveName))
@@ -139,7 +157,7 @@ namespace MapMaker
             }
             else
             {
-                MapLoader.Save(_lastFileSaveName, _mapController.MapFile);
+                Task.Run(() => _mapController.Save(_lastFileSaveName));
             }
         }
 
@@ -168,7 +186,7 @@ namespace MapMaker
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 _lastFileSaveName = dialog.FileName;
-                _mapController.MapFile = MapLoader.Load(_lastFileSaveName);
+                Task.Run(()=>_mapController.Load(_lastFileSaveName));
             }
         }
 
@@ -239,5 +257,7 @@ namespace MapMaker
             }
             e.Handled = true;
         }
+
+        
     }
 }

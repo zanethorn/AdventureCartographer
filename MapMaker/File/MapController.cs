@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Xml.Serialization;
 using MapMaker.Annotations;
 using MapMaker.Properties;
 
@@ -11,6 +17,9 @@ namespace MapMaker.File
 {
     public class MapController : INotifyPropertyChanged
     {
+        private const string KEY_FILE_NAME = "map.xml";
+        private const string IMAGE_DIRECTORY="Resources/Images/";
+        
         private MapFile _mapFile;
         private double _scale = 0.5;
         private Point _offset;
@@ -18,20 +27,22 @@ namespace MapMaker.File
         private MapObject? _selectedObject;
         private bool _isLatched;
         
+        
+        
         private Tool _selectedTool;
         private readonly IList<Tool> _tools;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public MapController()
         {
-            MapFile = new MapFile();
-
             SelectedTool = new Pointer(this);
             _tools = new List<Tool>
             {
                 SelectedTool,
                 new Pan(this)
             };
+            
+            NewMap();
         }
 
         public IEnumerable<Tool> Tools => _tools;
@@ -86,7 +97,7 @@ namespace MapMaker.File
         public MapFile MapFile
         {
             get => _mapFile;
-            set
+            private set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 if (Equals(value, _mapFile)) return;
@@ -125,6 +136,91 @@ namespace MapMaker.File
             SelectedLayer.MapObjects.Add(newObject);
         }
 
+        public void NewMap()
+        {
+            var map = new MapFile();
+            map.Layers.Add(new MapLayer(){Name="UntitledLayer_1"});
+            MapFile = map;
+        }
+        
+        public  async Task Load(string filename,CancellationToken cancellationToken = default)
+        {
+            using var zip = ZipFile.Open(filename, ZipArchiveMode.Read);
+            
+            // write the basic map.xml key file
+            var keyEntry = zip.GetEntry(KEY_FILE_NAME) ?? zip.CreateEntry(KEY_FILE_NAME);
+            using Stream keyStream = keyEntry.Open();
+            var serializer = new XmlSerializer(typeof(MapFile));
+            var mapFile = (MapFile)serializer.Deserialize(keyStream);
+            keyStream.Close();
+
+            foreach (var image in mapFile.ImageFiles)
+            {
+                var entryName = $"{IMAGE_DIRECTORY}{image.Id}.{image.FileExtension}";
+                var imgEntry = zip.GetEntry(entryName);
+                var outStream = imgEntry.Open();
+                var memStream = new MemoryStream();
+                outStream.CopyTo(memStream);
+                memStream.Seek(0, SeekOrigin.Begin);
+                outStream.Close();
+
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.StreamSource = memStream;
+                bitmap.EndInit();
+                if (bitmap.CanFreeze)
+                    bitmap.Freeze();
+                image.Bitmap = bitmap;
+            }
+
+            foreach (var layer in mapFile.Layers)
+            {
+                foreach (var obj in layer.MapObjects)
+                {
+                    if (obj is MapImage mapImage)
+                    {
+                        mapImage.Image = mapFile.ImageFiles.SingleOrDefault(i => i.Id == mapImage.Image.Id);
+                    }
+                }
+            }
+
+            MapFile= mapFile;
+        }
+
+        public async Task Save(string filename, CancellationToken cancellationToken = default)
+        {
+            using var zip = ZipFile.Open(filename, ZipArchiveMode.Update);
+            
+            // write the basic map.xml key file
+            var keyEntry = zip.GetEntry(KEY_FILE_NAME) ?? zip.CreateEntry(KEY_FILE_NAME);
+            await using Stream keyStream = keyEntry.Open();
+            var serializer = new XmlSerializer(typeof(MapFile));
+            serializer.Serialize(keyStream, MapFile);
+            await keyStream.FlushAsync(cancellationToken);
+
+            // Store off all images
+            foreach (var image in MapFile.ImageFiles)
+            {
+                var entryName = $"{IMAGE_DIRECTORY}{image.Id}.{image.FileExtension}";
+                if (zip.GetEntry(entryName) == null)
+                {
+                    if (image.Bitmap.StreamSource == null)
+                    {
+                        zip.CreateEntryFromFile(image.Path, entryName);
+                    }
+                    else
+                    {
+                        var imgEntry = zip.CreateEntry(entryName);
+                        await using var outStream = imgEntry.Open();
+                        await image.Bitmap.StreamSource.CopyToAsync(outStream, cancellationToken);
+                        await outStream.FlushAsync(cancellationToken);
+                    }
+                }
+            }
+            
+        }
+        
         public void SelectObject(MapObject? mapObject, bool latch = false)
         {
             if (mapObject == null)
