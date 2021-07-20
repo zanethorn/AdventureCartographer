@@ -30,29 +30,32 @@
             Executed="OnShowAbout" />
         
         <CommandBinding 
-            Command="{x:Static ApplicationCommands.SaveAs}"
+            Command="New" 
+            Executed="OnNew" />
+        <CommandBinding 
+            Command="SaveAs"
             Executed="OnSaveAs"/>
         <CommandBinding 
-            Command="{x:Static ApplicationCommands.Save}"
+            Command="Save"
             Executed="OnSave" />
         <CommandBinding 
-            Command="{x:Static ApplicationCommands.Open}"
+            Command="Open"
             Executed="OnOpen"/>
         
         <CommandBinding 
-            Command="ApplicationCommands.Copy"
+            Command="Copy"
             Executed="OnCopy"
             CanExecute="OnCanCopy"/>
         <CommandBinding 
-            Command="ApplicationCommands.Cut"
+            Command="Cut"
             Executed="OnCut"
             CanExecute="OnCanCut"/>
         <CommandBinding 
-            Command="ApplicationCommands.Paste"
+            Command="Paste"
             Executed="OnPaste"
             CanExecute="OnCanPaste"/>
         <CommandBinding 
-            Command="ApplicationCommands.Delete"
+            Command="Delete"
             Executed="OnDelete"
             CanExecute="OnCanDelete"/>
         <CommandBinding
@@ -62,24 +65,24 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" IsMainMenu="True">
             <MenuItem Header="_File">
-                <MenuItem Command="ApplicationCommands.New"/>
-                <MenuItem Command="ApplicationCommands.Open"/>
-                <MenuItem Command="ApplicationCommands.Save"/>
-                <MenuItem Command="ApplicationCommands.SaveAs"/>
+                <MenuItem Command="New"/>
+                <MenuItem Command="Open"/>
+                <MenuItem Command="Save"/>
+                <MenuItem Command="SaveAs"/>
                 <Separator/>
                 <MenuItem Header="Exit" Command="local:CustomCommands.Exit"/>
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Command="ApplicationCommands.Undo"/>
-                <MenuItem Command="ApplicationCommands.Redo"/>
+                <MenuItem Command="Undo"/>
+                <MenuItem Command="Redo"/>
                 <Separator/>
-                <MenuItem Command="ApplicationCommands.Copy" 
+                <MenuItem Command="Copy" 
                           CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
-                <MenuItem Command="ApplicationCommands.Cut" 
+                <MenuItem Command="Cut" 
                           CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
-                <MenuItem Command="ApplicationCommands.Paste"/>
+                <MenuItem Command="Paste"/>
                 <Separator/>
-                <MenuItem Command="ApplicationCommands.Delete"
+                <MenuItem Command="Delete"
                           CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
                 <Separator/>
                 <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences"/>

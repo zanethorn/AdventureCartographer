@@ -15,13 +15,7 @@ namespace MapMaker.File
         private int _pixelWidth=1750;
         private int _pixelHeight=1750;
 
-        private ObservableCollection<MapLayer> _layers = new()
-        {
-            new MapLayer
-            {
-                Name="Untitled_Layer_1"
-            }
-        };
+        private ObservableCollection<MapLayer> _layers = new();
 
         
         public event PropertyChangedEventHandler PropertyChanged;
