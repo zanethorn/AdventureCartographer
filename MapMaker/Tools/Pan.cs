@@ -3,6 +3,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using MapMaker.Annotations;
+using MapMaker.Commands;
 using MapMaker.File;
 
 namespace MapMaker
@@ -26,7 +27,8 @@ namespace MapMaker
         {
             var offset = Position - DownPosition;
             DownPosition = Position - offset;
-            Controller.Offset += offset;
+            var command = new PanFileViewCommand(Controller.Offset + offset);
+            Controller.IngestCommand(command);
         }
     }
 }

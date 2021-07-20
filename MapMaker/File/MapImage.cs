@@ -14,5 +14,10 @@ namespace MapMaker.File
         {
             ((MapImage) clone).Image = this.Image;
         }
+
+        public override string ToString()
+        {
+            return $"Image ({Image.ShortName})";
+        }
     }
 }

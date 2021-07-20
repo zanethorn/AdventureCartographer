@@ -43,9 +43,20 @@
             Executed="OnOpen"/>
         
         <CommandBinding 
+            Command="Undo"
+            Executed="OnUndo"
+            CanExecute="OnCanUndo"
+            />
+        <CommandBinding 
+            Command="Redo"
+            Executed="OnRedo"
+            CanExecute="OnCanRedo"
+            />
+        
+        <CommandBinding 
             Command="Copy"
             Executed="OnCopy"
-            CanExecute="OnCanCopy"/>
+            CanExecute="OnCanCopy" />
         <CommandBinding 
             Command="Cut"
             Executed="OnCut"
@@ -73,22 +84,23 @@
                 <MenuItem Header="Exit" Command="local:CustomCommands.Exit"/>
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Command="Undo"/>
-                <MenuItem Command="Redo"/>
+                <MenuItem Command="Undo" CommandParameter="{Binding Source={StaticResource MapController}, Path=CanUndo }"/>
+                <MenuItem Command="Redo" CommandParameter="{Binding Source={StaticResource MapController}, Path=CanRedo }"/>
                 <Separator/>
                 <MenuItem Command="Copy" 
-                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
+                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
                 <MenuItem Command="Cut" 
-                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
+                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
                 <MenuItem Command="Paste"/>
                 <Separator/>
                 <MenuItem Command="Delete"
-                          CommandTarget="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
+                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
                 <Separator/>
                 <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences"/>
             </MenuItem>
             <MenuItem Header="_Map">
-                <MenuItem Header="Show Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=GridPenColor, Mode=TwoWay}" />    
+                <MenuItem Header="Show Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ShowGrid, Mode=TwoWay}" />    
+                <MenuItem Header="Snap To Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SnapToGrid, Mode=TwoWay}" /> 
             </MenuItem>
             <MenuItem Header="_Library">
                 <MenuItem Header="Scan Directory..." Command="local:CustomCommands.ScanDirectory"/>
@@ -115,10 +127,26 @@
             <Separator />
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Offset:  " />
+                    <TextBlock Text="Map Offset:  " />
                     <TextBlock Text="{Binding Source={StaticResource MapController}, Path=Offset.X, Converter={StaticResource ToIntConverter}}" />
                     <TextBlock Text="," />
                     <TextBlock Text="{Binding Source={StaticResource MapController}, Path=Offset.Y, Converter={StaticResource ToIntConverter}}" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem DataContext="{Binding Source={StaticResource MapController}, Path=SelectedObject}"
+                           Visibility="{Binding Converter={StaticResource VisibleIfNotNullConverter}}">
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="{Binding}" />
+                    <TextBlock Text=":  " />
+                    <TextBlock Text="{Binding Offset.X, Converter={StaticResource ToIntConverter}}" />
+                    <TextBlock Text="," />
+                    <TextBlock Text="{Binding Offset.Y, Converter={StaticResource ToIntConverter}}" />
+                    <TextBlock Text=" (" />
+                    <TextBlock Text="{Binding Size.Width, Converter={StaticResource ToIntConverter}}" />
+                    <TextBlock Text="x" />
+                    <TextBlock Text="{Binding Size.Height, Converter={StaticResource ToIntConverter}}" />
+                    <TextBlock Text=")" />
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>

@@ -8,9 +8,12 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 using MapMaker.Annotations;
+using MapMaker.Commands;
 using MapMaker.Properties;
 
 namespace MapMaker.File
@@ -18,17 +21,19 @@ namespace MapMaker.File
     public class MapController : INotifyPropertyChanged
     {
         private const string KEY_FILE_NAME = "map.xml";
-        private const string IMAGE_DIRECTORY="Resources/Images/";
-        
+        private const string IMAGE_DIRECTORY = "Resources/Images/";
+
         private MapFile _mapFile;
         private double _scale = 0.5;
         private Point _offset;
         private MapLayer _selectedLayer;
         private MapObject? _selectedObject;
         private bool _isLatched;
-        
-        
-        
+
+        private readonly Stack<IMapCommand> _undoStack = new();
+        private readonly Stack<IMapCommand> _redoStack = new();
+        private IMapCommand? _currentCommand;
+
         private Tool _selectedTool;
         private readonly IList<Tool> _tools;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -41,9 +46,12 @@ namespace MapMaker.File
                 SelectedTool,
                 new Pan(this)
             };
-            
+
             NewMap();
         }
+
+        public bool CanUndo => _undoStack.Count > 0;
+        public bool CanRedo => _redoStack.Count > 0;
 
         public IEnumerable<Tool> Tools => _tools;
 
@@ -58,7 +66,6 @@ namespace MapMaker.File
             }
         }
 
-        
 
         public MapObject? SelectedObject
         {
@@ -119,39 +126,75 @@ namespace MapMaker.File
             }
         }
 
-        public void AddObject(MapObject newObject)
+        public void IngestCommand(IMapCommand command)
         {
-            if (newObject is MapImage newImage)
+            if (_currentCommand != null)
             {
-                var linkedBitmap = MapFile.ImageFiles.SingleOrDefault(f => f.Id == newImage.Image.Id);
-                if (linkedBitmap == null)
-                {
-                    linkedBitmap = newImage.Image;
-                    MapFile.ImageFiles.Add(linkedBitmap);
-                }
-
-                newImage.Image = linkedBitmap;
+                command = _currentCommand.Update(command);
             }
-            
-            SelectedLayer.MapObjects.Add(newObject);
+
+
+            _currentCommand = command;
+            _currentCommand.Do(this);
+
+            var top = _undoStack.Count == 0 ? null : _undoStack.Peek();
+            if (!Equals(_currentCommand, top))
+            {
+                _undoStack.Push(_currentCommand);
+            }
+
+            OnPropertyChanged(nameof(CanUndo));
+            OnPropertyChanged(nameof(CanRedo));
         }
+
+        public void Undo()
+        {
+            if (CanUndo)
+            {
+                _currentCommand = _undoStack.Pop();
+                _currentCommand.Undo(this);
+                _redoStack.Push(_currentCommand);
+
+                OnPropertyChanged(nameof(CanUndo));
+                OnPropertyChanged(nameof(CanRedo));
+            }
+        }
+
+        public void Redo()
+        {
+            if (CanRedo)
+            {
+                _currentCommand = _redoStack.Pop();
+                _currentCommand.Do(this);
+                _undoStack.Push(_currentCommand);
+
+                OnPropertyChanged(nameof(CanUndo));
+                OnPropertyChanged(nameof(CanRedo));
+            }
+        }
+
 
         public void NewMap()
         {
             var map = new MapFile();
-            map.Layers.Add(new MapLayer(){Name="UntitledLayer_1"});
+            map.Layers.Add(new MapLayer() {Name = "UntitledLayer_1"});
             MapFile = map;
+            
+            _undoStack.Clear();
+            _redoStack.Clear();
+            OnPropertyChanged(nameof(CanUndo));
+            OnPropertyChanged(nameof(CanRedo));
         }
-        
-        public  async Task Load(string filename,CancellationToken cancellationToken = default)
+
+        public async Task LoadMap(string filename, CancellationToken cancellationToken = default)
         {
             using var zip = ZipFile.Open(filename, ZipArchiveMode.Read);
-            
+
             // write the basic map.xml key file
             var keyEntry = zip.GetEntry(KEY_FILE_NAME) ?? zip.CreateEntry(KEY_FILE_NAME);
-            using Stream keyStream = keyEntry.Open();
+            await using Stream keyStream = keyEntry.Open();
             var serializer = new XmlSerializer(typeof(MapFile));
-            var mapFile = (MapFile)serializer.Deserialize(keyStream);
+            var mapFile = (MapFile) serializer.Deserialize(keyStream);
             keyStream.Close();
 
             foreach (var image in mapFile.ImageFiles)
@@ -160,7 +203,7 @@ namespace MapMaker.File
                 var imgEntry = zip.GetEntry(entryName);
                 var outStream = imgEntry.Open();
                 var memStream = new MemoryStream();
-                outStream.CopyTo(memStream);
+                await outStream.CopyToAsync(memStream, cancellationToken);
                 memStream.Seek(0, SeekOrigin.Begin);
                 outStream.Close();
 
@@ -185,13 +228,18 @@ namespace MapMaker.File
                 }
             }
 
-            MapFile= mapFile;
+            MapFile = mapFile;
+            
+            _undoStack.Clear();
+            _redoStack.Clear();
+            OnPropertyChanged(nameof(CanUndo));
+            OnPropertyChanged(nameof(CanRedo));
         }
 
-        public async Task Save(string filename, CancellationToken cancellationToken = default)
+        public async Task SaveMap(string filename, CancellationToken cancellationToken = default)
         {
             using var zip = ZipFile.Open(filename, ZipArchiveMode.Update);
-            
+
             // write the basic map.xml key file
             var keyEntry = zip.GetEntry(KEY_FILE_NAME) ?? zip.CreateEntry(KEY_FILE_NAME);
             await using Stream keyStream = keyEntry.Open();
@@ -218,9 +266,8 @@ namespace MapMaker.File
                     }
                 }
             }
-            
         }
-        
+
         public void SelectObject(MapObject? mapObject, bool latch = false)
         {
             if (mapObject == null)
@@ -245,14 +292,33 @@ namespace MapMaker.File
             }
         }
 
-        public Point SnapToGrid(Point input)
+        public Size SnapToGrid(Size input)
         {
-            return Settings.Default.ShowGrid && Settings.Default.SnapToGrid 
-                ? ClosestGridPoint(input) 
+            return Settings.Default.ShowGrid && Settings.Default.SnapToGrid
+                ? GetClosestGridPoint(input)
                 : input;
         }
         
-        public Point ClosestGridPoint(Point input)
+        public Point SnapToGrid(Point input)
+        {
+            return Settings.Default.ShowGrid && Settings.Default.SnapToGrid
+                ? GetClosestGridPoint(input)
+                : input;
+        }
+        
+        public Size GetClosestGridPoint(Size input)
+        {
+            var w = Settings.Default.GridCellWidth;
+            var modX = input.Width % w;
+            var modY = input.Height % w;
+            var baseX = input.Width - modX;
+            var baseY = input.Height - modY;
+            return new Size(
+                modX / w > 0.5 ? baseX + w : baseX,
+                modY / w > 0.5 ? baseY + w : baseY);
+        }
+
+        public Point GetClosestGridPoint(Point input)
         {
             var w = Settings.Default.GridCellWidth;
             var modX = input.X % w;
@@ -260,13 +326,14 @@ namespace MapMaker.File
             var baseX = input.X - modX;
             var baseY = input.Y - modY;
             return new Point(
-                modX / w > 0.5 ? baseX + w : baseX, 
+                modX / w > 0.5 ? baseX + w : baseX,
                 modY / w > 0.5 ? baseY + w : baseY);
         }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

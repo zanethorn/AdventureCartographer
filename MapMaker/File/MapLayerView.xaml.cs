@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace MapMaker.File
 {
-    public partial class MapLayerView : UserControl
+    public partial class MapLayerView 
     {
         public MapLayerView()
         {

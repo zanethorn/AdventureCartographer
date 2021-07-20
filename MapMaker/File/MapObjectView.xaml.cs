@@ -1,14 +1,15 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml.Serialization;
+using MapMaker.Commands;
 using MapMaker.Converters;
 using MapMaker.Properties;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace MapMaker.File
 {
@@ -26,8 +27,8 @@ namespace MapMaker.File
         {
             InitializeComponent();
             Controller = (MapController) FindResource(nameof(MapController));
+            Controller.PropertyChanged += OnControllerPropertyChanged;
 
-            
         }
 
         public MapController Controller { get; }
@@ -123,6 +124,9 @@ namespace MapMaker.File
         {
             var x = e.HorizontalChange;
             var y = e.VerticalChange;
+            
+            var pixelWidth = MapObject.Size.Width;
+            var pixelHeight = MapObject.Size.Height;
 
             if (_offsetX)
             {
@@ -148,18 +152,18 @@ namespace MapMaker.File
 
             if (_scaleX)
             {
-                var newX = MapObject.PixelWidth + x;
+                var newX = pixelWidth + x;
                 if (newX < 1.0)
                     newX = 1.0;
-                MapObject.PixelWidth = newX;
+                pixelWidth = newX;
             }
 
             if (_scaleY)
             {
-                var newY = MapObject.PixelHeight + y;
+                var newY = pixelHeight + y;
                 if (newY < 1.0)
                     y = 1.0;
-                MapObject.PixelHeight = newY;
+                pixelHeight = newY;
             }
 
             if (!_offsetX)
@@ -171,8 +175,14 @@ namespace MapMaker.File
             {
                 y = 0;
             }
+            
 
-            MapObject.Offset = new Point(MapObject.Offset.X - x, MapObject.Offset.Y - y);
+            var command = new DragResizeObjectCommand(
+                MapObject,
+                new Point(MapObject.Offset.X - x, MapObject.Offset.Y - y),
+                new Size(pixelWidth, pixelHeight)
+            );
+            Controller.IngestCommand(command);
         }
 
         private void OnDragCompleted(object sender, DragCompletedEventArgs e)
@@ -181,14 +191,22 @@ namespace MapMaker.File
             _scaleY = false;
             _offsetX = false;
             _offsetY = false;
-
-            MapObject.Offset = Controller.SnapToGrid(MapObject.Offset);
-            var sizer = Controller.SnapToGrid(new Point(MapObject.PixelWidth, MapObject.PixelHeight));
-            MapObject.PixelWidth = sizer.X;
-            MapObject.PixelHeight = sizer.Y;
         }
 
-
+        private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MapController.SelectedObject))
+            {
+                if (Controller.SelectedObject == MapObject)
+                {
+                    ContentDisplay.Stroke = (Brush)_brushConverter.ConvertFrom(Settings.Default.ControlHighlightColor);
+                }
+                else
+                {
+                    ContentDisplay.Stroke = Brushes.Transparent;
+                }
+            }
+        }
         
     }
 }

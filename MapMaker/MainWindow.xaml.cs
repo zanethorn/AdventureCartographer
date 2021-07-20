@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -19,8 +20,10 @@ using System.Xaml;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Windows.Markup;
+using MapMaker.Commands;
 using MapMaker.File;
 using MapMaker.Library;
+using MapMaker.Properties;
 using Ookii.Dialogs.Wpf;
 using Application = System.Windows.Application;
 using Clipboard = System.Windows.Clipboard;
@@ -48,6 +51,7 @@ namespace MapMaker
             InitializeComponent();
             _libraryController = (LibraryController) FindResource(nameof(LibraryController));
             _mapController = (MapController) FindResource(nameof(MapController));
+            _mapController.PropertyChanged += OnControllerPropertyChanged;
         }
 
         private void OnScanDirectory(object sender, RoutedEventArgs e)
@@ -157,7 +161,7 @@ namespace MapMaker
             }
             else
             {
-                Task.Run(() => _mapController.Save(_lastFileSaveName));
+                Task.Run(() => _mapController.SaveMap(_lastFileSaveName));
             }
         }
 
@@ -186,8 +190,30 @@ namespace MapMaker
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 _lastFileSaveName = dialog.FileName;
-                Task.Run(()=>_mapController.Load(_lastFileSaveName));
+                Task.Run(()=>_mapController.LoadMap(_lastFileSaveName));
             }
+        }
+        
+        private void OnUndo(object sender, ExecutedRoutedEventArgs e)
+        {
+            _mapController.Undo();
+        }
+
+        private void OnCanUndo(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _mapController.CanUndo;
+            e.Handled = true;
+        }
+        
+        private void OnRedo(object sender, ExecutedRoutedEventArgs e)
+        {
+            _mapController.Redo();
+        }
+
+        private void OnCanRedo(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _mapController.CanRedo;
+            e.Handled = true;
         }
 
         private void OnCopy(object sender, ExecutedRoutedEventArgs e)
@@ -228,7 +254,9 @@ namespace MapMaker
                 var serializer = new XmlSerializer(typeof(MapObject));
                 using StringReader reader = new(Clipboard.GetData(nameof(MapObject)).ToString());
                 var mapObject = (MapObject) serializer.Deserialize(reader);
-                _mapController.AddObject(mapObject);
+
+                var command = new AddImageCommand(mapObject as MapImage, _mapController.SelectedLayer);
+                _mapController.IngestCommand(command);
                 e.Handled = true;
             }
         }
@@ -258,6 +286,13 @@ namespace MapMaker
             e.Handled = true;
         }
 
-        
+        private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MapController.CanUndo) ||
+                e.PropertyName == nameof(MapController.CanRedo))
+            {
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
     }
 }
