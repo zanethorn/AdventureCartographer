@@ -2,40 +2,71 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using MapMaker.Converters;
+using MapMaker.Properties;
 using Microsoft.EntityFrameworkCore;
 
 namespace MapMaker.File
 {
     public partial class MapObjectView : UserControl
     {
+        private static readonly BrushConverter _brushConverter = new();
+        
         private bool _scaleX;
         private bool _scaleY;
         private bool _offsetX;
         private bool _offsetY;
 
+
         public MapObjectView()
         {
             InitializeComponent();
             Controller = (MapController) FindResource(nameof(MapController));
+
+            
         }
 
         public MapController Controller { get; }
 
         public MapObject MapObject => (MapObject) DataContext;
+        
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var binding = new Binding(nameof(MapController.SelectedObject))
+            {
+                Source = Controller,
+                ConverterParameter = MapObject,
+                Converter = (IValueConverter) FindResource(nameof(EqualsIsVisibilityConverter))
+            };
+
+
+            ThumbNW.SetBinding(Thumb.VisibilityProperty, binding);
+            ThumbN.SetBinding(Thumb.VisibilityProperty, binding);
+            ThumbNE.SetBinding(Thumb.VisibilityProperty, binding);
+            ThumbW.SetBinding(Thumb.VisibilityProperty, binding);
+            ThumbE.SetBinding(Thumb.VisibilityProperty, binding);
+            ThumbSW.SetBinding(Thumb.VisibilityProperty, binding);
+            ThumbS.SetBinding(Thumb.VisibilityProperty, binding);
+            ThumbSE.SetBinding(Thumb.VisibilityProperty, binding);
+        }
 
         private void OnMouseEnter(object sender, MouseEventArgs e)
         {
-            Controller.SelectedObject = MapObject;
-            content.Stroke = Brushes.Blue;
+            Controller.SelectObject(MapObject);
         }
 
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
-            Controller.SelectedObject = null;
-            content.Stroke = Brushes.Transparent;
+            Controller.SelectObject(null);
+        }
+        
+        private void OnMouseClick(object sender, MouseButtonEventArgs e)
+        {
+            Controller.SelectObject(MapObject, true);
         }
 
         private void OnDragStartedNW(object sender, DragStartedEventArgs e)
@@ -157,5 +188,7 @@ namespace MapMaker.File
             MapObject.PixelHeight = sizer.Y;
         }
 
+
+        
     }
 }

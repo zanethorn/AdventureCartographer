@@ -6,26 +6,34 @@
              xmlns:local="clr-namespace:MapMaker.File"
              xmlns:mapMaker="clr-namespace:MapMaker"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:properties="clr-namespace:MapMaker.Properties"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:MapObject}"
+             DataContextChanged="OnDataContextChanged"
              MouseEnter="OnMouseEnter"
-             MouseLeave="OnMouseLeave">
+             MouseLeave="OnMouseLeave"
+             MouseLeftButtonDown="OnMouseClick">
     <UserControl.Resources>
         <Style TargetType="Thumb">
-            <Setter Property="Width" Value="10" />
-            <Setter Property="Height" Value="10" />
-            <Setter Property="RenderTransform">
-                <Setter.Value>
-                    <ScaleTransform
-                        ScaleX="{Binding  Source={StaticResource MapController}, Path=Scale, Converter={StaticResource InvertDoubleConverter}}"
-                        ScaleY="{Binding  Source={StaticResource MapController}, Path=Scale, Converter={StaticResource InvertDoubleConverter}}" />
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Width" Value="{Binding  
+                Source={StaticResource MapController}, 
+                Path=Scale, 
+                Converter={StaticResource InvertDoubleConverter}, 
+                ConverterParameter=12}" />
+            <Setter Property="Height" Value="{Binding  
+                Source={StaticResource MapController}, 
+                Path=Scale, 
+                Converter={StaticResource InvertDoubleConverter}, 
+                ConverterParameter=12}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Border BorderBrush="Blue" BorderThickness="1" />
+                        <Rectangle
+                            Fill="Transparent"
+                            IsHitTestVisible="True"
+                            Stroke="{Binding Source={x:Static properties:Settings.Default}, Path=ControlHighlightColor}"
+                            StrokeThickness="2" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -33,45 +41,64 @@
     </UserControl.Resources>
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Command="ApplicationCommands.Copy" 
+            <MenuItem Command="ApplicationCommands.Copy"
                       CommandParameter="{Binding }" />
-            <MenuItem Command="ApplicationCommands.Cut" 
-                      CommandParameter="{Binding}"/>
-            <MenuItem Command="ApplicationCommands.Delete" 
+            <MenuItem Command="ApplicationCommands.Cut"
+                      CommandParameter="{Binding}" />
+            <MenuItem Command="ApplicationCommands.Delete"
                       CommandParameter="{Binding}" />
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="{Binding  
+                Source={StaticResource MapController}, 
+                Path=Scale, 
+                Converter={StaticResource InvertDoubleConverter}, 
+                ConverterParameter=12}" />
             <ColumnDefinition Width="{Binding PixelWidth}" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="{Binding  
+                Source={StaticResource MapController}, 
+                Path=Scale, 
+                Converter={StaticResource InvertDoubleConverter}, 
+                ConverterParameter=12}" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="{Binding  
+                Source={StaticResource MapController}, 
+                Path=Scale, 
+                Converter={StaticResource InvertDoubleConverter}, 
+                ConverterParameter=12}" />
             <RowDefinition Height="{Binding PixelHeight}" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="{Binding  
+                Source={StaticResource MapController}, 
+                Path=Scale, 
+                Converter={StaticResource InvertDoubleConverter}, 
+                ConverterParameter=12}" />
         </Grid.RowDefinitions>
 
-        <Thumb Grid.Row="0"
+        <Thumb x:Name="ThumbNW"
+               Grid.Row="0"
                Grid.Column="0"
                HorizontalAlignment="Right"
                VerticalAlignment="Bottom"
                Cursor="SizeNWSE"
                DragStarted="OnDragStartedNW"
                DragDelta="OnDragDelta"
-               DragCompleted="OnDragCompleted"/>
+               DragCompleted="OnDragCompleted" />
 
-        <Thumb Grid.Row="0"
+        <Thumb x:Name="ThumbN"
+               Grid.Row="0"
                Grid.Column="1"
                HorizontalAlignment="Center"
                VerticalAlignment="Bottom"
                Cursor="SizeNS"
                DragStarted="OnDragStartedN"
                DragDelta="OnDragDelta"
-               DragCompleted="OnDragCompleted"/>
+               DragCompleted="OnDragCompleted" />
 
-        <Thumb Grid.Row="0"
+        <Thumb x:Name="ThumbNE"
+               Grid.Row="0"
                Grid.Column="2"
                HorizontalAlignment="Left"
                VerticalAlignment="Bottom"
@@ -80,7 +107,8 @@
                DragDelta="OnDragDelta"
                DragCompleted="OnDragCompleted" />
 
-        <Thumb Grid.Row="1"
+        <Thumb x:Name="ThumbW"
+               Grid.Row="1"
                Grid.Column="0"
                HorizontalAlignment="Right"
                VerticalAlignment="Center"
@@ -89,16 +117,18 @@
                DragDelta="OnDragDelta"
                DragCompleted="OnDragCompleted" />
 
-        <Thumb Grid.Row="1"
+        <Thumb x:Name="ThumbE"
+               Grid.Row="1"
                Grid.Column="2"
                HorizontalAlignment="Left"
                VerticalAlignment="Center"
                Cursor="SizeWE"
                DragStarted="OnDragStartedE"
                DragDelta="OnDragDelta"
-               DragCompleted="OnDragCompleted"/>
+               DragCompleted="OnDragCompleted" />
 
-        <Thumb Grid.Row="2"
+        <Thumb x:Name="ThumbSW"
+               Grid.Row="2"
                Grid.Column="0"
                HorizontalAlignment="Right"
                VerticalAlignment="Top"
@@ -107,16 +137,18 @@
                DragDelta="OnDragDelta"
                DragCompleted="OnDragCompleted" />
 
-        <Thumb Grid.Row="2"
+        <Thumb x:Name="ThumbS"
+               Grid.Row="2"
                Grid.Column="1"
                HorizontalAlignment="Center"
                VerticalAlignment="Top"
-               Cursor="SizeNS" 
+               Cursor="SizeNS"
                DragStarted="OnDragStartedS"
                DragDelta="OnDragDelta"
                DragCompleted="OnDragCompleted" />
 
-        <Thumb Grid.Row="2"
+        <Thumb x:Name="ThumbSE"
+               Grid.Row="2"
                Grid.Column="2"
                HorizontalAlignment="Left"
                VerticalAlignment="Top"
@@ -124,8 +156,14 @@
                DragStarted="OnDragStartedSE"
                DragDelta="OnDragDelta"
                DragCompleted="OnDragCompleted" />
+        
+        <Border Grid.Row="1" Grid.Column="1"
+                            Width="{Binding PixelWidth}"
+                            Height="{Binding PixelHeight}"
+                            BorderBrush="{Binding Source={x:Static properties:Settings.Default}, Path=ControlHighlightColor}"
+                            BorderThickness="2" />
 
-        <Rectangle Grid.Row="1" Grid.Column="1" x:Name="content"
+        <Rectangle Grid.Row="1" Grid.Column="1" x:Name="ContentDisplay"
                    Width="{Binding PixelWidth}"
                    Height="{Binding PixelHeight}">
             <Rectangle.Fill>

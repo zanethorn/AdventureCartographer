@@ -10,4 +10,5 @@
     <converters:InvertDoubleConverter x:Key="InvertDoubleConverter" />
     <converters:SubtractingConverter x:Key="SubtractingConverter" />
     <converters:GridConverter x:Key="GridConverter" />
+    <converters:EqualsIsVisibilityConverter x:Key="EqualsIsVisibilityConverter" /> 
 </ResourceDictionary>

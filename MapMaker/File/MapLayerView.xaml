@@ -17,9 +17,9 @@
         <ItemsControl.ItemContainerStyle>
             <Style TargetType="ContentPresenter">
                 <Setter Property="Canvas.Left" 
-                        Value="{Binding Offset.X, Converter={StaticResource SubtractingConverter}, ConverterParameter=10}" />
+                        Value="{Binding Offset.X, Converter={StaticResource SubtractingConverter}, ConverterParameter=12}" />
                 <Setter Property="Canvas.Top" 
-                        Value="{Binding Offset.Y, Converter={StaticResource SubtractingConverter}, ConverterParameter=10}" />
+                        Value="{Binding Offset.Y, Converter={StaticResource SubtractingConverter}, ConverterParameter=12}" />
             </Style>
         </ItemsControl.ItemContainerStyle>
         <ItemsControl.ItemTemplate>
