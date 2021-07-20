@@ -20,7 +20,6 @@ namespace MapMaker.Library
     {
         public static readonly string[] FileExtensions = new[] {".png", ".jpg", ".bmp"};
         private LibraryDbContext? _context;
-        private bool _isLoaded;
         private string _libraryName;
         private ImageCollection _selectedCollection;
         private ImageCollection _defaultCollection;
@@ -32,17 +31,6 @@ namespace MapMaker.Library
         
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public bool IsLoaded
-        {
-            get => _isLoaded;
-            private set
-            {
-                if (value == _isLoaded) return;
-                _isLoaded = value;
-                OnPropertyChanged();
-            }
-        }
 
         public bool IsEmpty => AllImages.Count == 0;
 
@@ -163,26 +151,24 @@ namespace MapMaker.Library
             _context = new LibraryDbContext(libraryName);
             await _context.Database.EnsureCreatedAsync();
 
-            await _context.ImageCollections.LoadAsync();
-            ImageCollections = new ObservableCollection<ImageCollection>(_context.ImageCollections.Local);
+            await _context.ImageCollections.Include(i=>i.Images).LoadAsync();
+            var imageCollections = new ObservableCollection<ImageCollection>(_context.ImageCollections.Local);
 
             await _context.ImageFiles.LoadAsync();
             AllImages = new ObservableCollection<ImageFile>(_context.ImageFiles.Local);
 
-            IsLoaded = true;
-
-            if (ImageCollections.Count == 0)
+            if (imageCollections.Count == 0)
             {
                 await AddCollectionAsync("Default");
             }
 
+            ImageCollections = imageCollections;
             DefaultCollection = ImageCollections[0];
             SelectedCollection = DefaultCollection;
         }
 
         public async Task<ImageCollection> AddCollectionAsync(string? name)
         {
-            LoadCheck();
 
             var newCollection = new ImageCollection
             {
@@ -240,8 +226,6 @@ namespace MapMaker.Library
 
         public async Task AddImageToCollectionAsync(string imagePath, ImageCollection collection)
         {
-            LoadCheck();
-
             await using var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
             using var img = Image.FromStream(fileStream);
             
@@ -270,16 +254,9 @@ namespace MapMaker.Library
         {
             if (_context != null)
             {
-                IsLoaded = false;
                 _context.Dispose();
                 _context = null;
             }
-        }
-
-        private void LoadCheck()
-        {
-            if (!IsLoaded)
-                throw new ApplicationException("No Library Loaded!");
         }
 
         [NotifyPropertyChangedInvocator]
