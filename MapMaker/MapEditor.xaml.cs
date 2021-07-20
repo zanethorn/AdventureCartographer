@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MapMaker.Commands;
 using MapMaker.File;
 using MapMaker.Library;
 
@@ -40,10 +41,13 @@ namespace MapMaker
                 {
                     Image = imgFile,
                     Offset=pos,
-                    PixelWidth = imgFile.PixelWidth,
-                    PixelHeight = imgFile.PixelHeight
+                    Size = new Size(
+                        imgFile.PixelWidth,
+                        imgFile.PixelHeight
+                        )
                 };
-                Controller.AddObject(imgObject);
+                var command = new AddImageCommand(imgObject, Controller.SelectedLayer);
+                Controller.IngestCommand(command);
             }
         }
 

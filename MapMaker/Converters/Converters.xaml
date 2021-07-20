@@ -8,7 +8,8 @@
     <converters:BindingResourceConverter x:Key="BindingResourceConverter" />
     <converters:ToIntConverter x:Key="ToIntConverter" />
     <converters:InvertDoubleConverter x:Key="InvertDoubleConverter" />
-    <converters:SubtractingConverter x:Key="SubtractingConverter" />
+    <converters:ToolTrayOffsetConverter x:Key="ToolTrayOffsetConverter" />
     <converters:GridConverter x:Key="GridConverter" />
     <converters:EqualsIsVisibilityConverter x:Key="EqualsIsVisibilityConverter" /> 
+    <converters:VisibleIfNotNullConverter x:Key="VisibleIfNotNullConverter" />
 </ResourceDictionary>

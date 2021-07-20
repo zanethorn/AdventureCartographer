@@ -12,31 +12,18 @@ namespace MapMaker.File
     [XmlInclude(typeof(MapImage))]
     public abstract class MapObject: INotifyPropertyChanged, ICloneable
     {
-        private double _pixelWidth;
-        private double _pixelHeight;
+        private Size _size;
         private Point _offset;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [XmlAttribute]
-        public double PixelWidth
+        [XmlElement()]
+        public Size Size
         {
-            get => _pixelWidth;
+            get => _size;
             set
             {
-                if (value == _pixelWidth) return;
-                _pixelWidth = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [XmlAttribute]
-        public double PixelHeight
-        {
-            get => _pixelHeight;
-            set
-            {
-                if (value == _pixelHeight) return;
-                _pixelHeight = value;
+                if (value == _size) return;
+                _size = value;
                 OnPropertyChanged();
             }
         }

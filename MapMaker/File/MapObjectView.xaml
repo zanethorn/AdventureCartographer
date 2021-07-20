@@ -16,12 +16,14 @@
              MouseLeftButtonDown="OnMouseClick">
     <UserControl.Resources>
         <Style TargetType="Thumb">
-            <Setter Property="Width" Value="{Binding  
+            <Setter Property="Width"
+                    Value="{Binding  
                 Source={StaticResource MapController}, 
                 Path=Scale, 
                 Converter={StaticResource InvertDoubleConverter}, 
                 ConverterParameter=12}" />
-            <Setter Property="Height" Value="{Binding  
+            <Setter Property="Height"
+                    Value="{Binding  
                 Source={StaticResource MapController}, 
                 Path=Scale, 
                 Converter={StaticResource InvertDoubleConverter}, 
@@ -33,7 +35,11 @@
                             Fill="Transparent"
                             IsHitTestVisible="True"
                             Stroke="{Binding Source={x:Static properties:Settings.Default}, Path=ControlHighlightColor}"
-                            StrokeThickness="2" />
+                            StrokeThickness="{Binding  
+                                Source={StaticResource MapController}, 
+                                Path=Scale, 
+                                Converter={StaticResource InvertDoubleConverter}, 
+                                ConverterParameter=2}" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -51,26 +57,30 @@
     </UserControl.ContextMenu>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding  
+            <ColumnDefinition
+                Width="{Binding  
                 Source={StaticResource MapController}, 
                 Path=Scale, 
                 Converter={StaticResource InvertDoubleConverter}, 
                 ConverterParameter=12}" />
-            <ColumnDefinition Width="{Binding PixelWidth}" />
-            <ColumnDefinition Width="{Binding  
+            <ColumnDefinition Width="{Binding Size.Width}" />
+            <ColumnDefinition
+                Width="{Binding  
                 Source={StaticResource MapController}, 
                 Path=Scale, 
                 Converter={StaticResource InvertDoubleConverter}, 
                 ConverterParameter=12}" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="{Binding  
+            <RowDefinition
+                Height="{Binding  
                 Source={StaticResource MapController}, 
                 Path=Scale, 
                 Converter={StaticResource InvertDoubleConverter}, 
                 ConverterParameter=12}" />
-            <RowDefinition Height="{Binding PixelHeight}" />
-            <RowDefinition Height="{Binding  
+            <RowDefinition Height="{Binding Size.Height}" />
+            <RowDefinition
+                Height="{Binding  
                 Source={StaticResource MapController}, 
                 Path=Scale, 
                 Converter={StaticResource InvertDoubleConverter}, 
@@ -156,16 +166,17 @@
                DragStarted="OnDragStartedSE"
                DragDelta="OnDragDelta"
                DragCompleted="OnDragCompleted" />
-        
-        <Border Grid.Row="1" Grid.Column="1"
-                            Width="{Binding PixelWidth}"
-                            Height="{Binding PixelHeight}"
-                            BorderBrush="{Binding Source={x:Static properties:Settings.Default}, Path=ControlHighlightColor}"
-                            BorderThickness="2" />
+
 
         <Rectangle Grid.Row="1" Grid.Column="1" x:Name="ContentDisplay"
-                   Width="{Binding PixelWidth}"
-                   Height="{Binding PixelHeight}">
+                   Stroke="Transparent"
+                   StrokeThickness="{Binding  
+                    Source={StaticResource MapController}, 
+                    Path=Scale, 
+                    Converter={StaticResource InvertDoubleConverter}, 
+                    ConverterParameter=2}"
+                   Width="{Binding Size.Width}"
+                   Height="{Binding Size.Height}">
             <Rectangle.Fill>
                 <ImageBrush ImageSource="{Binding Image.Bitmap}" />
             </Rectangle.Fill>
