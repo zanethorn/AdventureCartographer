@@ -132,7 +132,7 @@ namespace MapMaker
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-            _libraryController.CloseLibrary();
+            _libraryController.Dispose();
         }
         
         private void OnNew(object sender, ExecutedRoutedEventArgs e)
@@ -269,20 +269,39 @@ namespace MapMaker
         
         private void OnDelete(object sender, ExecutedRoutedEventArgs e)
         {
-            if (e.Parameter is MapObject mapObject)
+            switch (e.Parameter)
             {
-                _mapController.SelectedLayer.MapObjects.Remove(mapObject);
-                e.Handled = true;
+                case MapImage mapImage:
+                {
+                    var command = new DeleteImageCommand(mapImage, _mapController.SelectedLayer);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+                case ImageFile libraryImage:
+                {
+                    if (MessageBox.Show(
+                        "Are you sure you wish to delete this image from your library?",
+                        "Delete Image",
+                        MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    {
+                        _libraryController.DeleteImage(libraryImage).Wait();
+                        //Task.Run(async () => await _libraryController.DeleteImage(libraryImage));
+                    }
+                    break;
+                }
             }
         }
 
         private void OnCanDelete(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (e.Parameter is MapObject mapObject)
+            switch (e.Parameter)
             {
-                e.CanExecute = true;
-                
+                case MapObject:
+                case ImageFile:
+                    e.CanExecute = true;
+                    break;
             }
+
             e.Handled = true;
         }
 

@@ -7,25 +7,31 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:ImageFile}" >
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="ApplicationCommands.Delete"
+                      CommandParameter="{Binding}" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" MouseDown="OnMouseDown" Width="300">
-        <Image Width="70" Height="70" Stretch="Uniform" Source="{Binding Path}" />
+        <Image Width="70" Height="70" Stretch="Uniform" Source="{Binding Bitmap, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource DownloadingIcon}}" />
         <StackPanel Width="230">
             <TextBlock FontWeight="Bold" Text="{Binding ShortName}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Units: " />
-                <TextBlock Text="{Binding PixelWidth, Converter={StaticResource GridConverter}}" />
+                <TextBlock Text="{Binding PixelWidth, Converter={StaticResource GridConverter}, Mode=OneWay}" />
                 <TextBlock Text="x" />
-                <TextBlock Text="{Binding PixelHeight, Converter={StaticResource GridConverter}}" />
+                <TextBlock Text="{Binding PixelHeight, Converter={StaticResource GridConverter}, Mode=OneWay}" />
                 <TextBlock Text="  Pixels: " />
-                <TextBlock Text="{Binding PixelWidth}" />
+                <TextBlock Text="{Binding PixelWidth, Mode=OneWay}" />
                 <TextBlock Text="x" />
-                <TextBlock Text="{Binding PixelHeight}" />
+                <TextBlock Text="{Binding PixelHeight, Mode=OneWay}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="File Type: " />
-                <TextBlock Text="{Binding FileExtension}" />
+                <TextBlock Text="{Binding FileExtension, Mode=OneWay}" />
                 <TextBlock Text="  File Size: " />
-                <TextBlock Text="{Binding FileSize}" />
+                <TextBlock Text="{Binding FileSize, Mode=OneWay}" />
             </StackPanel>
         </StackPanel>
         

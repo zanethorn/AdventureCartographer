@@ -20,6 +20,10 @@
             <library:LibraryController x:Key="LibraryController" />
             <file:MapController x:Key="MapController" />
 
+            
+            <DataTemplate x:Key="ImageFileTemplate">
+                <library:ImageFileView />
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

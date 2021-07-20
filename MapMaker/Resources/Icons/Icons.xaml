@@ -4,4 +4,5 @@
     <BitmapImage x:Key="MinusIcon" UriSource="minus-box.png" />
     <BitmapImage x:Key="Pointer" UriSource="cursor-default.png" />
     <BitmapImage x:Key="Pan" UriSource="cursor-pointer.png" />
+    <BitmapImage x:Key="DownloadingIcon" UriSource="progress-download.png" />
 </ResourceDictionary>

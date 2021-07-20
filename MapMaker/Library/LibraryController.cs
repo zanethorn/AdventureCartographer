@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using MapMaker.Annotations;
 using MapMaker.File;
 using Microsoft.EntityFrameworkCore;
@@ -16,19 +18,20 @@ using Image = System.Drawing.Image;
 
 namespace MapMaker.Library
 {
-    public class LibraryController : INotifyPropertyChanged
+    public class LibraryController : INotifyPropertyChanged, IDisposable
     {
         public static readonly string[] FileExtensions = new[] {".png", ".jpg", ".bmp"};
-        private LibraryDbContext? _context;
+        private LibraryDbContext _context;
         private string _libraryName;
         private ImageCollection _selectedCollection;
         private ImageCollection _defaultCollection;
-        private string _scanPath;
+        private string _scanPath= string.Empty;
         private bool _scanSubfolders;
         private CollectionModes _collectionMode = CollectionModes.DefaultCollection;
-        private ObservableCollection<ImageCollection> _imageCollections = new ObservableCollection<ImageCollection>();
-        private ObservableCollection<ImageFile> _allImages = new ObservableCollection<ImageFile>();
-        
+        private ObservableCollection<ImageCollection> _imageCollections = new();
+        private ObservableCollection<ImageFile> _allImages = new();
+        private string _imageSearch= string.Empty;
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -64,8 +67,26 @@ namespace MapMaker.Library
                 if (value == _allImages) return;
                 _allImages = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(FilteredImages));
             }
         }
+
+        public string ImageSearch
+        {
+            get => _imageSearch;
+            set
+            {
+                if (value == _imageSearch) return;
+                _imageSearch = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FilteredImages));
+            }
+        }
+
+        public IList<ImageFile> FilteredImages =>
+            string.IsNullOrWhiteSpace(ImageSearch)
+                ? _allImages
+                : _allImages.Where(i => i.ShortName.StartsWith(ImageSearch, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
         public ImageCollection SelectedCollection
         {
@@ -151,7 +172,7 @@ namespace MapMaker.Library
             _context = new LibraryDbContext(libraryName);
             await _context.Database.EnsureCreatedAsync();
 
-            await _context.ImageCollections.Include(i=>i.Images).LoadAsync();
+            await _context.ImageCollections.Include(i => i.Images).LoadAsync();
             var imageCollections = new ObservableCollection<ImageCollection>(_context.ImageCollections.Local);
 
             await _context.ImageFiles.LoadAsync();
@@ -169,7 +190,6 @@ namespace MapMaker.Library
 
         public async Task<ImageCollection> AddCollectionAsync(string? name)
         {
-
             var newCollection = new ImageCollection
             {
                 Name = name
@@ -207,14 +227,16 @@ namespace MapMaker.Library
 
             if (files.Count > 0)
             {
-                var saveCollection = collection ?? await AddCollectionAsync(folderPath[(folderPath.LastIndexOf(Path.PathSeparator)+1)..]);
+                var collectionName =
+                    Path.GetFileName(Path.GetFullPath(folderPath).TrimEnd(Path.DirectorySeparatorChar));
+                var saveCollection = collection ?? await AddCollectionAsync(collectionName);
 
                 foreach (var file in files)
                 {
                     await AddImageToCollectionAsync(file, saveCollection);
                 }
             }
-            
+
             if (recursive)
             {
                 foreach (var directory in Directory.GetDirectories(folderPath))
@@ -228,9 +250,9 @@ namespace MapMaker.Library
         {
             await using var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
             using var img = Image.FromStream(fileStream);
-            
+
             var name = Path.GetFileNameWithoutExtension(imagePath);
-            
+
             var imgFile = new ImageFile()
             {
                 Path = imagePath,
@@ -241,8 +263,7 @@ namespace MapMaker.Library
                 FileExtension = Path.GetExtension(imagePath).Substring(1).ToUpper(),
                 FileSize = fileStream.Length
             };
-            
-            
+
 
             await _context.ImageFiles.AddAsync(imgFile);
             collection.Images.Add(imgFile);
@@ -250,19 +271,29 @@ namespace MapMaker.Library
             AllImages.Add(imgFile);
         }
 
-        public void CloseLibrary()
+        public async Task DeleteImage(ImageFile image)
         {
-            if (_context != null)
-            {
-                _context.Dispose();
-                _context = null;
-            }
+            _context.ImageFiles.Remove(image);
+            AllImages.Remove(image);
+            await _context.SaveChangesAsync();
+            OnPropertyChanged(nameof(FilteredImages));
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+            _context = null;
+            
         }
 
         [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        private void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            if (Dispatcher.CurrentDispatcher.CheckAccess())
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            else
+                Dispatcher.CurrentDispatcher.BeginInvoke(() =>
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)));
         }
     }
 }
