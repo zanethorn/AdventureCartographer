@@ -35,7 +35,7 @@ namespace MapMaker
             var data = e.Data.GetData(typeof(ImageFile));
             if (data is ImageFile imgFile)
             {
-                var pos = Controller.SnapToGrid(e.GetPosition(fileView));
+                var pos = Controller.SnapToGrid(e.GetPosition(FileView));
                 var imgObject = new MapImage()
                 {
                     Image = imgFile,
@@ -54,22 +54,22 @@ namespace MapMaker
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            Controller.SelectedTool.Move(e.GetPosition(fileView));
+            Controller.SelectedTool.Move(e.GetPosition(FileView));
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Controller.SelectedTool.Down(e.GetPosition(fileView));
+            Controller.SelectedTool.Down(e.GetPosition(FileView));
         }
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            Controller.SelectedTool.Up(e.GetPosition(fileView));
+            Controller.SelectedTool.Up(e.GetPosition(FileView));
         }
 
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
-            Controller.SelectedTool.Up(e.GetPosition(fileView));
+            Controller.SelectedTool.Up(e.GetPosition(FileView));
         }
         
         private void OnCanCopy(object sender, CanExecuteRoutedEventArgs e)

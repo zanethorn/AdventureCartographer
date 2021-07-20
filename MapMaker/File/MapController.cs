@@ -16,6 +16,7 @@ namespace MapMaker.File
         private Point _offset;
         private MapLayer _selectedLayer;
         private MapObject? _selectedObject;
+        private bool _isLatched;
         
         private Tool _selectedTool;
         private readonly IList<Tool> _tools;
@@ -51,7 +52,7 @@ namespace MapMaker.File
         public MapObject? SelectedObject
         {
             get => _selectedObject;
-            set
+            private set
             {
                 if (Equals(value, _selectedObject)) return;
                 _selectedObject = value;
@@ -122,6 +123,30 @@ namespace MapMaker.File
             }
             
             SelectedLayer.MapObjects.Add(newObject);
+        }
+
+        public void SelectObject(MapObject? mapObject, bool latch = false)
+        {
+            if (mapObject == null)
+            {
+                if (latch)
+                {
+                    SelectedObject = null;
+                    _isLatched = false;
+                }
+                else if (!_isLatched)
+                {
+                    SelectedObject = null;
+                }
+            }
+            else
+            {
+                SelectedObject = mapObject;
+                if (latch)
+                {
+                    _isLatched = true;
+                }
+            }
         }
 
         public Point SnapToGrid(Point input)

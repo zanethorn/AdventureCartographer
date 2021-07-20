@@ -118,5 +118,17 @@ namespace MapMaker.Properties {
                 this["SnapToGrid"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF0000FF")]
+        public string ControlHighlightColor {
+            get {
+                return ((string)(this["ControlHighlightColor"]));
+            }
+            set {
+                this["ControlHighlightColor"] = value;
+            }
+        }
     }
 }

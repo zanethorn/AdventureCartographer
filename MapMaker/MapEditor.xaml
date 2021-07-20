@@ -52,9 +52,21 @@
             </DrawingBrush>
         </Canvas.Background>
         
-        <Slider Canvas.Right="0" Maximum="4" Minimum="0.05" Value="{Binding Scale, Mode=TwoWay}" Orientation="Vertical" />
+        <Slider Canvas.Top="20"
+                Canvas.Right="20" 
+                Canvas.ZIndex="10000"
+                Cursor="Arrow"
+                Maximum="4" 
+                Minimum="0.05"
+                MinHeight="300"
+                Value="{Binding Scale, Mode=TwoWay}" 
+                Orientation="Vertical" 
+                Background="Gainsboro"
+                Foreground="LightSlateGray" >
+            
+        </Slider>
         
-        <file:MapFileView x:Name="fileView" 
+        <file:MapFileView x:Name="FileView" 
                           Canvas.ZIndex="0"
                           Canvas.Left="{Binding Offset.X}"
                           Canvas.Top="{Binding Offset.Y}" 

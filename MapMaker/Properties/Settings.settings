@@ -26,5 +26,8 @@
     <Setting Name="SnapToGrid" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="ControlHighlightColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF0000FF</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
