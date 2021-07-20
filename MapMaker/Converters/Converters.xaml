@@ -12,4 +12,5 @@
     <converters:GridConverter x:Key="GridConverter" />
     <converters:EqualsIsVisibilityConverter x:Key="EqualsIsVisibilityConverter" /> 
     <converters:VisibleIfNotNullConverter x:Key="VisibleIfNotNullConverter" />
+    <converters:FileSizeConverter x:Key="FileSizeConverter" />
 </ResourceDictionary>

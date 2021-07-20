@@ -31,7 +31,7 @@
                 <TextBlock Text="File Type: " />
                 <TextBlock Text="{Binding FileExtension, Mode=OneWay}" />
                 <TextBlock Text="  File Size: " />
-                <TextBlock Text="{Binding FileSize, Mode=OneWay}" />
+                <TextBlock Text="{Binding FileSize, Mode=OneWay, Converter={StaticResource FileSizeConverter}}" />
             </StackPanel>
         </StackPanel>
         
