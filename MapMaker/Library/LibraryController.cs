@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using MapMaker.Annotations;
 using MapMaker.File;
 using Microsoft.EntityFrameworkCore;
@@ -17,19 +18,19 @@ using Image = System.Drawing.Image;
 
 namespace MapMaker.Library
 {
-    public class LibraryController : INotifyPropertyChanged
+    public class LibraryController : INotifyPropertyChanged, IDisposable
     {
         public static readonly string[] FileExtensions = new[] {".png", ".jpg", ".bmp"};
-        private LibraryDbContext? _context;
+        private LibraryDbContext _context;
         private string _libraryName;
         private ImageCollection _selectedCollection;
         private ImageCollection _defaultCollection;
-        private string _scanPath;
+        private string _scanPath= string.Empty;
         private bool _scanSubfolders;
         private CollectionModes _collectionMode = CollectionModes.DefaultCollection;
-        private ObservableCollection<ImageCollection> _imageCollections = new ObservableCollection<ImageCollection>();
-        private ObservableCollection<ImageFile> _allImages = new ObservableCollection<ImageFile>();
-        private string _imageSearch;
+        private ObservableCollection<ImageCollection> _imageCollections = new();
+        private ObservableCollection<ImageFile> _allImages = new();
+        private string _imageSearch= string.Empty;
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -270,19 +271,29 @@ namespace MapMaker.Library
             AllImages.Add(imgFile);
         }
 
-        public void CloseLibrary()
+        public async Task DeleteImage(ImageFile image)
         {
-            if (_context != null)
-            {
-                _context.Dispose();
-                _context = null;
-            }
+            _context.ImageFiles.Remove(image);
+            AllImages.Remove(image);
+            await _context.SaveChangesAsync();
+            OnPropertyChanged(nameof(FilteredImages));
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+            _context = null;
+            
         }
 
         [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        private void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            if (Dispatcher.CurrentDispatcher.CheckAccess())
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            else
+                Dispatcher.CurrentDispatcher.BeginInvoke(() =>
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)));
         }
     }
 }

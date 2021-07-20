@@ -2,9 +2,9 @@ using MapMaker.File;
 
 namespace MapMaker.Commands
 {
-    public abstract class AddObjectCommand:IMapCommand
+    public class DeleteObjectCommand:IMapCommand
     {
-        protected AddObjectCommand(MapObject mapObject, MapLayer mapLayer)
+        protected DeleteObjectCommand(MapObject mapObject, MapLayer mapLayer)
         {
             MapObject = mapObject;
             MapLayer = mapLayer;
@@ -16,16 +16,16 @@ namespace MapMaker.Commands
         
         public virtual void Do(MapController controller)
         {
-            MapLayer.MapObjects.Add(MapObject);
-        }
-
-        public virtual void Undo(MapController controller)
-        {
             MapLayer.MapObjects.Remove(MapObject);
             if (controller.SelectedObject == MapObject)
             {
                 controller.SelectObject(null, true);
             }
+        }
+
+        public virtual void Undo(MapController controller)
+        {
+            MapLayer.MapObjects.Add(MapObject);
         }
 
         public IMapCommand Update(IMapCommand command)
