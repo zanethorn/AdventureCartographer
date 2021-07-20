@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 using MapMaker.Annotations;
 
@@ -79,7 +81,28 @@ namespace MapMaker.Library
         [NotMapped]
         public BitmapImage Bitmap
         {
-            get => _bitmap ??= new BitmapImage(new Uri(Path));
+            get
+            {
+                if (_bitmap == null)
+                {
+                    Task.Run(() =>
+                    {
+                        _bitmap = new BitmapImage(new Uri(Path))
+                            {CacheOption = BitmapCacheOption.OnDemand, DecodePixelWidth = 70};
+                        _bitmap.Freeze();
+                        if (Dispatcher.CurrentDispatcher.CheckAccess())
+                        {
+                            OnPropertyChanged();
+                        }
+                        else
+                        {
+                            Dispatcher.CurrentDispatcher.BeginInvoke(() => OnPropertyChanged());
+                        }
+                    });
+                }
+
+                return _bitmap;
+            }
             set
             {
                 if (Equals(value, _bitmap)) return;

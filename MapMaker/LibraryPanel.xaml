@@ -8,7 +8,7 @@
              xmlns:file="clr-namespace:MapMaker.File"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Expander ExpandDirection="Left" IsExpanded="True" >
+    <Expander ExpandDirection="Left" IsExpanded="True">
         <TabControl MinWidth="200">
             <TabItem Header="Collections">
                 <ScrollViewer>
@@ -16,27 +16,45 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="All Images">
-                <ListView ItemsSource="{Binding Source={StaticResource LibraryController}, Path=AllImages }" >
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <library:ImageFileView />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <Grid VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <TextBox Grid.Row="0"
+                             HorizontalAlignment="Stretch"
+                             Text="{Binding Source={StaticResource LibraryController}, Path=ImageSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" />
+
+                    <ListView
+                        Grid.Row="1"
+                        ItemsSource="{Binding Source={StaticResource LibraryController}, Path=FilteredImages }"
+                        ItemTemplate="{StaticResource ImageFileTemplate}"
+                        VerticalContentAlignment="Top"
+                        SelectionMode="Single"
+                        VirtualizingPanel.IsContainerVirtualizable="True"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
+                        VirtualizingPanel.IsVirtualizingWhenGrouping="True" />
+
+                </Grid>
             </TabItem>
             <TabItem Header="File Images">
-                <ListView ItemsSource="{Binding Source={StaticResource MapController}, Path=MapFile.ImageFiles }" >
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <library:ImageFileView />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <ListView
+                    ItemsSource="{Binding Source={StaticResource MapController}, Path=MapFile.ImageFiles }"
+                    ItemTemplate="{StaticResource ImageFileTemplate}"
+                    VerticalContentAlignment="Top"
+                    SelectionMode="Single"
+                    VirtualizingPanel.IsContainerVirtualizable="True"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True" />
+
             </TabItem>
-            <TabItem Header="Layers" >
+            <TabItem Header="Layers">
                 <file:LayerPanel />
             </TabItem>
         </TabControl>
     </Expander>
-    
+
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -28,7 +29,8 @@ namespace MapMaker.Library
         private CollectionModes _collectionMode = CollectionModes.DefaultCollection;
         private ObservableCollection<ImageCollection> _imageCollections = new ObservableCollection<ImageCollection>();
         private ObservableCollection<ImageFile> _allImages = new ObservableCollection<ImageFile>();
-        
+        private string _imageSearch;
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -64,8 +66,26 @@ namespace MapMaker.Library
                 if (value == _allImages) return;
                 _allImages = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(FilteredImages));
             }
         }
+
+        public string ImageSearch
+        {
+            get => _imageSearch;
+            set
+            {
+                if (value == _imageSearch) return;
+                _imageSearch = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FilteredImages));
+            }
+        }
+
+        public IList<ImageFile> FilteredImages =>
+            string.IsNullOrWhiteSpace(ImageSearch)
+                ? _allImages
+                : _allImages.Where(i => i.ShortName.StartsWith(ImageSearch, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
         public ImageCollection SelectedCollection
         {
@@ -151,7 +171,7 @@ namespace MapMaker.Library
             _context = new LibraryDbContext(libraryName);
             await _context.Database.EnsureCreatedAsync();
 
-            await _context.ImageCollections.Include(i=>i.Images).LoadAsync();
+            await _context.ImageCollections.Include(i => i.Images).LoadAsync();
             var imageCollections = new ObservableCollection<ImageCollection>(_context.ImageCollections.Local);
 
             await _context.ImageFiles.LoadAsync();
@@ -169,7 +189,6 @@ namespace MapMaker.Library
 
         public async Task<ImageCollection> AddCollectionAsync(string? name)
         {
-
             var newCollection = new ImageCollection
             {
                 Name = name
@@ -207,14 +226,16 @@ namespace MapMaker.Library
 
             if (files.Count > 0)
             {
-                var saveCollection = collection ?? await AddCollectionAsync(folderPath[(folderPath.LastIndexOf(Path.PathSeparator)+1)..]);
+                var collectionName =
+                    Path.GetFileName(Path.GetFullPath(folderPath).TrimEnd(Path.DirectorySeparatorChar));
+                var saveCollection = collection ?? await AddCollectionAsync(collectionName);
 
                 foreach (var file in files)
                 {
                     await AddImageToCollectionAsync(file, saveCollection);
                 }
             }
-            
+
             if (recursive)
             {
                 foreach (var directory in Directory.GetDirectories(folderPath))
@@ -228,9 +249,9 @@ namespace MapMaker.Library
         {
             await using var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
             using var img = Image.FromStream(fileStream);
-            
+
             var name = Path.GetFileNameWithoutExtension(imagePath);
-            
+
             var imgFile = new ImageFile()
             {
                 Path = imagePath,
@@ -241,8 +262,7 @@ namespace MapMaker.Library
                 FileExtension = Path.GetExtension(imagePath).Substring(1).ToUpper(),
                 FileSize = fileStream.Length
             };
-            
-            
+
 
             await _context.ImageFiles.AddAsync(imgFile);
             collection.Images.Add(imgFile);

@@ -4,6 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:MapMaker"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:library="clr-namespace:MapMaker.Library"
         mc:Ignorable="d"
         Title="Map Maker - Scan Images" 
         MinHeight="200" 
@@ -13,45 +15,59 @@
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         DataContext="{StaticResource LibraryController}">
-    <Grid Margin="10">
+    <StackPanel Margin="10">
+    <Grid Margin="0,0,0,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid.Resources>
-            <Style TargetType="TextBlock">
-                <Setter Property="FontWeight" Value="Bold" />
-                <Setter Property="TextAlignment" Value="Right" />
-                <Setter Property="Margin" Value="5" />
-            </Style>
-        </Grid.Resources>
+  
         
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Scan Path:" />
-        <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly="True" Text="{Binding ScanPath}" />
-        <Button Grid.Row="0" Grid.Column="2" Content="..." Click="ScanPath_Click" />
+        <Label Target="{Binding ElementName=ScanPathBox}" 
+               Grid.Row="0" 
+               Grid.Column="0" 
+               Content="Scan Path:" />
+        <TextBox x:Name="ScanPathBox" 
+                 Grid.Row="0" 
+                 Grid.Column="1" 
+                 IsReadOnly="True" 
+                 Text="{Binding ScanPath}" />
+        <Button Grid.Row="0" 
+                Grid.Column="2" 
+                Content="..." 
+                Click="ScanPath_Click" />
         
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Subfolders:" />
-        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding ScanSubfolders}" />
+        <Label Target="{Binding ElementName=ScanSubfoldersCheck}" 
+               Grid.Row="1" 
+               Grid.Column="0" 
+               Content="Search Subfolders:" />
+        <CheckBox x:Name="ScanSubfoldersCheck" 
+                  Grid.Row="1" 
+                  Grid.Column="1" 
+                  IsChecked="{Binding ScanSubfolders}" />
         
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Collection Mode:" />
-        <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding CollectionMode}">
-            <ComboBoxItem Content="Collection per Folder"></ComboBoxItem>
-            <ComboBoxItem Content="New Collection"></ComboBoxItem>
-            <ComboBoxItem Content="Default Collection"></ComboBoxItem>
-        </ComboBox>
+        <Label Target="{Binding ElementName=CollectionTypeDropdown}" 
+               Grid.Row="2" 
+               Grid.Column="0" 
+               Content="Collection Mode:" />
+        <ComboBox x:Name="CollectionTypeDropdown" 
+                  Grid.Row="2" 
+                  Grid.Column="1" 
+                  ItemsSource="{Binding Source={local:EnumBindingSource {x:Type library:CollectionModes}}}"
+                  SelectedValue="{Binding CollectionMode, Mode=TwoWay}" />
         
-        
-        <StackPanel Grid.Row="3" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
+    </Grid>
+        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right">
             <Button  IsDefault="True" Content="Begin Scan..." Click="OnDefaultClick" />
             <Button  IsCancel="True" Content="Cancel" />
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </Window>

@@ -7,13 +7,25 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:ImageCollection}" >
-    <Expander Header="{Binding Name}" MinWidth="300">
-        <ListView ItemsSource="{Binding Images}" >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <local:ImageFileView />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+    <Expander Width="300" Header="{Binding Name}">
+        <Expander.HeaderTemplate>
+            <DataTemplate >
+                <TextBlock Text="{Binding}" 
+                           Margin="4 0"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold"
+                           TextTrimming="CharacterEllipsis"
+                           Width="{Binding
+                        RelativeSource={RelativeSource
+                        Mode=FindAncestor,
+                        AncestorType={x:Type Expander}},
+                        Path=ActualWidth}"
+                           TextWrapping="NoWrap"/>
+            </DataTemplate>
+        </Expander.HeaderTemplate>
+        <Expander.Content>
+            <ItemsControl ItemsSource="{Binding Images}"
+                          ItemTemplate="{StaticResource ImageFileTemplate}" />
+        </Expander.Content>
     </Expander>
 </UserControl>
