@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:MapMaker.Library"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance local:ImageFile}">
+             d:DataContext="{d:DesignInstance local:ImageFile}" >
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" MouseDown="OnMouseDown" Width="300">
         <Image Width="70" Height="70" Stretch="Uniform" Source="{Binding Path}" />
-        <StackPanel>
-            <TextBlock FontWeight="Bold" Text="{Binding ShortName}"/>
+        <StackPanel Width="230">
+            <TextBlock FontWeight="Bold" Text="{Binding ShortName}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Units: " />
                 <TextBlock Text="{Binding PixelWidth, Converter={StaticResource GridConverter}}" />

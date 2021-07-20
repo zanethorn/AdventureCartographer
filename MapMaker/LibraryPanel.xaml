@@ -15,6 +15,24 @@
                     <library:ImageLibraryView />
                 </ScrollViewer>
             </TabItem>
+            <TabItem Header="All Images">
+                <ListView ItemsSource="{Binding Source={StaticResource LibraryController}, Path=AllImages }" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <library:ImageFileView />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
+            <TabItem Header="File Images">
+                <ListView ItemsSource="{Binding Source={StaticResource MapController}, Path=MapFile.ImageFiles }" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <library:ImageFileView />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
             <TabItem Header="Layers" >
                 <file:LayerPanel />
             </TabItem>

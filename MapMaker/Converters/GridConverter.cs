@@ -9,7 +9,7 @@ namespace MapMaker.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return System.Convert.ToDouble(value) / Settings.Default.GridCellWidth;
+            return System.Math.Round(System.Convert.ToDouble(value) / Settings.Default.GridCellWidth, 1);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

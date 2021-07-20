@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              DataContext="{StaticResource LibraryController}">
 
-    <ListView ItemsSource="{Binding ImageCollections}">
+    <ListView ItemsSource="{Binding ImageCollections}" MinWidth="300">
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
                 <VirtualizingStackPanel>
