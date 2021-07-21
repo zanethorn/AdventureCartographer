@@ -12,13 +12,12 @@ using MapMaker.Annotations;
 
 namespace MapMaker.Library
 {
-    public class ImageFile:INotifyPropertyChanged
+    public class ImageFile : SmartObject
     {
         private Guid _id = Guid.NewGuid();
         private string _fullName;
         private string _shortName;
         private BitmapImage? _bitmap;
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         [XmlAttribute]
         public Guid Id
@@ -58,17 +57,17 @@ namespace MapMaker.Library
 
         [XmlIgnore]
         public string Path { get; set; }
-        
+
         [XmlAttribute]
         public int PixelWidth { get; set; }
-        
+
         [XmlAttribute]
         public int PixelHeight { get; set; }
-        
-        
+
+
         [XmlAttribute]
         public string FileExtension { get; set; }
-        
+
         [XmlAttribute]
         public long FileSize { get; set; }
 
@@ -85,20 +84,10 @@ namespace MapMaker.Library
             {
                 if (_bitmap == null)
                 {
-                    Task.Run(() =>
-                    {
-                        _bitmap = new BitmapImage(new Uri(Path))
-                            {CacheOption = BitmapCacheOption.OnDemand, DecodePixelWidth = 70};
-                        _bitmap.Freeze();
-                        if (Dispatcher.CurrentDispatcher.CheckAccess())
-                        {
-                            OnPropertyChanged();
-                        }
-                        else
-                        {
-                            Dispatcher.CurrentDispatcher.BeginInvoke(() => OnPropertyChanged());
-                        }
-                    });
+                    _bitmap = new BitmapImage(new Uri(Path))
+                        {CacheOption = BitmapCacheOption.OnDemand, DecodePixelWidth = 70};
+                    _bitmap.Freeze();
+                    OnPropertyChanged();
                 }
 
                 return _bitmap;
@@ -109,12 +98,6 @@ namespace MapMaker.Library
                 _bitmap = value;
                 OnPropertyChanged();
             }
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

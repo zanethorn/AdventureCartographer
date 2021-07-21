@@ -10,11 +10,10 @@ namespace MapMaker.File
     
 
     [XmlInclude(typeof(MapImage))]
-    public abstract class MapObject: INotifyPropertyChanged, ICloneable
+    public abstract class MapObject: SmartObject
     {
         private Size _size;
         private Point _offset;
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [XmlElement()]
         public Size Size
@@ -40,20 +39,5 @@ namespace MapMaker.File
             }
         }
         
-        public object Clone()
-        {
-            var clone = MemberwiseClone();
-            OnClone(clone);
-            return clone;
-        }
-        
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        protected abstract void OnClone(object clone);
     }
 }

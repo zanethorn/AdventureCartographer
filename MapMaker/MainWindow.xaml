@@ -54,6 +54,10 @@
             />
         
         <CommandBinding 
+            Command="{x:Static local:CustomCommands.Duplicate }"
+            Executed="OnDuplicate"
+            CanExecute="OnCanDuplicate" />
+        <CommandBinding 
             Command="Copy"
             Executed="OnCopy"
             CanExecute="OnCanCopy" />
@@ -72,6 +76,27 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.ShowPreferences}"
             Executed="OnShowPreferences" />
+        
+        <CommandBinding 
+            Command="{x:Static local:CustomCommands.MoveUp}"
+            Executed="OnMoveUp"
+            CanExecute="OnCanMoveUp" />
+        <CommandBinding 
+            Command="{x:Static local:CustomCommands.MoveDown}"
+            Executed="OnMoveDown"
+            CanExecute="OnCanMoveDown" />
+        <CommandBinding 
+            Command="{x:Static local:CustomCommands.MoveToTop}"
+            Executed="OnMoveTop"
+            CanExecute="OnCanMoveUp" />
+        <CommandBinding 
+            Command="{x:Static local:CustomCommands.MoveToBottom}"
+            Executed="OnMoveBottom"
+            CanExecute="OnCanMoveDown" />
+        
+        <CommandBinding 
+            Command="{x:Static local:CustomCommands.NewLayer}"
+            Executed="OnNewLayer" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top" IsMainMenu="True">
@@ -87,6 +112,8 @@
                 <MenuItem Command="Undo" CommandParameter="{Binding Source={StaticResource MapController}, Path=CanUndo }"/>
                 <MenuItem Command="Redo" CommandParameter="{Binding Source={StaticResource MapController}, Path=CanRedo }"/>
                 <Separator/>
+                <MenuItem Command="{x:Static local:CustomCommands.Duplicate }"
+                          Header="Duplicate" />
                 <MenuItem Command="Copy" 
                           CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
                 <MenuItem Command="Cut" 

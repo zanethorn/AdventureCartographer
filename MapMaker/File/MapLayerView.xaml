@@ -7,6 +7,7 @@
               mc:Ignorable="d"
               d:DesignHeight="300" d:DesignWidth="300"
               d:DataContext="{d:DesignInstance local:MapLayer}" Background="Transparent"
+              x:Name="Container"
               ItemsSource="{Binding MapObjects}">
     <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
@@ -31,6 +32,7 @@
                     </MultiBinding>
                 </Setter.Value>
             </Setter>
+            
         </Style>
     </ItemsControl.ItemContainerStyle>
     <ItemsControl.ItemTemplate>

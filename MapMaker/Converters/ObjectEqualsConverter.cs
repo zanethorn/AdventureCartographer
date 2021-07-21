@@ -5,13 +5,11 @@ using System.Windows.Data;
 
 namespace MapMaker.Converters
 {
-    public class CollectionIndexConverter:IMultiValueConverter
+    public class ObjectEqualsConverter:IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var collection = (IList) values[0];
-            var item = values[1];
-            return collection.IndexOf(item);
+            return Equals(values[0], values[1]);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

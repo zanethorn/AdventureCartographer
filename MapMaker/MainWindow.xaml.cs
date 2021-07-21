@@ -235,6 +235,40 @@ namespace MapMaker
             e.Handled = true;
         }
         
+        private void OnDuplicate(object sender, ExecutedRoutedEventArgs e)
+        {
+            switch (e.Parameter)
+            {
+                case MapImage mapImage:
+                {
+                    var newImage = (MapImage)mapImage.Clone();
+                    var command = new AddImageCommand(newImage, _mapController.SelectedLayer);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+                case MapLayer layer:
+                {
+                    var newLayer = (MapLayer)layer.Clone();
+                    var command = new AddLayerCommand(newLayer, _mapController.MapFile.Layers.IndexOf(layer));
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+            }
+        }
+
+        private void OnCanDuplicate(object sender, CanExecuteRoutedEventArgs e)
+        {
+            switch (e.Parameter)
+            {
+                case MapImage:
+                case MapLayer:
+                    e.CanExecute = true;
+                    break;
+            }
+
+            e.Handled = true;
+        }
+        
         private void OnCut(object sender, ExecutedRoutedEventArgs e)
         {
             OnCopy(sender, e);
@@ -289,6 +323,12 @@ namespace MapMaker
                     }
                     break;
                 }
+                case MapLayer layer:
+                {
+                    var command = new DeleteLayerCommand(layer);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
             }
         }
 
@@ -300,11 +340,131 @@ namespace MapMaker
                 case ImageFile:
                     e.CanExecute = true;
                     break;
+                case MapLayer:
+                    e.CanExecute = _mapController.MapFile.Layers.Count > 1;
+                    break;
             }
 
             e.Handled = true;
         }
 
+        
+        private void OnMoveUp(object sender, ExecutedRoutedEventArgs e)
+        {
+            switch (e.Parameter)
+            {
+                case MapObject mapObject:
+                {
+                    var command = new ReorderObjectCommand(mapObject, _mapController.SelectedLayer, _mapController.SelectedLayer.MapObjects.IndexOf(mapObject) +1);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+                case MapLayer layer:
+                {
+                    var command = new ReorderLayerCommand(layer,_mapController.MapFile.Layers.IndexOf(layer)+1);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+            }
+        }
+
+        private void OnCanMoveUp(object sender, CanExecuteRoutedEventArgs e)
+        {
+            switch (e.Parameter)
+            {
+                case MapObject mapObject:
+                    e.CanExecute = _mapController.SelectedLayer.MapObjects.IndexOf(mapObject) < _mapController.SelectedLayer.MapObjects.Count -1;
+                    break;
+                case MapLayer layer:
+                    e.CanExecute = _mapController.MapFile.Layers.IndexOf(layer) < _mapController.MapFile.Layers.Count-1;
+                    break;
+            }
+
+            e.Handled = true;
+        }
+        
+        private void OnMoveDown(object sender, ExecutedRoutedEventArgs e)
+        {
+            switch (e.Parameter)
+            {
+                case MapObject mapObject:
+                {
+                    var command = new ReorderObjectCommand(mapObject, _mapController.SelectedLayer, _mapController.SelectedLayer.MapObjects.IndexOf(mapObject) -1);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+                case MapLayer layer:
+                {
+                    var command = new ReorderLayerCommand(layer,_mapController.MapFile.Layers.IndexOf(layer)-1);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+            }
+        }
+
+        private void OnCanMoveDown(object sender, CanExecuteRoutedEventArgs e)
+        {
+            switch (e.Parameter)
+            {
+                case MapObject mapObject:
+                    e.CanExecute = _mapController.SelectedLayer.MapObjects.IndexOf(mapObject) >0;
+                    break;
+                case MapLayer layer:
+                    e.CanExecute = _mapController.MapFile.Layers.IndexOf(layer) > 0;
+                    break;
+            }
+
+            e.Handled = true;
+        }
+        
+        private void OnMoveTop(object sender, ExecutedRoutedEventArgs e)
+        {
+            switch (e.Parameter)
+            {
+                case MapObject mapObject:
+                {
+                    var command = new ReorderObjectCommand(mapObject, _mapController.SelectedLayer, _mapController.SelectedLayer.MapObjects.Count -1);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+                case MapLayer layer:
+                {
+                    var command = new ReorderLayerCommand(layer,_mapController.MapFile.Layers.Count-1);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+            }
+        }
+        
+        private void OnMoveBottom(object sender, ExecutedRoutedEventArgs e)
+        {
+            switch (e.Parameter)
+            {
+                case MapObject mapObject:
+                {
+                    var command = new ReorderObjectCommand(mapObject, _mapController.SelectedLayer, 0);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+                case MapLayer layer:
+                {
+                    var command = new ReorderLayerCommand(layer,0);
+                    _mapController.IngestCommand(command);
+                    break;
+                }
+            }
+        }
+        
+        private void OnNewLayer(object sender, ExecutedRoutedEventArgs e)
+        {
+            var newLayer = new MapLayer()
+            {
+                Name = $"UntitledLayer_{_mapController.MapFile.Layers.Count+1}"
+            };
+            var command = new AddLayerCommand(newLayer);
+            _mapController.IngestCommand(command);
+        }
+        
         private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MapController.CanUndo) ||
