@@ -18,7 +18,7 @@ using MapMaker.Properties;
 
 namespace MapMaker.File
 {
-    public class MapController : INotifyPropertyChanged
+    public class MapController : SmartObject
     {
         private const string KEY_FILE_NAME = "map.xml";
         private const string IMAGE_DIRECTORY = "Resources/Images/";
@@ -36,7 +36,6 @@ namespace MapMaker.File
 
         private Tool _selectedTool;
         private readonly IList<Tool> _tools;
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public MapController()
         {
@@ -145,6 +144,8 @@ namespace MapMaker.File
 
             OnPropertyChanged(nameof(CanUndo));
             OnPropertyChanged(nameof(CanRedo));
+            
+            DispatchNotifications();
         }
 
         public void Undo()
@@ -157,6 +158,7 @@ namespace MapMaker.File
 
                 OnPropertyChanged(nameof(CanUndo));
                 OnPropertyChanged(nameof(CanRedo));
+                DispatchNotifications();
             }
         }
 
@@ -170,6 +172,7 @@ namespace MapMaker.File
 
                 OnPropertyChanged(nameof(CanUndo));
                 OnPropertyChanged(nameof(CanRedo));
+                DispatchNotifications();
             }
         }
 
@@ -234,6 +237,7 @@ namespace MapMaker.File
             _redoStack.Clear();
             OnPropertyChanged(nameof(CanUndo));
             OnPropertyChanged(nameof(CanRedo));
+            DispatchNotifications();
         }
 
         public async Task SaveMap(string filename, CancellationToken cancellationToken = default)
@@ -266,6 +270,7 @@ namespace MapMaker.File
                     }
                 }
             }
+            DispatchNotifications();
         }
 
         public void SelectObject(MapObject? mapObject, bool latch = false)
@@ -328,13 +333,6 @@ namespace MapMaker.File
             return new Point(
                 modX / w > 0.5 ? baseX + w : baseX,
                 modY / w > 0.5 ? baseY + w : baseY);
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

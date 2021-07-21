@@ -16,8 +16,8 @@ namespace MapMaker.File
         private int _pixelWidth=3500;
         private int _pixelHeight=3500;
 
-        private ObservableCollection<MapLayer> _layers = new();
-        private ObservableCollection<ImageFile> _imageFiles = new();
+        private SmartCollection<MapLayer> _layers = new();
+        private SmartCollection<ImageFile> _imageFiles = new();
         private bool _exportGrid;
 
 
@@ -72,7 +72,7 @@ namespace MapMaker.File
 
 
         [XmlArray(nameof(Layers))]
-        public ObservableCollection<MapLayer> Layers
+        public SmartCollection<MapLayer> Layers
         {
             get => _layers;
             set
@@ -83,7 +83,7 @@ namespace MapMaker.File
             }
         }
 
-        public ObservableCollection<ImageFile> ImageFiles
+        public SmartCollection<ImageFile> ImageFiles
         {
             get => _imageFiles;
             set
@@ -99,8 +99,8 @@ namespace MapMaker.File
             base.OnClone(clone);
 
             var myClone = (MapFile)clone;
-            myClone._layers = new ObservableCollection<MapLayer>(_layers.Clone());
-            myClone._imageFiles = new ObservableCollection<ImageFile>(_imageFiles.Clone());
+            myClone._layers = (SmartCollection<MapLayer>)_layers.Clone();
+            myClone._imageFiles = (SmartCollection<ImageFile>)_imageFiles.Clone();
         }
     }
 }

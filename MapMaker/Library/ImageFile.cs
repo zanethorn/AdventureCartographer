@@ -18,6 +18,11 @@ namespace MapMaker.Library
         private string _fullName;
         private string _shortName;
         private BitmapImage? _bitmap;
+        private string _path;
+        private int _pixelWidth;
+        private int _pixelHeight;
+        private string _fileExtension;
+        private long _fileSize;
 
         [XmlAttribute]
         public Guid Id
@@ -56,23 +61,66 @@ namespace MapMaker.Library
         }
 
         [XmlIgnore]
-        public string Path { get; set; }
+        public string Path
+        {
+            get => _path;
+            set
+            {
+                if (value == _path) return;
+                _path = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Bitmap));
+            }
+        }
 
         [XmlAttribute]
-        public int PixelWidth { get; set; }
+        public int PixelWidth
+        {
+            get => _pixelWidth;
+            set
+            {
+                if (value == _pixelWidth) return;
+                _pixelWidth = value;
+                OnPropertyChanged();
+            }
+        }
 
         [XmlAttribute]
-        public int PixelHeight { get; set; }
+        public int PixelHeight
+        {
+            get => _pixelHeight;
+            set
+            {
+                if (value == _pixelHeight) return;
+                _pixelHeight = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         [XmlAttribute]
-        public string FileExtension { get; set; }
+        public string FileExtension
+        {
+            get => _fileExtension;
+            set
+            {
+                if (value == _fileExtension) return;
+                _fileExtension = value;
+                OnPropertyChanged();
+            }
+        }
 
         [XmlAttribute]
-        public long FileSize { get; set; }
-
-        [XmlIgnore]
-        public IList<ImageTags> Tags { get; set; } = new List<ImageTags>();
+        public long FileSize
+        {
+            get => _fileSize;
+            set
+            {
+                if (value == _fileSize) return;
+                _fileSize = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         [XmlIgnore]
@@ -85,7 +133,7 @@ namespace MapMaker.Library
                 if (_bitmap == null)
                 {
                     _bitmap = new BitmapImage(new Uri(Path))
-                        {CacheOption = BitmapCacheOption.OnDemand, DecodePixelWidth = 70};
+                        {CacheOption = BitmapCacheOption.OnLoad, DecodePixelWidth = 70};
                     _bitmap.Freeze();
                     OnPropertyChanged();
                 }
@@ -98,6 +146,15 @@ namespace MapMaker.Library
                 _bitmap = value;
                 OnPropertyChanged();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _bitmap = null;
+            }
+            base.Dispose(disposing);
         }
     }
 }

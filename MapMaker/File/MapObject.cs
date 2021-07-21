@@ -39,5 +39,10 @@ namespace MapMaker.File
             }
         }
         
+        public override string ToString()
+        {
+            // Forces children to implement this method
+            throw new NotImplementedException();
+        }
     }
 }

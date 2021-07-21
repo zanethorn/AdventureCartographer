@@ -28,7 +28,7 @@
 
                     <ListView
                         Grid.Row="1"
-                        ItemsSource="{Binding Source={StaticResource LibraryController}, Path=FilteredImages }"
+                        ItemsSource="{Binding Source={StaticResource LibraryController}, Path=FilteredImages, IsAsync=True }"
                         ItemTemplate="{StaticResource ImageFileTemplate}"
                         VerticalContentAlignment="Top"
                         SelectionMode="Single"
@@ -41,7 +41,7 @@
             </TabItem>
             <TabItem Header="File Images">
                 <ListView
-                    ItemsSource="{Binding Source={StaticResource MapController}, Path=MapFile.ImageFiles }"
+                    ItemsSource="{Binding Source={StaticResource MapController}, Path=MapFile.ImageFiles, IsAsync=True }"
                     ItemTemplate="{StaticResource ImageFileTemplate}"
                     VerticalContentAlignment="Top"
                     SelectionMode="Single"

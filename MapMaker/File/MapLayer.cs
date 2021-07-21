@@ -13,7 +13,7 @@ namespace MapMaker.File
     public class MapLayer: SmartObject
     {
         private string _name;
-        private ObservableCollection<MapObject> _mapObjects = new();
+        private SmartCollection<MapObject> _mapObjects = new();
         private bool _isVisible = true;
         private bool _isLocked =false;
 
@@ -54,7 +54,7 @@ namespace MapMaker.File
         }
 
         [XmlArray]
-        public ObservableCollection<MapObject> MapObjects
+        public SmartCollection<MapObject> MapObjects
         {
             get => _mapObjects;
             set
@@ -69,7 +69,7 @@ namespace MapMaker.File
         {
             base.OnClone(clone);
             var myClone = (MapLayer) clone;
-            myClone._mapObjects = new ObservableCollection<MapObject>(_mapObjects.Clone());
+            myClone._mapObjects = (SmartCollection<MapObject>)_mapObjects.Clone();
         }
     }
 }

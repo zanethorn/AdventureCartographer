@@ -14,8 +14,8 @@
     <UserControl.RenderTransform>
         <TransformGroup>
             <ScaleTransform
-                CenterX="{Binding Width, Converter={StaticResource HalvingConverter}}"
-                CenterY="{Binding Height, Converter={StaticResource HalvingConverter}}"
+                CenterX="{Binding MapFile.PixelWidth, Converter={StaticResource HalvingConverter}}"
+                CenterY="{Binding MapFile.PixelHeight, Converter={StaticResource HalvingConverter}}"
                 ScaleX="{Binding Scale}"
                 ScaleY="{Binding Scale}" />
         </TransformGroup>

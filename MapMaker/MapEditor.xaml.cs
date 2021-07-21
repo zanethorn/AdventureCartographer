@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,11 +11,15 @@ namespace MapMaker
 {
     public partial class MapEditor : UserControl
     {
+        private LibraryController _library;
+        private MapController _map;
+
         public MapEditor()
         {
             InitializeComponent();
 
-            
+            _library = (LibraryController) FindResource(nameof(LibraryController));
+            _map = (MapController) FindResource(nameof(MapController));
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -33,27 +38,52 @@ namespace MapMaker
 
         private void OnDrop(object sender, DragEventArgs e)
         {
-            var data = e.Data.GetData(typeof(ImageFile));
-            if (data is ImageFile imgFile)
+            var pos = Controller.SnapToGrid(e.GetPosition(FileView));
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                var pos = Controller.SnapToGrid(e.GetPosition(FileView));
-                var imgObject = new MapImage()
+                var fileNames = (string[]) e.Data.GetData(DataFormats.FileDrop);
+
+                Task.Run(async () =>
                 {
-                    Image = imgFile,
-                    Offset=pos,
-                    Size = new Size(
-                        imgFile.PixelWidth,
-                        imgFile.PixelHeight
+                    foreach (var file in fileNames)
+                    {
+                        var imgFile = await _library.AddImageToCollectionAsync(file, _library.DefaultCollection);
+                        var imgObject = new MapImage()
+                        {
+                            Image = imgFile,
+                            Offset = pos,
+                            Size = new Size(
+                                imgFile.PixelWidth,
+                                imgFile.PixelHeight
+                            )
+                        };
+                        var command = new AddImageCommand(imgObject, _map.SelectedLayer);
+                        _map.IngestCommand(command);
+                    }
+                });
+            }
+            else if (e.Data.GetDataPresent(typeof(ImageFile)))
+            {
+                var data = e.Data.GetData(typeof(ImageFile));
+                if (data is ImageFile imgFile)
+                {
+                    var imgObject = new MapImage()
+                    {
+                        Image = imgFile,
+                        Offset = pos,
+                        Size = new Size(
+                            imgFile.PixelWidth,
+                            imgFile.PixelHeight
                         )
-                };
-                var command = new AddImageCommand(imgObject, Controller.SelectedLayer);
-                Controller.IngestCommand(command);
+                    };
+                    var command = new AddImageCommand(imgObject, Controller.SelectedLayer);
+                    _map.IngestCommand(command);
+                }
             }
         }
 
         private void OnDragEnter(object sender, DragEventArgs e)
         {
-            
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
@@ -75,16 +105,16 @@ namespace MapMaker
         {
             Controller.SelectedTool.Up(e.GetPosition(FileView));
         }
-        
+
         private void OnCanCopy(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = Controller.SelectedObject != null;
         }
-        
+
         private void OnPaste(object sender, ExecutedRoutedEventArgs e)
         {
-            var original = (MapObject)Clipboard.GetData(nameof(MapObject));
-            var newItem = (MapObject)original.Clone();
+            var original = (MapObject) Clipboard.GetData(nameof(MapObject));
+            var newItem = (MapObject) original.Clone();
             Controller.SelectedLayer.MapObjects.Append(newItem);
         }
 

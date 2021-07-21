@@ -4,13 +4,14 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Windows;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 using MapMaker.Annotations;
 
 namespace MapMaker
 {
-    public abstract class SmartObject : INotifyPropertyChanged, ICloneable, IDisposable
+    public abstract class SmartObject : ISmartObject
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -19,15 +20,17 @@ namespace MapMaker
         [NotMapped]
         private List<string> _propertyBacklog = new();
 
+        [XmlIgnore]
+        [IgnoreDataMember]
+        [NotMapped]
+        public Dispatcher UIDispatcher => Application.Current.Dispatcher;
 
-        protected Dispatcher CurrentDispatcher => Dispatcher.CurrentDispatcher;
-
-        public void Touch(string propertyName )
+        public void Touch(string propertyName)
         {
             OnPropertyChanged(propertyName);
-            DispatchBacklog();
+            DispatchNotifications();
         }
-        
+
         public object Clone()
         {
             var clone = (SmartObject) MemberwiseClone();
@@ -51,9 +54,9 @@ namespace MapMaker
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (CurrentDispatcher.CheckAccess())
+            if (UIDispatcher.CheckAccess())
             {
-                DispatchBacklog();
+                DispatchNotifications();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
             else if (!_propertyBacklog.Contains(propertyName))
@@ -62,29 +65,42 @@ namespace MapMaker
             }
         }
 
-        protected void DispatchBacklog()
+        public void DispatchNotifications()
         {
-            void ClearBacklog()
+            void DispatchBacklog()
             {
-                foreach (var propertyName in _propertyBacklog)
+                OnDispatchNotifications();
+
+                if (_propertyBacklog.Count > 0)
                 {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                    foreach (var propertyName in _propertyBacklog)
+                    {
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                    }
+
+                    _propertyBacklog.Clear();
                 }
 
-                _propertyBacklog.Clear();
+                OnNotificationsDispatched();
             }
 
-            if (_propertyBacklog.Count > 0)
+
+            if (UIDispatcher.CheckAccess())
             {
-                if (CurrentDispatcher.CheckAccess())
-                {
-                    ClearBacklog();
-                }
-                else
-                {
-                    CurrentDispatcher.BeginInvoke((Action) ClearBacklog);
-                }
+                DispatchBacklog();
             }
+            else
+            {
+                UIDispatcher.BeginInvoke((Action) DispatchBacklog);
+            }
+        }
+
+        protected virtual void OnDispatchNotifications()
+        {
+        }
+
+        protected virtual void OnNotificationsDispatched()
+        {
         }
 
         protected virtual void Dispose(bool disposing)

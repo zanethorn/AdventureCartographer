@@ -18,22 +18,19 @@ using Image = System.Drawing.Image;
 
 namespace MapMaker.Library
 {
-    public class LibraryController : INotifyPropertyChanged, IDisposable
+    public class LibraryController : SmartObject
     {
         public static readonly string[] FileExtensions = new[] {".png", ".jpg", ".bmp"};
         private LibraryDbContext _context;
-        private string _libraryName;
+        private string _libraryName = "Default";
         private ImageCollection _selectedCollection;
         private ImageCollection _defaultCollection;
         private string _scanPath= string.Empty;
         private bool _scanSubfolders;
         private CollectionModes _collectionMode = CollectionModes.DefaultCollection;
-        private ObservableCollection<ImageCollection> _imageCollections = new();
-        private ObservableCollection<ImageFile> _allImages = new();
+        private SmartCollection<ImageCollection> _imageCollections = new();
+        private SmartCollection<ImageFile> _allImages = new();
         private string _imageSearch= string.Empty;
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public bool IsEmpty => AllImages.Count == 0;
 
@@ -48,7 +45,7 @@ namespace MapMaker.Library
             }
         }
 
-        public ObservableCollection<ImageCollection> ImageCollections
+        public SmartCollection<ImageCollection> ImageCollections
         {
             get => _imageCollections;
             private set
@@ -59,7 +56,7 @@ namespace MapMaker.Library
             }
         }
 
-        public ObservableCollection<ImageFile> AllImages
+        public SmartCollection<ImageFile> AllImages
         {
             get => _allImages;
             private set
@@ -173,10 +170,10 @@ namespace MapMaker.Library
             await _context.Database.EnsureCreatedAsync();
 
             await _context.ImageCollections.Include(i => i.Images).LoadAsync();
-            var imageCollections = new ObservableCollection<ImageCollection>(_context.ImageCollections.Local);
+            var imageCollections = new SmartCollection<ImageCollection>(_context.ImageCollections.Local);
 
             await _context.ImageFiles.LoadAsync();
-            AllImages = new ObservableCollection<ImageFile>(_context.ImageFiles.Local);
+            AllImages = new SmartCollection<ImageFile>(_context.ImageFiles.Local);
 
             if (imageCollections.Count == 0)
             {
@@ -186,6 +183,8 @@ namespace MapMaker.Library
             ImageCollections = imageCollections;
             DefaultCollection = ImageCollections[0];
             SelectedCollection = DefaultCollection;
+            
+            DispatchNotifications();
         }
 
         public async Task<ImageCollection> AddCollectionAsync(string? name)
@@ -199,6 +198,8 @@ namespace MapMaker.Library
             await _context.ImageCollections.AddAsync(newCollection);
             await _context.SaveChangesAsync();
             ImageCollections.Add(newCollection);
+            
+            DispatchNotifications();
 
             return newCollection;
         }
@@ -214,6 +215,7 @@ namespace MapMaker.Library
             };
 
             await ScanImageFolderAsync(ScanPath, ScanSubfolders, collection);
+            DispatchNotifications();
         }
 
         private async Task ScanImageFolderAsync(string folderPath, bool recursive, ImageCollection? collection)
@@ -246,29 +248,35 @@ namespace MapMaker.Library
             }
         }
 
-        public async Task AddImageToCollectionAsync(string imagePath, ImageCollection collection)
+        public async Task<ImageFile> AddImageToCollectionAsync(string imagePath, ImageCollection collection)
         {
-            await using var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
-            using var img = Image.FromStream(fileStream);
-
-            var name = Path.GetFileNameWithoutExtension(imagePath);
-
-            var imgFile = new ImageFile()
+            var imgFile = _allImages.SingleOrDefault(i => i.Path == imagePath);
+            if (imgFile == null)
             {
-                Path = imagePath,
-                FullName = name,
-                ShortName = name,
-                PixelHeight = img.Height,
-                PixelWidth = img.Width,
-                FileExtension = Path.GetExtension(imagePath).Substring(1).ToUpper(),
-                FileSize = fileStream.Length
-            };
+                await using var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+                using var img = Image.FromStream(fileStream);
+                var name = Path.GetFileNameWithoutExtension(imagePath);
+                imgFile = new ImageFile()
+                {
+                    Path = imagePath,
+                    FullName = name,
+                    ShortName = name,
+                    PixelHeight = img.Height,
+                    PixelWidth = img.Width,
+                    FileExtension = Path.GetExtension(imagePath).Substring(1).ToUpper(),
+                    FileSize = fileStream.Length
+                };
 
 
-            await _context.ImageFiles.AddAsync(imgFile);
+                await _context.ImageFiles.AddAsync(imgFile);
+                AllImages.Add(imgFile);
+            }
+            
             collection.Images.Add(imgFile);
             await _context.SaveChangesAsync();
-            AllImages.Add(imgFile);
+            DispatchNotifications();
+
+            return imgFile;
         }
 
         public async Task DeleteImage(ImageFile image)
@@ -277,23 +285,16 @@ namespace MapMaker.Library
             AllImages.Remove(image);
             await _context.SaveChangesAsync();
             OnPropertyChanged(nameof(FilteredImages));
+            DispatchNotifications();
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _context.Dispose();
-            _context = null;
-            
-        }
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            if (Dispatcher.CurrentDispatcher.CheckAccess())
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            else
-                Dispatcher.CurrentDispatcher.BeginInvoke(() =>
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)));
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

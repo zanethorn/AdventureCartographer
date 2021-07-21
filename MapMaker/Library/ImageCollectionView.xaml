@@ -24,7 +24,7 @@
             </DataTemplate>
         </Expander.HeaderTemplate>
         <Expander.Content>
-            <ItemsControl ItemsSource="{Binding Images}"
+            <ItemsControl ItemsSource="{Binding Images, IsAsync=True}"
                           ItemTemplate="{StaticResource ImageFileTemplate}" />
         </Expander.Content>
     </Expander>

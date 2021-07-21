@@ -30,6 +30,21 @@ namespace MapMaker.Library
             }
         }
 
-        public ObservableCollection<ImageFile> Images { get; set; } = new();
+        public SmartCollection<ImageFile> Images { get; set; } = new();
+
+        protected override void OnNotificationsDispatched()
+        {
+            Images.DispatchNotifications();
+            base.OnNotificationsDispatched();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Images.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }
