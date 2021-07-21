@@ -170,6 +170,7 @@ namespace MapMaker
         {
             var dialog = new SaveFileDialog
             {
+                FileName = _mapController.MapFile.Name,
                 Filter = "map files (*.mapx)|*.mapx|All files (*.*)|*.*",
                 OverwritePrompt = true,
                 RestoreDirectory = true
@@ -214,6 +215,7 @@ namespace MapMaker
         {
             var dialog = new SaveFileDialog
             {
+                FileName = _mapController.MapFile.Name,
                 Filter = "png files (*.png)|*.png|All files (*.*)|*.*",
                 OverwritePrompt = true,
                 RestoreDirectory = true
