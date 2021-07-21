@@ -65,7 +65,7 @@
                     </Grid.RowDefinitions>
                     
                     
-                    <Label Grid.Row="2" Grid.Column="0" Target="{Binding ElementName=ControlHighlightColorPicker}">Line Color:</Label>
+                    <Label Grid.Row="2" Grid.Column="0" Target="{Binding ElementName=ControlHighlightColorPicker}">Highlight Color:</Label>
                     <local:ColorPickerButton Grid.Row="2" Grid.Column="1" x:Name="ControlHighlightColorPicker"
                                              Color="{Binding Source={x:Static properties:Settings.Default}, Path=ControlHighlightColor, Mode=TwoWay}" />
                 </Grid>

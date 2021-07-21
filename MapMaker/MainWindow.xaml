@@ -85,6 +85,10 @@
             Executed="OnShowPreferences" />
         
         <CommandBinding 
+            Command="local:CustomCommands.ShowMapSettings"
+            Executed="OnShowMapSettings"/>
+        
+        <CommandBinding 
             Command="{x:Static local:CustomCommands.MoveUp}"
             Executed="OnMoveUp"
             CanExecute="OnCanMoveUp" />
@@ -137,6 +141,8 @@
                 <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences"/>
             </MenuItem>
             <MenuItem Header="_Map">
+                <MenuItem Header="Map Settings..." Command="local:CustomCommands.ShowMapSettings" />
+                <Separator/>
                 <MenuItem Header="Show Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ShowGrid, Mode=TwoWay}" />    
                 <MenuItem Header="Snap To Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SnapToGrid, Mode=TwoWay}" /> 
             </MenuItem>

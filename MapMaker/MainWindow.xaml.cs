@@ -520,5 +520,11 @@ namespace MapMaker
                 CommandManager.InvalidateRequerySuggested();
             }
         }
+
+        private void OnShowMapSettings(object sender, ExecutedRoutedEventArgs e)
+        {
+            var dialog = new MapSettingsDialog();
+            dialog.ShowDialog();
+        }
     }
 }
