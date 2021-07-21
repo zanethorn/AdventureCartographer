@@ -33,7 +33,7 @@ namespace MapMaker.File
 
         public MapController Controller { get; }
 
-        public MapObject MapObject => (MapObject) DataContext;
+        public MapObject? MapObject =>  DataContext as MapObject;
         
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

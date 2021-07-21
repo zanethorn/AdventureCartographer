@@ -10,13 +10,12 @@ namespace MapMaker.File
 {
     
     [XmlType(nameof(MapLayer))]
-    public class MapLayer: INotifyPropertyChanged
+    public class MapLayer: SmartObject
     {
         private string _name;
-        private ObservableCollection<MapObject> _mapObjects = new ObservableCollection<MapObject>();
+        private ObservableCollection<MapObject> _mapObjects = new();
         private bool _isVisible = true;
         private bool _isLocked =false;
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [XmlAttribute]
         public bool IsLocked
@@ -66,11 +65,11 @@ namespace MapMaker.File
             }
         }
 
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected override void OnClone(object clone)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            base.OnClone(clone);
+            var myClone = (MapLayer) clone;
+            myClone._mapObjects = new ObservableCollection<MapObject>(_mapObjects.Clone());
         }
     }
 }

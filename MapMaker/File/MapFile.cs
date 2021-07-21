@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
@@ -9,16 +10,15 @@ using MapMaker.Library;
 
 namespace MapMaker.File
 {
-    public class MapFile: INotifyPropertyChanged
+    public class MapFile: SmartObject
     {
         private string _name = "UntitledMap1";
         private int _pixelWidth=1750;
         private int _pixelHeight=1750;
 
         private ObservableCollection<MapLayer> _layers = new();
+        private ObservableCollection<ImageFile> _imageFiles = new();
 
-        
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [XmlAttribute]
         public string Name
@@ -70,13 +70,24 @@ namespace MapMaker.File
             }
         }
 
-
-        public ObservableCollection<ImageFile> ImageFiles { get; set; } = new();
-        
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public ObservableCollection<ImageFile> ImageFiles
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => _imageFiles;
+            set
+            {
+                if (Equals(value, _imageFiles)) return;
+                _imageFiles = value;
+                OnPropertyChanged();
+            }
+        }
+
+        protected override void OnClone(object clone)
+        {
+            base.OnClone(clone);
+
+            var myClone = (MapFile)clone;
+            myClone._layers = new ObservableCollection<MapLayer>(_layers.Clone());
+            myClone._imageFiles = new ObservableCollection<ImageFile>(_imageFiles.Clone());
         }
     }
 }

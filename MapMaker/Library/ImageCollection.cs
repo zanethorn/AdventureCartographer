@@ -3,11 +3,33 @@ using System.Collections.ObjectModel;
 
 namespace MapMaker.Library
 {
-    public class ImageCollection
+    public class ImageCollection:SmartObject
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        
-        public ObservableCollection<ImageFile> Images { get; set; } = new ObservableCollection<ImageFile>();
+        private int _id;
+        private string _name;
+
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                if (value == _id) return;
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (value == _name) return;
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ImageFile> Images { get; set; } = new();
     }
 }

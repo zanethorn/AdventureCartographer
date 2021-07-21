@@ -8,11 +8,23 @@ namespace MapMaker.File
     [XmlType(nameof(MapImage))]
     public class MapImage:MapObject
     {
-        public ImageFile Image { get; set; }
+        private ImageFile _image;
+
+        public ImageFile Image
+        {
+            get => _image;
+            set
+            {
+                if (Equals(value, _image)) return;
+                _image = value;
+                OnPropertyChanged();
+            }
+        }
 
         protected override void OnClone(object clone)
         {
-            ((MapImage) clone).Image = this.Image;
+            var myClone = (MapImage) clone;
+            myClone._image = _image;
         }
 
         public override string ToString()
