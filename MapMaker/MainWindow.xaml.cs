@@ -44,6 +44,7 @@ namespace MapMaker
         private readonly LibraryController _libraryController;
         private readonly MapController _mapController;
         private string? _lastFileSaveName = null;
+        private string? _lastExportName = null;
         private ProgressDialog _progressDialog;
         
         public MainWindow()
@@ -177,6 +178,50 @@ namespace MapMaker
             {
                 _lastFileSaveName = dialog.FileName;
                 OnSave(sender, e);
+            }
+        }
+        
+        private void OnExport(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(_lastExportName))
+            {
+                OnExportAs(sender, e);
+            }
+            else
+            {
+                var bmp = new RenderTargetBitmap(
+                    _mapController.MapFile.PixelWidth, 
+                    _mapController.MapFile.PixelHeight, 
+                    96, 
+                    96, 
+                    PixelFormats.Pbgra32);
+                var previousGridState = Settings.Default.ShowGrid;
+                Settings.Default.ShowGrid = _mapController.MapFile.ExportGrid;
+                bmp.Render(Editor.FileView);
+                Settings.Default.ShowGrid = previousGridState;
+                
+                var encoder = new PngBitmapEncoder();
+                BitmapFrame frame = BitmapFrame.Create(bmp);
+                encoder.Frames.Add(frame);
+
+                using var stream = System.IO.File.Create(_lastExportName);
+                encoder.Save(stream);
+                MessageBox.Show("Done Exporting File");
+            }
+        }
+
+        private void OnExportAs(object sender, ExecutedRoutedEventArgs e)
+        {
+            var dialog = new SaveFileDialog
+            {
+                Filter = "png files (*.png)|*.png|All files (*.*)|*.*",
+                OverwritePrompt = true,
+                RestoreDirectory = true
+            };
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _lastExportName = dialog.FileName;
+                OnExport(sender, e);
             }
         }
 

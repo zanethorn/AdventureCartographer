@@ -18,6 +18,7 @@ namespace MapMaker.File
 
         private ObservableCollection<MapLayer> _layers = new();
         private ObservableCollection<ImageFile> _imageFiles = new();
+        private bool _exportGrid;
 
 
         [XmlAttribute]
@@ -28,6 +29,18 @@ namespace MapMaker.File
             {
                 if (value == _name) return;
                 _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [XmlAttribute]
+        public bool ExportGrid
+        {
+            get => _exportGrid;
+            set
+            {
+                if (value == _exportGrid) return;
+                _exportGrid = value;
                 OnPropertyChanged();
             }
         }

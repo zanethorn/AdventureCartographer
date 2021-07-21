@@ -16,9 +16,7 @@
             Command="{x:Static local:CustomCommands.Exit}" />
     </Window.InputBindings>
     <Window.CommandBindings>
-        <CommandBinding
-            Command="{x:Static local:CustomCommands.Exit}"
-            Executed="OnExit" />
+        
         <CommandBinding
             Command="{x:Static local:CustomCommands.ScanDirectory}"
             Executed="OnScanDirectory" />
@@ -41,6 +39,15 @@
         <CommandBinding 
             Command="Open"
             Executed="OnOpen"/>
+        <CommandBinding
+            Command="local:CustomCommands.Export"
+            Executed="OnExport"/>
+        <CommandBinding
+            Command="local:CustomCommands.ExportAs"
+            Executed="OnExportAs"/>
+        <CommandBinding
+            Command="{x:Static local:CustomCommands.Exit}"
+            Executed="OnExit" />
         
         <CommandBinding 
             Command="Undo"
@@ -103,8 +110,12 @@
             <MenuItem Header="_File">
                 <MenuItem Command="New"/>
                 <MenuItem Command="Open"/>
+                <Separator/>
                 <MenuItem Command="Save"/>
                 <MenuItem Command="SaveAs"/>
+                <Separator/>
+                <MenuItem Command="local:CustomCommands.Export" Header="Export"/>
+                <MenuItem Command="local:CustomCommands.ExportAs" Header="ExportAs"/>
                 <Separator/>
                 <MenuItem Header="Exit" Command="local:CustomCommands.Exit"/>
             </MenuItem>
@@ -195,6 +206,6 @@
             </ListView.ItemTemplate>
         </ListView>
         <local:LibraryPanel DockPanel.Dock="Right" />
-        <local:MapEditor DockPanel.ZIndex="-1" />
+        <local:MapEditor x:Name="Editor" DockPanel.ZIndex="-1" />
     </DockPanel>
 </Window>
