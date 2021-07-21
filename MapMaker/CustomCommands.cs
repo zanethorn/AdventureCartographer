@@ -4,6 +4,10 @@ namespace MapMaker
 {
     public static class CustomCommands
     {
+        public static RoutedCommand Export { get; }= new(nameof(Export), typeof(CustomCommands));
+        
+        public static RoutedCommand ExportAs { get; }= new(nameof(ExportAs), typeof(CustomCommands));
+        
         public static RoutedCommand Exit { get; }= new(nameof(Exit), typeof(CustomCommands));
 
         

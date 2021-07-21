@@ -13,11 +13,12 @@ namespace MapMaker.File
     public class MapFile: SmartObject
     {
         private string _name = "UntitledMap1";
-        private int _pixelWidth=1750;
-        private int _pixelHeight=1750;
+        private int _pixelWidth=3500;
+        private int _pixelHeight=3500;
 
         private ObservableCollection<MapLayer> _layers = new();
         private ObservableCollection<ImageFile> _imageFiles = new();
+        private bool _exportGrid;
 
 
         [XmlAttribute]
@@ -28,6 +29,18 @@ namespace MapMaker.File
             {
                 if (value == _name) return;
                 _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [XmlAttribute]
+        public bool ExportGrid
+        {
+            get => _exportGrid;
+            set
+            {
+                if (value == _exportGrid) return;
+                _exportGrid = value;
                 OnPropertyChanged();
             }
         }

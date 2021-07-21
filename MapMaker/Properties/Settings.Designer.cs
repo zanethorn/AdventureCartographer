@@ -37,7 +37,7 @@ namespace MapMaker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        [global::System.Configuration.DefaultSettingValueAttribute("140")]
         public int GridCellWidth {
             get {
                 return ((int)(this["GridCellWidth"]));
