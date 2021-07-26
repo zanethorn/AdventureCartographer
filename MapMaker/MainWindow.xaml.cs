@@ -1,58 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xaml;
-using System.Xml;
 using System.Xml.Serialization;
-using System.Windows.Markup;
-using MapMaker.Commands;
-using MapMaker.Library;
-using MapMaker.Map;
-using MapMaker.Properties;
+using MapMaker.Controllers;
+using MapMaker.Models.Library;
+using MapMaker.Models.Map;
+using MapMaker.Views;
+using MonitoredUndo;
 using Ookii.Dialogs.Wpf;
 using Application = System.Windows.Application;
 using Clipboard = System.Windows.Clipboard;
-using DataFormats = System.Windows.DataFormats;
-using DataObject = System.Windows.DataObject;
 using MessageBox = System.Windows.MessageBox;
-using Path = System.IO.Path;
-using XamlReader = System.Windows.Markup.XamlReader;
-using XamlWriter = System.Windows.Markup.XamlWriter;
 
 namespace MapMaker
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly EditorController _editorController;
         private readonly LibraryController _libraryController;
         private readonly MapController _mapController;
-        private string? _lastFileSaveName = null;
-        private string? _lastExportName = null;
-        private ProgressDialog _progressDialog;
-        
+        private readonly SettingsController _settingsController;
+        private string? _lastExportName;
+        private string? _lastFileSaveName;
+        private ProgressDialog? _progressDialog;
+
         public MainWindow()
         {
             InitializeComponent();
+            _settingsController = (SettingsController) FindResource(nameof(SettingsController));
             _libraryController = (LibraryController) FindResource(nameof(LibraryController));
             _mapController = (MapController) FindResource(nameof(MapController));
             _mapController.PropertyChanged += OnControllerPropertyChanged;
+            _editorController = (EditorController) FindResource(nameof(EditorController));
         }
 
         private void OnScanDirectory(object sender, RoutedEventArgs e)
@@ -65,81 +53,61 @@ namespace MapMaker
                 _libraryController.ScanImageFolderAsync().Wait();
                 var newFileCount = _libraryController.AllImages.Count;
                 var newCollectionCount = _libraryController.ImageCollections.Count;
-                
+
                 var addFileCount = newFileCount - oldFileCount;
                 var addCollectionCount = newCollectionCount - oldCollectionCount;
-                
-                MessageBox.Show(this, $"{addFileCount} Files Added To Library in {Math.Max(1,addCollectionCount)} collections.", "Scan Files");
-            }
 
+                MessageBox.Show(this,
+                    $"{addFileCount} Files Added To Library in {Math.Max(1, addCollectionCount)} collections.",
+                    "Scan Files");
+            }
         }
-        
+
         private void OnShowPreferences(object sender, RoutedEventArgs e)
         {
             var dialog = new PreferencesDialog();
             dialog.ShowDialog();
         }
-        
+
         private void OnShowAbout(object sender, RoutedEventArgs e)
         {
             var dialog = new SplashDialog();
             dialog.ShowDialog();
         }
-        
+
         private void OnViewLibraryDetails(object sender, RoutedEventArgs e)
         {
             var dialog = new LibraryDetailsDialog();
             dialog.ShowDialog();
         }
-        
+
         private void OnExit(object sender, ExecutedRoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
-		private void OnWindowLoaded(object sender, RoutedEventArgs e)
-		{
-            // TODO: Show Loading Screen Here
-            //_progressDialog = new ProgressDialog()
-            //{
-            //    Text = "Loading Image Library"
-            //};
-            
-            Task.Run(async () =>
-            {
-                await _libraryController.LoadLibraryAsync();
-                Dispatcher.BeginInvoke(new Action(OnLibraryLoaded));
-            });
-            //_progressDialog.Show(this);
-        }
-
-        private void OnLibraryLoaded()
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-       
             if (_libraryController.IsEmpty)
-            {
                 // TODO: Put this into a localizable file
                 if (MessageBox.Show(this,
                     "It looks like there are no image files currently in your image library.  Would you like to scan a directory to add some?",
                     "Add Library Files",
                     MessageBoxButton.YesNo
                 ) == MessageBoxResult.Yes)
-                {
-                    if (CustomCommands.ScanDirectory.CanExecute(null,this))
+                    if (CustomCommands.ScanDirectory.CanExecute(null, this))
                         CustomCommands.ScanDirectory.Execute(null, this);
-                }
-            }
         }
 
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
             _libraryController.Dispose();
         }
-        
+
         private void OnNew(object sender, ExecutedRoutedEventArgs e)
         {
             var result = MessageBox.Show(
-                this, 
+                this,
                 "Do you wish to save the current file before creating a new one?",
                 "New File", MessageBoxButton.YesNoCancel);
             switch (result)
@@ -153,24 +121,20 @@ namespace MapMaker
 
             _mapController.NewMap();
         }
-        
+
         private void OnSave(object sender, ExecutedRoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(_lastFileSaveName))
-            {
                 OnSaveAs(sender, e);
-            }
             else
-            {
-                Task.Run(() => _mapController.SaveMap(_lastFileSaveName));
-            }
+                Task.Run(() => _mapController.SaveMap(_lastFileSaveName, _editorController.SelectedMap));
         }
 
         private void OnSaveAs(object sender, ExecutedRoutedEventArgs e)
         {
             var dialog = new SaveFileDialog
             {
-                FileName = _mapController.MapFile.Name,
+                FileName = _editorController.SelectedMap.Name,
                 Filter = "map files (*.mapx)|*.mapx|All files (*.*)|*.*",
                 OverwritePrompt = true,
                 RestoreDirectory = true
@@ -181,7 +145,7 @@ namespace MapMaker
                 OnSave(sender, e);
             }
         }
-        
+
         private void OnExport(object sender, ExecutedRoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(_lastExportName))
@@ -191,21 +155,21 @@ namespace MapMaker
             else
             {
                 var bmp = new RenderTargetBitmap(
-                    _mapController.MapFile.PixelWidth, 
-                    _mapController.MapFile.PixelHeight, 
-                    96, 
-                    96, 
+                    _editorController.SelectedMap.PixelWidth,
+                    _editorController.SelectedMap.PixelHeight,
+                    96,
+                    96,
                     PixelFormats.Pbgra32);
-                var previousGridState = Settings.Default.ShowGrid;
-                Settings.Default.ShowGrid = _mapController.MapFile.ExportGrid;
+                var previousGridState = _settingsController.Settings.ShowGrid;
+                _settingsController.Settings.ShowGrid = _editorController.SelectedMap.ExportGrid;
                 bmp.Render(Editor.FileView);
-                Settings.Default.ShowGrid = previousGridState;
-                
+                _settingsController.Settings.ShowGrid = previousGridState;
+
                 var encoder = new PngBitmapEncoder();
                 BitmapFrame frame = BitmapFrame.Create(bmp);
                 encoder.Frames.Add(frame);
 
-                using var stream = System.IO.File.Create(_lastExportName);
+                using var stream = File.Create(_lastExportName);
                 encoder.Save(stream);
                 MessageBox.Show("Done Exporting File");
             }
@@ -215,7 +179,7 @@ namespace MapMaker
         {
             var dialog = new SaveFileDialog
             {
-                FileName = _mapController.MapFile.Name,
+                FileName = _editorController.SelectedMap.Name,
                 Filter = "png files (*.png)|*.png|All files (*.*)|*.*",
                 OverwritePrompt = true,
                 RestoreDirectory = true
@@ -229,7 +193,7 @@ namespace MapMaker
 
         private void OnOpen(object sender, ExecutedRoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog()
+            var dialog = new OpenFileDialog
             {
                 Filter = "map files (*.mapx)|*.mapx|All files (*.*)|*.*",
                 RestoreDirectory = true
@@ -237,29 +201,29 @@ namespace MapMaker
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 _lastFileSaveName = dialog.FileName;
-                Task.Run(()=>_mapController.LoadMap(_lastFileSaveName));
+                Task.Run(() => _mapController.LoadMap(_lastFileSaveName));
             }
         }
-        
+
         private void OnUndo(object sender, ExecutedRoutedEventArgs e)
         {
-            _mapController.Undo();
+            _editorController.Undo();
         }
 
         private void OnCanUndo(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _mapController.CanUndo;
+            e.CanExecute = _editorController.CanUndo;
             e.Handled = true;
         }
-        
+
         private void OnRedo(object sender, ExecutedRoutedEventArgs e)
         {
-            _mapController.Redo();
+            _editorController.Redo();
         }
 
         private void OnCanRedo(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _mapController.CanRedo;
+            e.CanExecute = _editorController.CanRedo;
             e.Handled = true;
         }
 
@@ -270,7 +234,7 @@ namespace MapMaker
                 Clipboard.Clear();
                 var serializer = new XmlSerializer(typeof(MapObject));
                 using StringWriter writer = new();
-                serializer.Serialize(writer,mapObject);
+                serializer.Serialize(writer, mapObject);
                 Clipboard.SetData(nameof(MapObject), writer.ToString());
                 e.Handled = true;
             }
@@ -281,23 +245,30 @@ namespace MapMaker
             e.CanExecute = e.Parameter != null;
             e.Handled = true;
         }
-        
+
         private void OnDuplicate(object sender, ExecutedRoutedEventArgs e)
         {
             switch (e.Parameter)
             {
-                case MapImage mapImage:
+                case MapObject mapObject:
                 {
-                    var newImage = (MapImage)mapImage.Clone();
-                    var command = new AddImageCommand(newImage, _mapController.SelectedLayer);
-                    _mapController.IngestCommand(command);
+                    var newImage = (MapImage) mapObject.Clone();
+                    _mapController.AddObjectToLayer(
+                        _editorController.SelectedMap,
+                        _editorController.SelectedLayer,
+                        newImage
+                        );
+                    _editorController.SelectedObject = newImage;
                     break;
                 }
-                case MapLayer layer:
+                case MapLayer mapLayer:
                 {
-                    var newLayer = (MapLayer)layer.Clone();
-                    var command = new AddLayerCommand(newLayer, _mapController.MapFile.Layers.IndexOf(layer));
-                    _mapController.IngestCommand(command);
+                    var newLayer = (MapLayer) mapLayer.Clone();
+                    _mapController.AddLayer(
+                        _editorController.SelectedMap,
+                        newLayer
+                        );
+                    _editorController.SelectedLayer = newLayer;
                     break;
                 }
             }
@@ -315,7 +286,7 @@ namespace MapMaker
 
             e.Handled = true;
         }
-        
+
         private void OnCut(object sender, ExecutedRoutedEventArgs e)
         {
             OnCopy(sender, e);
@@ -327,17 +298,22 @@ namespace MapMaker
             e.CanExecute = e.Parameter != null;
             e.Handled = true;
         }
-        
+
         private void OnPaste(object sender, ExecutedRoutedEventArgs e)
         {
             if (Clipboard.ContainsData(nameof(MapObject)))
             {
                 var serializer = new XmlSerializer(typeof(MapObject));
-                using StringReader reader = new(Clipboard.GetData(nameof(MapObject)).ToString());
-                var mapObject = (MapObject) serializer.Deserialize(reader);
+                using StringReader reader = new(Clipboard.GetData(nameof(MapObject)).ToString() ?? string.Empty);
+                var mapObject = (MapObject) serializer.Deserialize(reader)!;
 
-                var command = new AddImageCommand(mapObject as MapImage, _mapController.SelectedLayer);
-                _mapController.IngestCommand(command);
+                _mapController.AddObjectToLayer(
+                    _editorController.SelectedMap,
+                    _editorController.SelectedLayer,
+                    mapObject
+                    );
+                _editorController.SelectedObject = mapObject;
+
                 e.Handled = true;
             }
         }
@@ -347,15 +323,20 @@ namespace MapMaker
             e.CanExecute = Clipboard.ContainsData(nameof(MapObject));
             e.Handled = true;
         }
-        
+
         private void OnDelete(object sender, ExecutedRoutedEventArgs e)
         {
             switch (e.Parameter)
             {
-                case MapImage mapImage:
+                case MapObject mapObject:
                 {
-                    var command = new DeleteImageCommand(mapImage, _mapController.SelectedLayer);
-                    _mapController.IngestCommand(command);
+                    _mapController.DeleteObjectFromLayer(
+                        _editorController.SelectedMap,
+                        _editorController.SelectedLayer,
+                        mapObject
+                        );
+                    if (mapObject == _editorController.SelectedObject)
+                        _editorController.SelectedObject = null;
                     break;
                 }
                 case LibraryImage libraryImage:
@@ -364,16 +345,18 @@ namespace MapMaker
                         "Are you sure you wish to delete this image from your library?",
                         "Delete Image",
                         MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                    {
                         _libraryController.DeleteImage(libraryImage).Wait();
-                        //Task.Run(async () => await _libraryController.DeleteImage(libraryImage));
-                    }
                     break;
                 }
-                case MapLayer layer:
+                case MapLayer mapLayer:
                 {
-                    var command = new DeleteLayerCommand(layer);
-                    _mapController.IngestCommand(command);
+                    var ix = _editorController.SelectedMap.Layers.IndexOf(_editorController.SelectedLayer);
+                    _mapController.DeleteLayer(
+                        _editorController.SelectedMap,
+                        mapLayer
+                        );
+                    if (mapLayer == _editorController.SelectedLayer)
+                        _editorController.SelectedLayer = _editorController.SelectedMap.Layers[ix];
                     break;
                 }
             }
@@ -388,28 +371,33 @@ namespace MapMaker
                     e.CanExecute = true;
                     break;
                 case MapLayer:
-                    e.CanExecute = _mapController.MapFile.Layers.Count > 1;
+                    e.CanExecute = _editorController.SelectedMap.Layers.Count > 1;
                     break;
             }
 
             e.Handled = true;
         }
 
-        
+
         private void OnMoveUp(object sender, ExecutedRoutedEventArgs e)
         {
             switch (e.Parameter)
             {
                 case MapObject mapObject:
                 {
-                    var command = new ReorderObjectCommand(mapObject, _mapController.SelectedLayer, _mapController.SelectedLayer.MapObjects.IndexOf(mapObject) +1);
-                    _mapController.IngestCommand(command);
+                    _mapController.MoveObjectUp(
+                        _editorController.SelectedMap,
+                        _editorController.SelectedLayer,
+                        mapObject
+                        );
                     break;
                 }
-                case MapLayer layer:
+                case MapLayer mapLayer:
                 {
-                    var command = new ReorderLayerCommand(layer,_mapController.MapFile.Layers.IndexOf(layer)+1);
-                    _mapController.IngestCommand(command);
+                    _mapController.MoveLayerUp(
+                        _editorController.SelectedMap,
+                        mapLayer
+                        );
                     break;
                 }
             }
@@ -420,30 +408,37 @@ namespace MapMaker
             switch (e.Parameter)
             {
                 case MapObject mapObject:
-                    e.CanExecute = _mapController.SelectedLayer.MapObjects.IndexOf(mapObject) < _mapController.SelectedLayer.MapObjects.Count -1;
+                    e.CanExecute = _editorController.SelectedLayer.MapObjects.IndexOf(mapObject) <
+                                   _editorController.SelectedLayer.MapObjects.Count - 1;
                     break;
                 case MapLayer layer:
-                    e.CanExecute = _mapController.MapFile.Layers.IndexOf(layer) < _mapController.MapFile.Layers.Count-1;
+                    e.CanExecute = _editorController.SelectedMap.Layers.IndexOf(layer) <
+                                   _editorController.SelectedMap.Layers.Count - 1;
                     break;
             }
 
             e.Handled = true;
         }
-        
+
         private void OnMoveDown(object sender, ExecutedRoutedEventArgs e)
         {
             switch (e.Parameter)
             {
                 case MapObject mapObject:
                 {
-                    var command = new ReorderObjectCommand(mapObject, _mapController.SelectedLayer, _mapController.SelectedLayer.MapObjects.IndexOf(mapObject) -1);
-                    _mapController.IngestCommand(command);
+                    _mapController.MoveObjectDown(
+                        _editorController.SelectedMap,
+                        _editorController.SelectedLayer,
+                        mapObject
+                    );
                     break;
                 }
-                case MapLayer layer:
+                case MapLayer mapLayer:
                 {
-                    var command = new ReorderLayerCommand(layer,_mapController.MapFile.Layers.IndexOf(layer)-1);
-                    _mapController.IngestCommand(command);
+                    _mapController.MoveLayerDown(
+                        _editorController.SelectedMap,
+                        mapLayer
+                    );
                     break;
                 }
             }
@@ -454,71 +449,78 @@ namespace MapMaker
             switch (e.Parameter)
             {
                 case MapObject mapObject:
-                    e.CanExecute = _mapController.SelectedLayer.MapObjects.IndexOf(mapObject) >0;
+                    e.CanExecute = _editorController.SelectedLayer.MapObjects.IndexOf(mapObject) > 0;
                     break;
                 case MapLayer layer:
-                    e.CanExecute = _mapController.MapFile.Layers.IndexOf(layer) > 0;
+                    e.CanExecute = _editorController.SelectedMap.Layers.IndexOf(layer) > 0;
                     break;
             }
 
             e.Handled = true;
         }
-        
+
         private void OnMoveTop(object sender, ExecutedRoutedEventArgs e)
         {
             switch (e.Parameter)
             {
                 case MapObject mapObject:
                 {
-                    var command = new ReorderObjectCommand(mapObject, _mapController.SelectedLayer, _mapController.SelectedLayer.MapObjects.Count -1);
-                    _mapController.IngestCommand(command);
+                    _mapController.MoveObjectTop(
+                        _editorController.SelectedMap,
+                        _editorController.SelectedLayer,
+                        mapObject
+                    );
                     break;
                 }
-                case MapLayer layer:
+                case MapLayer mapLayer:
                 {
-                    var command = new ReorderLayerCommand(layer,_mapController.MapFile.Layers.Count-1);
-                    _mapController.IngestCommand(command);
+                    _mapController.MoveLayerTop(
+                        _editorController.SelectedMap,
+                        mapLayer
+                    );
                     break;
                 }
             }
         }
-        
+
         private void OnMoveBottom(object sender, ExecutedRoutedEventArgs e)
         {
             switch (e.Parameter)
             {
                 case MapObject mapObject:
                 {
-                    var command = new ReorderObjectCommand(mapObject, _mapController.SelectedLayer, 0);
-                    _mapController.IngestCommand(command);
+                    _mapController.MoveObjectBottom(
+                        _editorController.SelectedMap,
+                        _editorController.SelectedLayer,
+                        mapObject
+                    );
                     break;
                 }
-                case MapLayer layer:
+                case MapLayer mapLayer:
                 {
-                    var command = new ReorderLayerCommand(layer,0);
-                    _mapController.IngestCommand(command);
+                    _mapController.MoveLayerDown(
+                        _editorController.SelectedMap,
+                        mapLayer
+                    );
                     break;
                 }
             }
         }
-        
+
         private void OnNewLayer(object sender, ExecutedRoutedEventArgs e)
         {
-            var newLayer = new MapLayer()
+            var newLayer = new MapLayer
             {
-                Name = $"UntitledLayer_{_mapController.MapFile.Layers.Count+1}"
+                Name = $"UntitledLayer_{_editorController.SelectedMap.Layers.Count + 1}"
             };
-            var command = new AddLayerCommand(newLayer);
-            _mapController.IngestCommand(command);
+            _mapController.AddLayer(_editorController.SelectedMap,newLayer);
         }
-        
-        private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
+
+        private void OnControllerPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MapController.CanUndo) ||
-                e.PropertyName == nameof(MapController.CanRedo))
-            {
+            if (e.PropertyName == nameof(EditorController.CanUndo) ||
+                e.PropertyName == nameof(EditorController.CanRedo))
                 CommandManager.InvalidateRequerySuggested();
-            }
         }
 
         private void OnShowMapSettings(object sender, ExecutedRoutedEventArgs e)

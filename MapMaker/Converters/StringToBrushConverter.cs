@@ -5,10 +5,10 @@ using System.Windows.Media;
 
 namespace MapMaker.Converters
 {
-    public class StringToBrushConverter:IValueConverter
+    public class StringToBrushConverter : IValueConverter
     {
-        private static readonly BrushConverter Converter = new BrushConverter();
-        
+        private static readonly BrushConverter Converter = new();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return string.IsNullOrEmpty(System.Convert.ToString(value))

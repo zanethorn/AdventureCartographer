@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace MapMaker.Converters
 {
-    public class EnumToIntConverter:IValueConverter
+    public class EnumToIntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

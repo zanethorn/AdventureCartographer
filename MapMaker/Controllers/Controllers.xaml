@@ -1,0 +1,8 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controllers="clr-namespace:MapMaker.Controllers">
+    <controllers:LibraryController x:Key="LibraryController" />
+    <controllers:MapController x:Key="MapController" />
+    <controllers:SettingsController x:Key="SettingsController" />
+    <controllers:EditorController x:Key="EditorController" />
+</ResourceDictionary>

@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="MapMaker.Views.MapEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="clr-namespace:MapMaker.Properties"
+             xmlns:views="clr-namespace:MapMaker.Views"
+             mc:Ignorable="d"
+             DataContext="{StaticResource MapController}"
+             AllowDrop="True"
+             MouseMove="OnMouseMove"
+             MouseDown="OnMouseDown"
+             MouseUp="OnMouseUp"
+             MouseLeave="OnMouseLeave"
+             Drop="OnDrop"
+
+             x:Name="editor">
+    <UserControl.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Copy"
+                        CanExecute="OnCanCopy" />
+        <CommandBinding Command="ApplicationCommands.Paste"
+                        Executed="OnPaste"
+                        CanExecute="OnCanPaste" />
+    </UserControl.CommandBindings>
+    <Canvas>
+        <Canvas.Background>
+            <DrawingBrush TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <!-- checkerboard background -->
+                        <GeometryDrawing
+                            Brush="{Binding Source={StaticResource SettingsController}, Path=BackgroundGridColor1, Converter={StaticResource BrushConverter}}">
+                            <GeometryDrawing.Geometry>
+                                <RectangleGeometry Rect="0,0,2,2" />
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+
+                        <!-- two checkerboard foreground tiles -->
+                        <GeometryDrawing
+                            Brush="{Binding Source={StaticResource SettingsController}, Path=BackgroundGridColor2, Converter={StaticResource BrushConverter}}">
+                            <GeometryDrawing.Geometry>
+                                <GeometryGroup>
+                                    <RectangleGeometry Rect="0,0,1,1" />
+                                    <RectangleGeometry Rect="1,1,1,1" />
+                                </GeometryGroup>
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Canvas.Background>
+
+        <Slider Canvas.Top="20"
+                Canvas.Right="20"
+                Canvas.ZIndex="10000"
+                Cursor="Arrow"
+                Maximum="4"
+                Minimum="0.05"
+                MinHeight="300"
+                Value="{Binding Scale, Mode=TwoWay}"
+                Orientation="Vertical"
+                Background="Gainsboro"
+                Foreground="LightSlateGray" />
+
+        <views:MapFileView x:Name="FileView"
+                           Canvas.ZIndex="0"
+                           Canvas.Left="{Binding Offset.X}"
+                           Canvas.Top="{Binding Offset.Y}"
+                           Height="{Binding MapFile.PixelWidth}"
+                           Width="{Binding MapFile.PixelHeight}" />
+
+    </Canvas>
+</UserControl>

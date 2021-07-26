@@ -9,7 +9,7 @@ namespace MapMaker.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var resource = Application.Current.FindResource(System.Convert.ToString(value));             
+            var resource = Application.Current.FindResource(System.Convert.ToString(value));
             return resource ?? Binding.DoNothing;
         }
 

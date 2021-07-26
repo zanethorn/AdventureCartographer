@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace MapMaker.Converters
 {
-    public class CollectionIndexConverter:IMultiValueConverter
+    public class CollectionIndexConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

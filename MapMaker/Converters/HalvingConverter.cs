@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace MapMaker.Converters
 {
-    public class HalvingConverter:IValueConverter
+    public class HalvingConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

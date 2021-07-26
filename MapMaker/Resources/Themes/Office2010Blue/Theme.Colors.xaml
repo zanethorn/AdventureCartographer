@@ -5,11 +5,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
     <!-- ********************************** THEME BRUSHES - For Color Tuner **********************************-->
-    <SolidColorBrush x:Key="Brush01" Color="#FFb9cee6"/>
-    <SolidColorBrush x:Key="Brush02" Color="#FF87AAD0"/>
-    <SolidColorBrush x:Key="Brush03" Color="#FF516189"/>
-    <SolidColorBrush x:Key="Brush04" Color="#FFEDDD39"/>
-    <SolidColorBrush x:Key="Brush05" Color="#FFFFA500"/>
+    <SolidColorBrush x:Key="Brush01" Color="#FFb9cee6" />
+    <SolidColorBrush x:Key="Brush02" Color="#FF87AAD0" />
+    <SolidColorBrush x:Key="Brush03" Color="#FF516189" />
+    <SolidColorBrush x:Key="Brush04" Color="#FFEDDD39" />
+    <SolidColorBrush x:Key="Brush05" Color="#FFFFA500" />
 
     <!-- ********************************** THEME COLORS **********************************-->
     <Color x:Key="Color_001">#FF181818</Color>
@@ -76,14 +76,14 @@
     <Color x:Key="Color_1018">#FFF99544</Color>
     <Color x:Key="Color_1020">#FFFDB881</Color>
     <Color x:Key="Color_1021">#FF616161</Color>
-  
+
     <!-- ********************************** BULLETGRAPH/LINEARGAUGE COLORS **********************************-->
     <Color x:Key="Color_1022">#FF395D8A</Color>
     <Color x:Key="Color_1023">#FF446FA3</Color>
-  <Color x:Key="Color_1024">#FF4F81BD</Color>
-  
+    <Color x:Key="Color_1024">#FF4F81BD</Color>
+
 
     <Color x:Key="Color_1025">#FF6C96C7</Color>
     <Color x:Key="Color_1026">#FF8AAAD2</Color>
-  
+
 </ResourceDictionary>

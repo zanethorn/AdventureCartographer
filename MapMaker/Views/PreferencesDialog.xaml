@@ -1,0 +1,80 @@
+<Window x:Class="MapMaker.Views.PreferencesDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:properties="clr-namespace:MapMaker.Properties"
+        xmlns:views="clr-namespace:MapMaker.Views"
+        mc:Ignorable="d"
+        Title="Preferences" Height="450" Width="800"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="10">
+        <TabControl>
+            <TabItem Header="Grid">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Target="{Binding ElementName=ShowGrid}">Show Grid</Label>
+                    <CheckBox Grid.Row="0" Grid.Column="1" x:Name="ShowGrid"
+                              IsChecked="{Binding Source={StaticResource SettingsController}, Path=ShowGrid, Mode=TwoWay}" />
+
+                    <Label Grid.Row="1" Grid.Column="0" Target="{Binding ElementName=GridSize}">Grid Size (px):</Label>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="GridSize"
+                             Text="{Binding Source={StaticResource SettingsController}, Path=GridCellWidth, Mode=TwoWay}"
+                             PreviewTextInput="GridSize_OnPreviewTextInput" />
+
+                    <Label Grid.Row="2" Grid.Column="0" Target="{Binding ElementName=GridLineColor}">Line Color:</Label>
+                    <views:ColorPickerButton Grid.Row="2" Grid.Column="1" x:Name="GridLineColor"
+                                             Color="{Binding Source={StaticResource SettingsController}, Path=GridPenColor, Mode=TwoWay}" />
+
+                    <Label Grid.Row="3" Grid.Column="0" Target="{Binding ElementName=GridBackground1}">Background Color 1:</Label>
+                    <views:ColorPickerButton Grid.Row="3" Grid.Column="1" x:Name="GridBackground1"
+                                             Color="{Binding Source={StaticResource SettingsController}, Path=BackgroundGridColor1, Mode=TwoWay}" />
+
+                    <Label Grid.Row="4" Grid.Column="0" Target="{Binding ElementName=GridBackground2}">Background Color 2:</Label>
+                    <views:ColorPickerButton Grid.Row="4" Grid.Column="1" x:Name="GridBackground2"
+                                             Color="{Binding Source={StaticResource SettingsController}, Path=BackgroundGridColor2, Mode=TwoWay}" />
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Editor">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+
+                    <Label Grid.Row="2" Grid.Column="0" Target="{Binding ElementName=ControlHighlightColorPicker}">Highlight Color:</Label>
+                    <views:ColorPickerButton Grid.Row="2" Grid.Column="1" x:Name="ControlHighlightColorPicker"
+                                             Color="{Binding Source={StaticResource SettingsController}, Path=ControlHighlightColor, Mode=TwoWay}" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button IsDefault="True" Content="Save" Click="OnDefault" />
+            <Button IsCancel="True" Content="Cancel" />
+        </StackPanel>
+    </StackPanel>
+</Window>

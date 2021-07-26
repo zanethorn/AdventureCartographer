@@ -26,26 +26,12 @@
       <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
       <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
       <PackageReference Include="PixiEditor.ColorPicker" Version="3.1.0" />
+        <PackageReference Include="MUF" Version="2.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Resource Include="Resources\Cursors\*.cur" />
       <Resource Include="Resources\Icons\*.png" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Properties\Settings.Designer.cs">
-        <DesignTimeSharedInput>True</DesignTimeSharedInput>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Settings.settings</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="Properties\Settings.settings">
-        <Generator>PublicSettingsSingleFileGenerator</Generator>
-        <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-      </None>
     </ItemGroup>
 
     <ItemGroup>

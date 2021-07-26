@@ -2,16 +2,16 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using MapMaker.Map;
+using MapMaker.Models.Map;
 
 namespace MapMaker.Converters
 {
-    public class ShouldShowEccentricityConverter:IValueConverter
+    public class ShouldShowEccentricityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return Visibility.Collapsed;
-            var shapeType = (ShapeTypes)value;
+            var shapeType = (ShapeTypes) value;
             return shapeType == ShapeTypes.Star
                 ? Visibility.Visible
                 : Visibility.Collapsed;
