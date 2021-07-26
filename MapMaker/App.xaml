@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:MapMaker"
              xmlns:ui="http://schemas.modernwpf.com/2019"
              xmlns:library="clr-namespace:MapMaker.Library"
-             xmlns:file="clr-namespace:MapMaker.File"
+             xmlns:map="clr-namespace:MapMaker.Map"
              StartupUri="MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
@@ -18,8 +18,8 @@
             </ResourceDictionary.MergedDictionaries>
 
             <library:LibraryController x:Key="LibraryController" />
-            <file:MapController x:Key="MapController" />
-
+            <map:MapController x:Key="MapController" />
+            <local:ViewController x:Key="ViewController" />
             
             <DataTemplate x:Key="ImageFileTemplate">
                 <library:ImageFileView />

@@ -1,11 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using MapMaker.Commands;
-using MapMaker.File;
 using MapMaker.Library;
+using MapMaker.Map;
+using MapMaker.Properties;
 
 namespace MapMaker
 {
@@ -13,6 +15,9 @@ namespace MapMaker
     {
         private LibraryController _library;
         private MapController _map;
+        private Point _lastPosition;
+        private Point _downPosition;
+        private Point _upPosition;
 
         public MapEditor()
         {
@@ -62,10 +67,10 @@ namespace MapMaker
                     }
                 });
             }
-            else if (e.Data.GetDataPresent(typeof(ImageFile)))
+            else if (e.Data.GetDataPresent(typeof(LibraryImage)))
             {
-                var data = e.Data.GetData(typeof(ImageFile));
-                if (data is ImageFile imgFile)
+                var data = e.Data.GetData(typeof(LibraryImage));
+                if (data is LibraryImage imgFile)
                 {
                     var imgObject = new MapImage()
                     {
@@ -88,22 +93,158 @@ namespace MapMaker
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            Controller.SelectedTool.Move(e.GetPosition(FileView));
+            var thisPosition = e.GetPosition(FileView);
+            var moveOffset = _lastPosition - thisPosition;
+            Controller.CursorPosition = thisPosition;
+            Cursor cursor = Cursors.Arrow;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                IMapCommand command = null;
+                switch (Controller.SelectedTool)
+                {
+                    case ToolTypes.Pointer:
+                    {
+                        if (Controller.SelectedObject != null)
+                        {
+                            cursor = Cursors.ScrollAll;
+                            command = new DragResizeObjectCommand(Controller.SelectedObject,
+                                Controller.SelectedObject.Offset - moveOffset ,
+                                Controller.SelectedObject.Size);
+                        }
+                        else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                        {
+                            cursor = Cursors.ScrollAll;
+                            command = new PanFileViewCommand(Controller.Offset - moveOffset);
+                        }
+                    }
+                        break;
+                    case ToolTypes.Pan:
+                    {
+                        cursor = Cursors.ScrollAll;
+                        command = new PanFileViewCommand(Controller.Offset - moveOffset);
+                    }
+                        break;
+                    case ToolTypes.Shape:
+                    {
+                    }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(MapController.SelectedTool));
+                }
+
+                if (command != null)
+                {
+                    Controller.IngestCommand(command);
+                }
+            }
+            else
+            {
+                switch (Controller.SelectedTool)
+                {
+                    case ToolTypes.Pointer:
+                    {
+                        if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                        {
+                            cursor = Cursors.Hand;
+                        }
+                    }
+                        break;
+                    case ToolTypes.Pan:
+                    {
+                        cursor = Cursors.Hand;
+                    }
+                        break;
+                    case ToolTypes.Shape:
+                    {
+                        cursor = Cursors.Pen;
+                    }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(MapController.SelectedTool));
+                }
+            }
+
+            Cursor = cursor;
+            _lastPosition = thisPosition;
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Controller.SelectedTool.Down(e.GetPosition(FileView));
+            _downPosition = e.GetPosition(FileView);
+            IMapCommand command = null;
+            switch (Controller.SelectedTool)
+            {
+                case ToolTypes.Pointer:
+                {
+                }
+                    break;
+                case ToolTypes.Pan:
+                {
+                }
+                    break;
+                case ToolTypes.Shape:
+                {
+                    var shape = new MapShape()
+                    {
+                        Offset = _downPosition,
+                        Size = new Size(3 * Settings.Default.GridCellWidth, 3 * Settings.Default.GridCellWidth)
+                    };
+                    command = new AddObjectCommand(shape, Controller.SelectedLayer);
+                    Controller.SelectObject(shape,true);
+                }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(MapController.SelectedTool));
+            }
+
+            if (command != null)
+            {
+                Controller.IngestCommand(command);
+            }
+
+            _lastPosition = _downPosition;
         }
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            Controller.SelectedTool.Up(e.GetPosition(FileView));
+            _upPosition = e.GetPosition(FileView);
+            var moveOffset = _lastPosition - _upPosition;
+            Controller.CursorPosition = _upPosition;
+            IMapCommand command = null;
+            switch (Controller.SelectedTool)
+            {
+                case ToolTypes.Pointer:
+                {
+                    command = new DragResizeObjectCommand(Controller.SelectedObject,
+                        Controller.SnapToGrid(Controller.SelectedObject.Offset - moveOffset) ,
+                        Controller.SelectedObject.Size);
+                }
+                    break;
+                case ToolTypes.Pan:
+                {
+                }
+                    break;
+                case ToolTypes.Shape:
+                {
+                    
+                }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(MapController.SelectedTool));
+            }
+
+            if (command != null)
+            {
+                Controller.IngestCommand(command);
+            }
+
+            _lastPosition = _upPosition;
         }
 
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
-            Controller.SelectedTool.Up(e.GetPosition(FileView));
+            //Controller.SelectedTool.Up(e.GetPosition(FileView));
         }
 
         private void OnCanCopy(object sender, CanExecuteRoutedEventArgs e)

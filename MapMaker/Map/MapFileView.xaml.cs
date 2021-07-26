@@ -1,7 +1,6 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Input;
 
-namespace MapMaker.File
+namespace MapMaker.Map
 {
     public partial class MapFileView : UserControl
     {

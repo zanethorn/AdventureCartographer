@@ -30,7 +30,7 @@ namespace MapMaker.Library
             }
         }
 
-        public SmartCollection<ImageFile> Images { get; set; } = new();
+        public SmartCollection<LibraryImage> Images { get; set; } = new();
 
         protected override void OnNotificationsDispatched()
         {

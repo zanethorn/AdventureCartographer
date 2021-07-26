@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using System.Xml.Serialization;
-using MapMaker.Annotations;
 using MapMaker.Commands;
 using MapMaker.Properties;
 
-namespace MapMaker.File
+namespace MapMaker.Map
 {
     public class MapController : SmartObject
     {
@@ -34,33 +30,44 @@ namespace MapMaker.File
         private readonly Stack<IMapCommand> _redoStack = new();
         private IMapCommand? _currentCommand;
 
-        private Tool _selectedTool;
-        private readonly IList<Tool> _tools;
+        private ToolTypes _selectedTool;
+        private Point _cursorPosition;
+        private MapBrush _selectedBrush;
 
         public MapController()
         {
-            SelectedTool = new Pointer(this);
-            _tools = new List<Tool>
-            {
-                SelectedTool,
-                new Pan(this)
-            };
-
             NewMap();
         }
 
         public bool CanUndo => _undoStack.Count > 0;
         public bool CanRedo => _redoStack.Count > 0;
 
-        public IEnumerable<Tool> Tools => _tools;
-
-        public Tool SelectedTool
+        public Cursor Cursor => SelectedTool switch
+        {
+            ToolTypes.Pointer => Cursors.Arrow,
+            ToolTypes.Pan => Cursors.Hand,
+            ToolTypes.Shape => Cursors.Arrow,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        
+        public ToolTypes SelectedTool
         {
             get => _selectedTool;
             set
             {
                 if (value == _selectedTool) return;
                 _selectedTool = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Point CursorPosition
+        {
+            get => _cursorPosition;
+            set
+            {
+                if (value.Equals(_cursorPosition)) return;
+                _cursorPosition = value;
                 OnPropertyChanged();
             }
         }
@@ -121,6 +128,17 @@ namespace MapMaker.File
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 if (Equals(value, _selectedLayer)) return;
                 _selectedLayer = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public MapBrush SelectedBrush
+        {
+            get => _selectedBrush;
+            set
+            {
+                if (Equals(value, _selectedBrush)) return;
+                _selectedBrush = value;
                 OnPropertyChanged();
             }
         }

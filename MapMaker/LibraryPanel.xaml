@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MapMaker"
              xmlns:library="clr-namespace:MapMaker.Library"
-             xmlns:file="clr-namespace:MapMaker.File"
+             xmlns:map="clr-namespace:MapMaker.Map"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Expander ExpandDirection="Left" IsExpanded="True">
-        <TabControl MinWidth="200">
+        <TabControl MinWidth="300">
             <TabItem Header="Collections">
                 <ScrollViewer>
                     <library:ImageLibraryView />
@@ -52,7 +52,7 @@
 
             </TabItem>
             <TabItem Header="Layers">
-                <file:LayerPanel />
+                <map:LayerPanel />
             </TabItem>
         </TabControl>
     </Expander>

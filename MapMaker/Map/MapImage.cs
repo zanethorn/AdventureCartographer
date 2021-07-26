@@ -1,16 +1,15 @@
 ﻿using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using MapMaker.Library;
 
-namespace MapMaker.File
+namespace MapMaker.Map
 {
     [XmlType(nameof(MapImage))]
     public class MapImage:MapObject
     {
-        private ImageFile _image;
+        private LibraryImage _image;
 
-        public ImageFile Image
+        public LibraryImage Image
         {
             get => _image;
             set
@@ -18,6 +17,7 @@ namespace MapMaker.File
                 if (Equals(value, _image)) return;
                 _image = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(RenderedBrush));
             }
         }
 
@@ -30,6 +30,11 @@ namespace MapMaker.File
         public override string ToString()
         {
             return $"Image ({Image.ShortName})";
+        }
+
+        public override Brush GetRenderBrush()
+        {
+            return Image.GetRenderBrush();
         }
     }
 }

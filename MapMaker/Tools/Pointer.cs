@@ -1,7 +1,7 @@
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using MapMaker.Annotations;
-using MapMaker.File;
+using MapMaker.Map;
 using MapMaker.Properties;
 
 namespace MapMaker

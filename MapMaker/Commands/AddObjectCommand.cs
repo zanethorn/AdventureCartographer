@@ -1,10 +1,10 @@
-using MapMaker.File;
+using MapMaker.Map;
 
 namespace MapMaker.Commands
 {
-    public abstract class AddObjectCommand:IMapCommand
+    public  class AddObjectCommand:IMapCommand
     {
-        protected AddObjectCommand(MapObject mapObject, MapLayer mapLayer)
+        public AddObjectCommand(MapObject mapObject, MapLayer mapLayer)
         {
             MapObject = mapObject;
             MapLayer = mapLayer;

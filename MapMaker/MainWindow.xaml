@@ -158,7 +158,7 @@
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Name}" />
+                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool}" />
                 </StackPanel>
             </StatusBarItem>
             <StatusBarItem>
@@ -195,22 +195,7 @@
             </StatusBarItem>
         </StatusBar>
     
-        <ListView DockPanel.Dock="Left"
-                  Background="GhostWhite" 
-                  BorderBrush="Gainsboro" 
-                  BorderThickness="1" 
-                  VerticalAlignment="Stretch"
-                  DataContext="{StaticResource MapController}"
-                  ItemsSource="{Binding Tools}"
-                  SelectedItem="{Binding SelectedTool, Mode=TwoWay}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Image Height="24"
-                           Width="24"
-                           Source="{Binding IconName, Converter={StaticResource BindingResourceConverter}}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <local:ToolTray DockPanel.Dock="Left" />
         <local:LibraryPanel DockPanel.Dock="Right" />
         <local:MapEditor x:Name="Editor" DockPanel.ZIndex="-1" />
     </DockPanel>

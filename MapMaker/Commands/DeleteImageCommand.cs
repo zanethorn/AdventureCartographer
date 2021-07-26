@@ -1,5 +1,5 @@
 using MapMaker.Annotations;
-using MapMaker.File;
+using MapMaker.Map;
 
 namespace MapMaker.Commands
 {

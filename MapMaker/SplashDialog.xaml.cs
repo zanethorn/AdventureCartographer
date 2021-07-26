@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Input;
 
 namespace MapMaker
 {
@@ -13,9 +14,9 @@ namespace MapMaker
             DataContext = FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly()!.Location);
         }
 
-		private void Window_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void OnMouseUp(object sender, MouseButtonEventArgs e)
 		{
-            DialogResult = true;
+			DialogResult = true;
 		}
-	}
+    }
 }

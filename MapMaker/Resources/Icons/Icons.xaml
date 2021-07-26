@@ -7,7 +7,8 @@
     <BitmapImage x:Key="MoveBottomIcon" UriSource="chevron-triple-down.png" />
     <BitmapImage x:Key="MinusIcon" UriSource="minus-box.png" />
     <BitmapImage x:Key="Pointer" UriSource="cursor-default.png" />
-    <BitmapImage x:Key="Pan" UriSource="cursor-pointer.png" />
+    <BitmapImage x:Key="Pan" UriSource="pan.png" />
+    <BitmapImage x:Key="Shape" UriSource="shape-polygon-plus.png" />
     <BitmapImage x:Key="DownloadingIcon" UriSource="progress-download.png" />
     <BitmapImage x:Key="MaskIcon" UriSource="guy-fawkes-mask.png" />
     <BitmapImage x:Key="EyeIcon" UriSource="eye-outline.png" />

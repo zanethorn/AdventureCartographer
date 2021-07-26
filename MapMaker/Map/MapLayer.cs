@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Media;
-using System.Xml.Serialization;
-using MapMaker.Annotations;
+﻿using System.Xml.Serialization;
 
-namespace MapMaker.File
+namespace MapMaker.Map
 {
     
     [XmlType(nameof(MapLayer))]

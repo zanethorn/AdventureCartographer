@@ -1,5 +1,5 @@
 using System.Windows;
-using MapMaker.File;
+using MapMaker.Map;
 
 namespace MapMaker.Commands
 {
@@ -33,8 +33,8 @@ namespace MapMaker.Commands
                 OriginalSize = MapObject.Size;
             }
 
-            MapObject.Offset = controller.SnapToGrid(NewOffset);
-            MapObject.Size = controller.SnapToGrid(NewSize);
+            MapObject.Offset = NewOffset;//controller.SnapToGrid(NewOffset);
+            MapObject.Size = NewSize;//controller.SnapToGrid(NewSize);
         }
 
         public void Undo(MapController controller)

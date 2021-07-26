@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace MapMaker.File
+namespace MapMaker.Map
 {
     public partial class MapSettingsDialog : Window
     {

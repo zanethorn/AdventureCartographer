@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MapMaker"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:file="clr-namespace:MapMaker.File"
              xmlns:properties="clr-namespace:MapMaker.Properties"
+             xmlns:map="clr-namespace:MapMaker.Map"
              mc:Ignorable="d"
              DataContext="{StaticResource MapController}"
              AllowDrop="True"
@@ -15,7 +15,7 @@
              MouseUp="OnMouseUp"
              MouseLeave="OnMouseLeave"
              Drop="OnDrop"
-             Cursor="{Binding SelectedTool.Cursor}"
+
              x:Name="editor"
 >
     <UserControl.CommandBindings>
@@ -66,7 +66,7 @@
             
         </Slider>
         
-        <file:MapFileView x:Name="FileView" 
+        <map:MapFileView x:Name="FileView" 
                           Canvas.ZIndex="0"
                           Canvas.Left="{Binding Offset.X}"
                           Canvas.Top="{Binding Offset.Y}" 

@@ -11,9 +11,9 @@ namespace MapMaker.Library
             InitializeComponent();
         }
 
-        public ImageFile File
+        public LibraryImage File
         {
-            get => (ImageFile) DataContext;
+            get => (LibraryImage) DataContext;
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)

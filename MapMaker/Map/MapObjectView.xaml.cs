@@ -10,8 +10,7 @@ using MapMaker.Commands;
 using MapMaker.Converters;
 using MapMaker.Properties;
 
-
-namespace MapMaker.File
+namespace MapMaker.Map
 {
     public partial class MapObjectView : UserControl
     {
@@ -183,6 +182,8 @@ namespace MapMaker.File
                 new Size(pixelWidth, pixelHeight)
             );
             Controller.IngestCommand(command);
+
+            e.Handled = true;
         }
 
         private void OnDragCompleted(object sender, DragCompletedEventArgs e)

@@ -10,6 +10,7 @@ namespace MapMaker
     public interface ISmartObject:INotifyPropertyChanged, ICloneable, IDisposable
     {
 
+        [Browsable(false)]
         Dispatcher UIDispatcher { get; }
 
         void DispatchNotifications();

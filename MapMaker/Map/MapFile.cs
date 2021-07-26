@@ -1,14 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Media.Imaging;
-using System.Xml.Serialization;
-using MapMaker.Annotations;
+﻿using System.Xml.Serialization;
 using MapMaker.Library;
 
-namespace MapMaker.File
+namespace MapMaker.Map
 {
     public class MapFile: SmartObject
     {
@@ -17,7 +10,7 @@ namespace MapMaker.File
         private int _pixelHeight=3500;
 
         private SmartCollection<MapLayer> _layers = new();
-        private SmartCollection<ImageFile> _imageFiles = new();
+        private SmartCollection<LibraryImage> _imageFiles = new();
         private bool _exportGrid;
 
 
@@ -83,7 +76,7 @@ namespace MapMaker.File
             }
         }
 
-        public SmartCollection<ImageFile> ImageFiles
+        public SmartCollection<LibraryImage> ImageFiles
         {
             get => _imageFiles;
             set
@@ -100,7 +93,7 @@ namespace MapMaker.File
 
             var myClone = (MapFile)clone;
             myClone._layers = (SmartCollection<MapLayer>)_layers.Clone();
-            myClone._imageFiles = (SmartCollection<ImageFile>)_imageFiles.Clone();
+            myClone._imageFiles = (SmartCollection<LibraryImage>)_imageFiles.Clone();
         }
     }
 }

@@ -21,8 +21,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Windows.Markup;
 using MapMaker.Commands;
-using MapMaker.File;
 using MapMaker.Library;
+using MapMaker.Map;
 using MapMaker.Properties;
 using Ookii.Dialogs.Wpf;
 using Application = System.Windows.Application;
@@ -358,7 +358,7 @@ namespace MapMaker
                     _mapController.IngestCommand(command);
                     break;
                 }
-                case ImageFile libraryImage:
+                case LibraryImage libraryImage:
                 {
                     if (MessageBox.Show(
                         "Are you sure you wish to delete this image from your library?",
@@ -384,7 +384,7 @@ namespace MapMaker
             switch (e.Parameter)
             {
                 case MapObject:
-                case ImageFile:
+                case LibraryImage:
                     e.CanExecute = true;
                     break;
                 case MapLayer:

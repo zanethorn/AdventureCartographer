@@ -14,7 +14,7 @@ namespace MapMaker.Library
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={LibraryPath}");
         
-        public DbSet<ImageFile> ImageFiles { get; set; }
+        public DbSet<LibraryImage> ImageFiles { get; set; }
         
         public DbSet<ImageTags> Tags { get; set; }
         

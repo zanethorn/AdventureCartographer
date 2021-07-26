@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using MapMaker.Annotations;
 using MapMaker.Commands;
-using MapMaker.File;
+using MapMaker.Map;
 
 namespace MapMaker
 {

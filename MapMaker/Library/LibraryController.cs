@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using MapMaker.Annotations;
-using MapMaker.File;
 using Microsoft.EntityFrameworkCore;
 using Image = System.Drawing.Image;
 
@@ -29,7 +28,7 @@ namespace MapMaker.Library
         private bool _scanSubfolders;
         private CollectionModes _collectionMode = CollectionModes.DefaultCollection;
         private SmartCollection<ImageCollection> _imageCollections = new();
-        private SmartCollection<ImageFile> _allImages = new();
+        private SmartCollection<LibraryImage> _allImages = new();
         private string _imageSearch= string.Empty;
 
         public bool IsEmpty => AllImages.Count == 0;
@@ -56,7 +55,7 @@ namespace MapMaker.Library
             }
         }
 
-        public SmartCollection<ImageFile> AllImages
+        public SmartCollection<LibraryImage> AllImages
         {
             get => _allImages;
             private set
@@ -80,7 +79,7 @@ namespace MapMaker.Library
             }
         }
 
-        public IList<ImageFile> FilteredImages =>
+        public IList<LibraryImage> FilteredImages =>
             string.IsNullOrWhiteSpace(ImageSearch)
                 ? _allImages
                 : _allImages.Where(i => i.ShortName.StartsWith(ImageSearch, StringComparison.InvariantCultureIgnoreCase)).ToList();
@@ -173,7 +172,7 @@ namespace MapMaker.Library
             var imageCollections = new SmartCollection<ImageCollection>(_context.ImageCollections.Local);
 
             await _context.ImageFiles.LoadAsync();
-            AllImages = new SmartCollection<ImageFile>(_context.ImageFiles.Local);
+            AllImages = new SmartCollection<LibraryImage>(_context.ImageFiles.Local);
 
             if (imageCollections.Count == 0)
             {
@@ -248,7 +247,7 @@ namespace MapMaker.Library
             }
         }
 
-        public async Task<ImageFile> AddImageToCollectionAsync(string imagePath, ImageCollection collection)
+        public async Task<LibraryImage> AddImageToCollectionAsync(string imagePath, ImageCollection collection)
         {
             var imgFile = _allImages.SingleOrDefault(i => i.Path == imagePath);
             if (imgFile == null)
@@ -256,7 +255,7 @@ namespace MapMaker.Library
                 await using var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
                 using var img = Image.FromStream(fileStream);
                 var name = Path.GetFileNameWithoutExtension(imagePath);
-                imgFile = new ImageFile()
+                imgFile = new LibraryImage()
                 {
                     Path = imagePath,
                     FullName = name,
@@ -279,10 +278,10 @@ namespace MapMaker.Library
             return imgFile;
         }
 
-        public async Task DeleteImage(ImageFile image)
+        public async Task DeleteImage(LibraryImage libraryImage)
         {
-            _context.ImageFiles.Remove(image);
-            AllImages.Remove(image);
+            _context.ImageFiles.Remove(libraryImage);
+            AllImages.Remove(libraryImage);
             await _context.SaveChangesAsync();
             OnPropertyChanged(nameof(FilteredImages));
             DispatchNotifications();

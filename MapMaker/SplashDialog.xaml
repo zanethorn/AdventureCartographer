@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         WindowStyle="None" WindowStartupLocation="CenterScreen" 
         ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
-        Title="About Mapmaker" Height="450" Width="800">
+        Title="About Mapmaker" Height="450" Width="800"
+        MouseUp="OnMouseUp">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

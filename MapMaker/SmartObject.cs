@@ -18,11 +18,13 @@ namespace MapMaker
         [XmlIgnore]
         [IgnoreDataMember]
         [NotMapped]
+        [Browsable(false)]
         private List<string> _propertyBacklog = new();
 
         [XmlIgnore]
         [IgnoreDataMember]
         [NotMapped]
+        [Browsable(false)]
         public Dispatcher UIDispatcher => Application.Current.Dispatcher;
 
         public void Touch(string propertyName)

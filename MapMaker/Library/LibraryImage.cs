@@ -5,14 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 using MapMaker.Annotations;
+using MapMaker.Map;
 
 namespace MapMaker.Library
 {
-    public class ImageFile : SmartObject
+    public class LibraryImage : SmartObject, IRendersBrush
     {
         private Guid _id = Guid.NewGuid();
         private string _fullName;
@@ -23,6 +25,7 @@ namespace MapMaker.Library
         private int _pixelHeight;
         private string _fileExtension;
         private long _fileSize;
+        private Brush? _renderBrush;
 
         [XmlAttribute]
         public Guid Id
@@ -69,7 +72,9 @@ namespace MapMaker.Library
                 if (value == _path) return;
                 _path = value;
                 OnPropertyChanged();
+                _bitmap = null;
                 OnPropertyChanged(nameof(Bitmap));
+                OnPropertyChanged(nameof(IRendersBrush.RenderedBrush));
             }
         }
 
@@ -132,10 +137,18 @@ namespace MapMaker.Library
             {
                 if (_bitmap == null)
                 {
-                    _bitmap = new BitmapImage(new Uri(Path))
-                        {CacheOption = BitmapCacheOption.OnLoad, DecodePixelWidth = 70};
-                    _bitmap.Freeze();
-                    OnPropertyChanged();
+                    try
+                    {
+                        _bitmap = new BitmapImage(new Uri(Path))
+                            {CacheOption = BitmapCacheOption.OnLoad, DecodePixelWidth = 70};
+                        _bitmap.Freeze();
+                        OnPropertyChanged();
+                        return _bitmap;
+                    }
+                    finally
+                    {
+                        DispatchNotifications();
+                    }
                 }
 
                 return _bitmap;
@@ -145,7 +158,15 @@ namespace MapMaker.Library
                 if (Equals(value, _bitmap)) return;
                 _bitmap = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IRendersBrush.RenderedBrush));
             }
+        }
+        
+        
+
+        public Brush GetRenderBrush()
+        {
+            return new ImageBrush(Bitmap);
         }
 
         protected override void Dispose(bool disposing)

@@ -8,7 +8,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using MapMaker.Annotations;
-using MapMaker.File;
+using MapMaker.Map;
 
 namespace MapMaker
 {
