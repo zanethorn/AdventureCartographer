@@ -9,9 +9,7 @@ namespace MapMaker.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var resourceKey = value as string;
-            if (string.IsNullOrEmpty(resourceKey)) return Binding.DoNothing;
-            var resource = Application.Current.FindResource(resourceKey);             
+            var resource = Application.Current.FindResource(System.Convert.ToString(value));
             return resource ?? Binding.DoNothing;
         }
 

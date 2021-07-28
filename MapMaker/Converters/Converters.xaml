@@ -10,9 +10,18 @@
     <converters:InvertDoubleConverter x:Key="InvertDoubleConverter" />
     <converters:ToolTrayOffsetConverter x:Key="ToolTrayOffsetConverter" />
     <converters:GridConverter x:Key="GridConverter" />
-    <converters:EqualsIsVisibilityConverter x:Key="EqualsIsVisibilityConverter" /> 
+    <converters:EqualsIsVisibilityConverter x:Key="EqualsIsVisibilityConverter" />
     <converters:VisibleIfNotNullConverter x:Key="VisibleIfNotNullConverter" />
+    <converters:VisibleIfNullConverter x:Key="VisibleIfNullConverter" />
     <converters:FileSizeConverter x:Key="FileSizeConverter" />
     <converters:CollectionIndexConverter x:Key="CollectionIndexConverter" />
     <converters:ObjectEqualsConverter x:Key="ObjectEqualsConverter" />
+    <converters:VisibleIfTypeConverter x:Key="VisibleIfTypeConverter" />
+    <converters:ShouldShowSidesConverter x:Key="ShouldShowSidesConverter" />
+    <converters:ShouldShowEccentricityConverter x:Key="ShouldShowEccentricityConverter" />
+    <converters:StringToColorConverter x:Key="StringToColorConverter" />
+    <converters:StringToBrushConverter x:Key="StringToBrushConverter" />
+    <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
+    <converters:DoubleToPercentConverter x:Key="DoubleToPercentConverter" />
+    <converters:EnumToIntConverter x:Key="EnumToIntConverter" />
 </ResourceDictionary>

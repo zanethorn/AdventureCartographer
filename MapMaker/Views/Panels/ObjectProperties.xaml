@@ -1,0 +1,95 @@
+<UserControl x:Class="MapMaker.Views.Panels.ObjectProperties"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:mapMaker="clr-namespace:MapMaker"
+             xmlns:map="clr-namespace:MapMaker.Models.Map"
+             xmlns:views="clr-namespace:MapMaker.Views"
+             xmlns:panels="clr-namespace:MapMaker.Views.Panels"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             DataContext="{Binding Source={StaticResource EditorController}, Path=SelectedObject}">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type xctk:IntegerUpDown}">
+            <Setter Property="Width" Value="80" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style TargetType="{x:Type xctk:DoubleUpDown}">
+            <Setter Property="Width" Value="80" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </UserControl.Resources>
+    <StackPanel>
+        <TextBlock Text="No Object Selected" Visibility="{Binding Converter={StaticResource VisibleIfNullConverter}}" />
+        <Grid Visibility="{Binding Converter={StaticResource VisibleIfNotNullConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Orientation="Vertical">
+                <TextBlock
+                    Text="{Binding}"
+                    FontWeight="Bold" />
+            </StackPanel>
+
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                Target="{Binding ElementName=OffsetPanel}"
+                Content="Location:" />
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="1"
+                x:Name="OffsetPanel"
+                Orientation="Horizontal">
+                <xctk:IntegerUpDown
+                    Value="{Binding X, Mode=TwoWay}" />
+                <xctk:IntegerUpDown
+                    Value="{Binding Y, Mode=TwoWay}" />
+            </StackPanel>
+
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                Target="{Binding ElementName=SizePanel}"
+                Content="Size:" />
+            <StackPanel
+                Grid.Row="2"
+                Grid.Column="1"
+                x:Name="SizePanel"
+                Orientation="Horizontal">
+                <xctk:IntegerUpDown
+                    Value="{Binding Width, Mode=TwoWay}" />
+                <xctk:IntegerUpDown
+                    Value="{Binding Height, Mode=TwoWay}" />
+            </StackPanel>
+
+            <!-- Tools for Shapes -->
+            <panels:ShapePropertiesPanel
+                Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Visibility="{Binding Converter={StaticResource VisibleIfTypeConverter}, ConverterParameter={x:Type map:MapShape}}" />
+            
+            <!-- Tools for Images -->
+            <views:ImageFileView
+                Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                DataContext="{Binding Image}"
+                Visibility="{Binding Source={StaticResource EditorController}, Path=SelectedObject, Converter={StaticResource VisibleIfTypeConverter}, ConverterParameter={x:Type map:MapImage}}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

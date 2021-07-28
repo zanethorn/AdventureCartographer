@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace MapMaker.Converters
 {
-    public class ToIntConverter:IValueConverter
+    public class ToIntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

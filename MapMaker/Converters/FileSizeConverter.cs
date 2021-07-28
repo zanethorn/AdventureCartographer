@@ -4,21 +4,22 @@ using System.Windows.Data;
 
 namespace MapMaker.Converters
 {
-    public class FileSizeConverter:IValueConverter
+    public class FileSizeConverter : IValueConverter
     {
-        static readonly string[] SizeSuffixes = 
-            { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+        private static readonly string[] SizeSuffixes =
+            {"bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var v = System.Convert.ToInt64(value);
-            if (v == 0) { return $"{v:n1} bytes"; }
+            if (v == 0) return $"{v:n1} bytes";
 
             // mag is 0 for bytes, 1 for KB, 2, for MB, etc.
-            var mag = (int)Math.Log(v, 1024);
+            var mag = (int) Math.Log(v, 1024);
 
             // 1L << (mag * 10) == 2 ^ (10 * mag) 
             // [i.e. the number of bytes in the unit corresponding to mag]
-            var adjustedSize = (decimal)v / (1L << (mag * 10));
+            var adjustedSize = (decimal) v / (1L << (mag * 10));
 
             // make adjustment when the value is large enough that
             // it would round up to 1000 or more

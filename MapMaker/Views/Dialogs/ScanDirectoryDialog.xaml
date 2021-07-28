@@ -1,0 +1,72 @@
+﻿<Window x:Class="MapMaker.Views.Dialogs.ScanDirectoryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:MapMaker"
+        xmlns:library="clr-namespace:MapMaker.Models.Library"
+        mc:Ignorable="d"
+        Title="Scan For Images"
+        MinHeight="200"
+        MinWidth="600"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        DataContext="{StaticResource LibraryController}">
+    <StackPanel Margin="10">
+        <Grid Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+
+            <Label Target="{Binding ElementName=ScanPathBox}"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   Content="Scan Path:" />
+            <TextBox x:Name="ScanPathBox"
+                     Grid.Row="0"
+                     Grid.Column="1"
+                     IsReadOnly="True"
+                     Text="{Binding ScanPath}" />
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Content="..."
+                    Click="ScanPath_Click" />
+
+            <Label Target="{Binding ElementName=ScanSubfoldersCheck}"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   Content="Search Subfolders:" />
+            <CheckBox x:Name="ScanSubfoldersCheck"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      IsChecked="{Binding ScanSubfolders}" />
+
+            <Label Target="{Binding ElementName=CollectionTypeDropdown}"
+                   Grid.Row="2"
+                   Grid.Column="0"
+                   Content="Collection Mode:" />
+            <ComboBox x:Name="CollectionTypeDropdown"
+                      Grid.Row="2"
+                      Grid.Column="1"
+                      ItemsSource="{Binding Source={local:EnumBindingSource {x:Type library:CollectionModes}}}"
+                      SelectedValue="{Binding CollectionMode, Mode=TwoWay}" />
+
+        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button IsDefault="True" Content="Begin Scan..." Click="OnDefaultClick" />
+            <Button IsCancel="True" Content="Cancel" />
+        </StackPanel>
+    </StackPanel>
+</Window>

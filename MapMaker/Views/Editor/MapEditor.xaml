@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="MapMaker.Views.Editor.MapEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="clr-namespace:MapMaker.Properties"
+             xmlns:views="clr-namespace:MapMaker.Views"
+             xmlns:editor="clr-namespace:MapMaker.Views.Editor"
+             mc:Ignorable="d"
+             AllowDrop="True"
+             MouseMove="OnMouseMove"
+             MouseDown="OnMouseDown"
+             MouseUp="OnMouseUp"
+             MouseLeave="OnMouseLeave"
+             Drop="OnDrop"
+             DataContext="{StaticResource EditorController}"
+             x:Name="Editor">
+    <UserControl.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Copy"
+                        CanExecute="OnCanCopy" />
+        <CommandBinding Command="ApplicationCommands.Paste"
+                        Executed="OnPaste"
+                        CanExecute="OnCanPaste" />
+    </UserControl.CommandBindings>
+    <Canvas Background="{StaticResource BackgroundGridBrush}" ClipToBounds="True">
+
+        <Slider x:Name="ScaleSlider"
+            Canvas.Top="20"
+                Canvas.Right="20"
+                Canvas.ZIndex="10000"
+                Cursor="Arrow"
+                Maximum="4"
+                Minimum="0.05"
+                MinHeight="300"
+                Value="{Binding Source={StaticResource EditorController}, Path=Scale, Mode=TwoWay}"
+                Orientation="Vertical"
+                Background="Gainsboro"
+                Foreground="LightSlateGray"
+                MouseDown="IgnoreMouse"
+                MouseMove="IgnoreMouse"
+                MouseUp="IgnoreMouse"/>
+
+        <editor:MapFileView x:Name="FileView"
+                            Canvas.ZIndex="0"
+                            Canvas.Left="{Binding Offset.X}"
+                            Canvas.Top="{Binding Offset.Y}"
+                            Height="{Binding SelectedMap.PixelWidth}"
+                            Width="{Binding SelectedMap.PixelHeight}" />
+
+    </Canvas>
+</UserControl>

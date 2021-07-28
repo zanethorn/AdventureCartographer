@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="MapMaker.Views.ImageLibraryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:views="clr-namespace:MapMaker.Views"
+             xmlns:panels="clr-namespace:MapMaker.Views.Panels"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             DataContext="{StaticResource LibraryController}">
+
+    <ListView ItemsSource="{Binding ImageCollections}" MinWidth="300">
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+        <ListView.Template>
+            <ControlTemplate>
+                <ItemsPresenter />
+            </ControlTemplate>
+        </ListView.Template>
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <panels:ImageCollectionView />
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</UserControl>

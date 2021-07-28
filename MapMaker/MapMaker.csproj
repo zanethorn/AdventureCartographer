@@ -12,39 +12,26 @@
         <RepositoryType>git</RepositoryType>
         <AssemblyVersion>0.1.1.0</AssemblyVersion>
         <Nullable>enable</Nullable>
+        <AssemblyName>MapMaker</AssemblyName>
+        <Version>0.1</Version>
+        <Product>Adventure Cartographer</Product>
+        <PackageId>Adventure Cartographer</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Extended.Wpf.Toolkit" Version="4.1.0" />
       <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
       <PackageReference Include="Infragistics.Themes.MetroLight.Wpf" Version="1.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
       <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
       <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
       <PackageReference Include="PixiEditor.ColorPicker" Version="3.1.0" />
+        <PackageReference Include="MUF" Version="2.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Resource Include="Resources\Cursors\*.cur" />
       <Resource Include="Resources\Icons\*.png" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Properties\Settings.Designer.cs">
-        <DesignTimeSharedInput>True</DesignTimeSharedInput>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Settings.settings</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="Properties\Settings.settings">
-        <Generator>PublicSettingsSingleFileGenerator</Generator>
-        <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Resources\Themes" />
     </ItemGroup>
 
 </Project>

@@ -4,10 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MapMaker"
-        xmlns:properties="clr-namespace:MapMaker.Properties"
+        xmlns:views="clr-namespace:MapMaker.Views"
+        xmlns:panels="clr-namespace:MapMaker.Views.Panels"
+        xmlns:editor="clr-namespace:MapMaker.Views.Editor"
         mc:Ignorable="d"
-        Title="Adventure Cartographer" 
-        Height="450" Width="800" 
+        Title="Adventure Cartographer"
+        Height="450" Width="800"
         WindowState="Maximized"
         Loaded="OnWindowLoaded" Closing="Window_Closing">
     <Window.InputBindings>
@@ -16,7 +18,7 @@
             Command="{x:Static local:CustomCommands.Exit}" />
     </Window.InputBindings>
     <Window.CommandBindings>
-        
+
         <CommandBinding
             Command="{x:Static local:CustomCommands.ScanDirectory}"
             Executed="OnScanDirectory" />
@@ -26,192 +28,142 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.ShowAbout}"
             Executed="OnShowAbout" />
-        
-        <CommandBinding 
-            Command="New" 
+
+        <CommandBinding
+            Command="New"
             Executed="OnNew" />
-        <CommandBinding 
+        <CommandBinding
             Command="SaveAs"
-            Executed="OnSaveAs"/>
-        <CommandBinding 
+            Executed="OnSaveAs" />
+        <CommandBinding
             Command="Save"
             Executed="OnSave" />
-        <CommandBinding 
+        <CommandBinding
             Command="Open"
-            Executed="OnOpen"/>
+            Executed="OnOpen" />
         <CommandBinding
             Command="local:CustomCommands.Export"
-            Executed="OnExport"/>
+            Executed="OnExport" />
         <CommandBinding
             Command="local:CustomCommands.ExportAs"
-            Executed="OnExportAs"/>
+            Executed="OnExportAs" />
         <CommandBinding
             Command="{x:Static local:CustomCommands.Exit}"
             Executed="OnExit" />
-        
-        <CommandBinding 
+
+        <CommandBinding
             Command="Undo"
             Executed="OnUndo"
-            CanExecute="OnCanUndo"
-            />
-        <CommandBinding 
+            CanExecute="OnCanUndo" />
+        <CommandBinding
             Command="Redo"
             Executed="OnRedo"
-            CanExecute="OnCanRedo"
-            />
-        
-        <CommandBinding 
+            CanExecute="OnCanRedo" />
+
+        <CommandBinding
             Command="{x:Static local:CustomCommands.Duplicate }"
             Executed="OnDuplicate"
             CanExecute="OnCanDuplicate" />
-        <CommandBinding 
+        <CommandBinding
             Command="Copy"
             Executed="OnCopy"
             CanExecute="OnCanCopy" />
-        <CommandBinding 
+        <CommandBinding
             Command="Cut"
             Executed="OnCut"
-            CanExecute="OnCanCut"/>
-        <CommandBinding 
+            CanExecute="OnCanCut" />
+        <CommandBinding
             Command="Paste"
             Executed="OnPaste"
-            CanExecute="OnCanPaste"/>
-        <CommandBinding 
+            CanExecute="OnCanPaste" />
+        <CommandBinding
             Command="Delete"
             Executed="OnDelete"
-            CanExecute="OnCanDelete"/>
+            CanExecute="OnCanDelete" />
         <CommandBinding
             Command="{x:Static local:CustomCommands.ShowPreferences}"
             Executed="OnShowPreferences" />
-        
-        <CommandBinding 
+
+        <CommandBinding
             Command="local:CustomCommands.ShowMapSettings"
-            Executed="OnShowMapSettings"/>
-        
-        <CommandBinding 
+            Executed="OnShowMapSettings" />
+
+        <CommandBinding
             Command="{x:Static local:CustomCommands.MoveUp}"
             Executed="OnMoveUp"
             CanExecute="OnCanMoveUp" />
-        <CommandBinding 
+        <CommandBinding
             Command="{x:Static local:CustomCommands.MoveDown}"
             Executed="OnMoveDown"
             CanExecute="OnCanMoveDown" />
-        <CommandBinding 
+        <CommandBinding
             Command="{x:Static local:CustomCommands.MoveToTop}"
             Executed="OnMoveTop"
             CanExecute="OnCanMoveUp" />
-        <CommandBinding 
+        <CommandBinding
             Command="{x:Static local:CustomCommands.MoveToBottom}"
             Executed="OnMoveBottom"
             CanExecute="OnCanMoveDown" />
-        
-        <CommandBinding 
+
+        <CommandBinding
             Command="{x:Static local:CustomCommands.NewLayer}"
             Executed="OnNewLayer" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top" IsMainMenu="True">
             <MenuItem Header="_File">
-                <MenuItem Command="New"/>
-                <MenuItem Command="Open"/>
-                <Separator/>
-                <MenuItem Command="Save"/>
-                <MenuItem Command="SaveAs"/>
-                <Separator/>
-                <MenuItem Command="local:CustomCommands.Export" Header="Export"/>
-                <MenuItem Command="local:CustomCommands.ExportAs" Header="ExportAs"/>
-                <Separator/>
-                <MenuItem Header="Exit" Command="local:CustomCommands.Exit"/>
+                <MenuItem Command="New" />
+                <MenuItem Command="Open" />
+                <Separator />
+                <MenuItem Command="Save" />
+                <MenuItem Command="SaveAs" />
+                <Separator />
+                <MenuItem Command="local:CustomCommands.Export" Header="Export" />
+                <MenuItem Command="local:CustomCommands.ExportAs" Header="ExportAs" />
+                <Separator />
+                <MenuItem Header="Exit" Command="local:CustomCommands.Exit" />
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Command="Undo" CommandParameter="{Binding Source={StaticResource MapController}, Path=CanUndo }"/>
-                <MenuItem Command="Redo" CommandParameter="{Binding Source={StaticResource MapController}, Path=CanRedo }"/>
-                <Separator/>
+                <MenuItem Command="Undo"
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=CanUndo }" />
+                <MenuItem Command="Redo"
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=CanRedo }" />
+                <Separator />
                 <MenuItem Command="{x:Static local:CustomCommands.Duplicate }"
                           Header="Duplicate" />
-                <MenuItem Command="Copy" 
-                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
-                <MenuItem Command="Cut" 
-                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
-                <MenuItem Command="Paste"/>
-                <Separator/>
+                <MenuItem Command="Copy"
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=SelectedObject }" />
+                <MenuItem Command="Cut"
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=SelectedObject }" />
+                <MenuItem Command="Paste" 
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=SelectedLayer}"/>
+                <Separator />
                 <MenuItem Command="Delete"
-                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
-                <Separator/>
-                <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences"/>
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=SelectedObject }" />
+                <Separator />
+                <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences" />
             </MenuItem>
             <MenuItem Header="_Map">
                 <MenuItem Header="Map Settings..." Command="local:CustomCommands.ShowMapSettings" />
-                <Separator/>
-                <MenuItem Header="Show Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ShowGrid, Mode=TwoWay}" />    
-                <MenuItem Header="Snap To Grid" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SnapToGrid, Mode=TwoWay}" /> 
+                <Separator />
+                <MenuItem Header="Show Grid" IsCheckable="True"
+                          IsChecked="{Binding Source={StaticResource SettingsController}, Path=ShowGrid, Mode=TwoWay}" />
+                <MenuItem Header="Snap To Grid" IsCheckable="True"
+                          IsChecked="{Binding Source={StaticResource SettingsController}, Path=SnapToGrid, Mode=TwoWay}" />
             </MenuItem>
             <MenuItem Header="_Library">
-                <MenuItem Header="Scan Directory..." Command="local:CustomCommands.ScanDirectory"/>
-                <Separator/>
-                <MenuItem Header="Library Details..." Command="local:CustomCommands.ViewLibraryDetails"/>
+                <MenuItem Header="Scan Directory..." Command="local:CustomCommands.ScanDirectory" />
+                <Separator />
+                <MenuItem Header="Library Details..." Command="local:CustomCommands.ViewLibraryDetails" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="About..." Command="local:CustomCommands.ShowAbout"/>
+                <MenuItem Header="About..." Command="local:CustomCommands.ShowAbout" />
             </MenuItem>
         </Menu>
-        <StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Name}" />
-                </StackPanel>
-            </StatusBarItem>
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.X, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text="," />
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.Y, Converter={StaticResource ToIntConverter}}" />
-                </StackPanel>
-            </StatusBarItem>
-            <Separator />
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Map Offset:  " />
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=Offset.X, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text="," />
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=Offset.Y, Converter={StaticResource ToIntConverter}}" />
-                </StackPanel>
-            </StatusBarItem>
-            <Separator />
-            <StatusBarItem DataContext="{Binding Source={StaticResource MapController}, Path=SelectedObject}"
-                           Visibility="{Binding Converter={StaticResource VisibleIfNotNullConverter}}">
-                <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="{Binding}" />
-                    <TextBlock Text=":  " />
-                    <TextBlock Text="{Binding Offset.X, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text="," />
-                    <TextBlock Text="{Binding Offset.Y, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text=" (" />
-                    <TextBlock Text="{Binding Size.Width, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text="x" />
-                    <TextBlock Text="{Binding Size.Height, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text=")" />
-                </StackPanel>
-            </StatusBarItem>
-        </StatusBar>
-    
-        <ListView DockPanel.Dock="Left"
-                  Background="GhostWhite" 
-                  BorderBrush="Gainsboro" 
-                  BorderThickness="1" 
-                  VerticalAlignment="Stretch"
-                  DataContext="{StaticResource MapController}"
-                  ItemsSource="{Binding Tools}"
-                  SelectedItem="{Binding SelectedTool, Mode=TwoWay}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Image Height="24"
-                           Width="24"
-                           Source="{Binding IconName, Converter={StaticResource BindingResourceConverter}}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <local:LibraryPanel DockPanel.Dock="Right" />
-        <local:MapEditor x:Name="Editor" DockPanel.ZIndex="-1" />
+
+        <panels:BottomStatusBar DockPanel.Dock="Bottom" />
+        <panels:ToolTray DockPanel.Dock="Left" />
+        <panels:LibraryPanel DockPanel.Dock="Right" />
+        <editor:MapEditor x:Name="Editor" DockPanel.ZIndex="-1" />
     </DockPanel>
 </Window>

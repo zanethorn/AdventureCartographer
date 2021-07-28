@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
 using System.Globalization;
 using System.Windows.Data;
 
 namespace MapMaker.Converters
 {
-    public class ObjectEqualsConverter:IMultiValueConverter
+    public class ObjectEqualsConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
