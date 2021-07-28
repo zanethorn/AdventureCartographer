@@ -1,12 +1,14 @@
-﻿using System.Windows.Media;
+﻿using System.Runtime.Serialization;
+using System.Windows.Media;
 using System.Xml.Serialization;
 using MapMaker.Models.Library;
 
 namespace MapMaker.Models.Map
 {
-    [XmlType(nameof(MapImage))]
+    [DataContract]
     public class MapImage : MapObject
     {
+        [DataMember(Name=nameof(Image), Order = 1001, EmitDefaultValue = true)]
         private LibraryImage? _image;
 
         public LibraryImage Image

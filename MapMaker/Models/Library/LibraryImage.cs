@@ -7,20 +7,36 @@ using System.Xml.Serialization;
 
 namespace MapMaker.Models.Library
 {
+    [DataContract]
     public class LibraryImage : SmartObject, IRendersBrush
     {
-        private BitmapImage? _bitmap;
-        private string? _fileExtension;
-        private long _fileSize;
-        private string? _fullName;
+        [DataMember(Name=nameof(Id), Order=0)]
         private Guid _id = Guid.NewGuid();
-        private string? _path;
-        private int _pixelHeight;
-        private int _pixelWidth;
-        private Brush? _renderBrush;
+        
+        [DataMember(Name=nameof(FullName), Order=1)]
+        private string? _fullName;
+        
+        [DataMember(Name=nameof(ShortName), Order=2)]
         private string? _shortName;
-
-        [XmlAttribute]
+        
+        [DataMember(Name=nameof(FileExtension), Order=3)]
+        private string? _fileExtension;
+        
+        [DataMember(Name=nameof(FileSize), Order=4)]
+        private long _fileSize;
+        
+        [DataMember(Name=nameof(PixelWidth), Order=5)]
+        private int _pixelWidth;
+        
+        [DataMember(Name=nameof(PixelHeight), Order=6)]
+        private int _pixelHeight;
+        
+        [DataMember(Name=nameof(Path), Order=7)]
+        private string? _path;
+        
+        private Brush? _renderBrush;
+        private BitmapImage? _bitmap;
+        
         public Guid Id
         {
             get => _id;
@@ -31,8 +47,7 @@ namespace MapMaker.Models.Library
                 OnPropertyChanged();
             }
         }
-
-        [XmlAttribute]
+        
         public string FullName
         {
             get => _fullName!;
@@ -43,8 +58,7 @@ namespace MapMaker.Models.Library
                 OnPropertyChanged();
             }
         }
-
-        [XmlAttribute]
+        
         public string ShortName
         {
             get => _shortName!;
@@ -55,8 +69,7 @@ namespace MapMaker.Models.Library
                 OnPropertyChanged();
             }
         }
-
-        [XmlIgnore]
+        
         public string Path
         {
             get => _path?? string.Empty;
@@ -71,8 +84,7 @@ namespace MapMaker.Models.Library
                 OnPropertyChanged(nameof(IRendersBrush.RenderedBrush));
             }
         }
-
-        [XmlAttribute]
+        
         public int PixelWidth
         {
             get => _pixelWidth;
@@ -83,8 +95,7 @@ namespace MapMaker.Models.Library
                 OnPropertyChanged();
             }
         }
-
-        [XmlAttribute]
+        
         public int PixelHeight
         {
             get => _pixelHeight;
@@ -96,8 +107,7 @@ namespace MapMaker.Models.Library
             }
         }
 
-
-        [XmlAttribute]
+        
         public string FileExtension
         {
             get => _fileExtension ?? string.Empty;
@@ -108,8 +118,7 @@ namespace MapMaker.Models.Library
                 OnPropertyChanged();
             }
         }
-
-        [XmlAttribute]
+        
         public long FileSize
         {
             get => _fileSize;
@@ -120,10 +129,7 @@ namespace MapMaker.Models.Library
                 OnPropertyChanged();
             }
         }
-
-
-        [XmlIgnore]
-        [IgnoreDataMember]
+        
         [NotMapped]
         public BitmapImage Bitmap
         {
@@ -154,6 +160,7 @@ namespace MapMaker.Models.Library
             }
         }
 
+        [NotMapped]
         public Brush RenderedBrush => _renderBrush ??= GetRenderBrush();
 
 

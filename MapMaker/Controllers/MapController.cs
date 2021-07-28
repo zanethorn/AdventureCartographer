@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -43,8 +44,8 @@ namespace MapMaker.Controllers
             // write the basic map.xml key file
             var keyEntry = zip.GetEntry(KeyFileName) ?? zip.CreateEntry(KeyFileName);
             await using Stream keyStream = keyEntry.Open();
-            var serializer = new XmlSerializer(typeof(MapFile));
-            var mapFile = (MapFile) serializer.Deserialize(keyStream)!;
+            var serializer = new DataContractSerializer(typeof(MapFile));
+            var mapFile = (MapFile) serializer.ReadObject(keyStream)!;
             keyStream.Close();
 
             foreach (var image in mapFile.ImageFiles)
@@ -67,11 +68,6 @@ namespace MapMaker.Controllers
                 image.Bitmap = bitmap;
             }
 
-            foreach (var layer in mapFile.Layers)
-            foreach (var obj in layer.MapObjects)
-                if (obj is MapImage mapImage)
-                    mapImage.Image = mapFile.ImageFiles.Single(i => i.Id == mapImage.Image.Id);
-
             return mapFile;
         }
 
@@ -82,8 +78,12 @@ namespace MapMaker.Controllers
             // write the basic map.xml key file
             var keyEntry = zip.GetEntry(KeyFileName) ?? zip.CreateEntry(KeyFileName);
             await using Stream keyStream = keyEntry.Open();
-            var serializer = new XmlSerializer(typeof(MapFile));
-            serializer.Serialize(keyStream, mapFile);
+            var settings = new DataContractSerializerSettings()
+            {
+                PreserveObjectReferences = true
+            };
+            var serializer = new DataContractSerializer(typeof(MapFile), settings);
+            serializer.WriteObject(keyStream, mapFile);
             await keyStream.FlushAsync(cancellationToken);
 
             // Store off all images

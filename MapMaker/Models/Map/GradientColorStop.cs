@@ -1,14 +1,18 @@
+using System.Runtime.Serialization;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace MapMaker.Models.Map
 {
+    [DataContract]
     public class GradientColorStop : SmartObject
     {
+        [DataMember(Name=nameof(Color), Order=0)]
         private string _color ="#FF000000";
+        
+        [DataMember(Name=nameof(Offset), Order=1)]
         private double _offset;
-
-        [XmlAttribute]
+        
         public double Offset
         {
             get => _offset;
@@ -19,8 +23,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged();
             }
         }
-
-        [XmlAttribute]
+        
         public string Color
         {
             get => _color;
@@ -32,8 +35,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(MediaColor));
             }
         }
-
-        [XmlIgnore]
+        
         public Color MediaColor
         {
             get => (Color) ColorConverter.ConvertFromString(Color);

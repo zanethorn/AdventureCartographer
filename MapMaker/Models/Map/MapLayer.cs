@@ -1,14 +1,22 @@
-﻿using System.Xml.Serialization;
+﻿using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace MapMaker.Models.Map
 {
-    [XmlType(nameof(MapLayer))]
+    [DataContract]
     public class MapLayer : SmartObject
     {
+        [DataMember]
         private bool _isLocked;
+        
+        [DataMember]
         private bool _isVisible = true;
-        private SmartCollection<MapObject> _mapObjects = new();
+        
+        [DataMember]
         private string _name = string.Empty;
+        
+        [DataMember(Order = int.MaxValue)]
+        private SmartCollection<MapObject> _mapObjects = new();
 
         [XmlAttribute]
         public bool IsLocked
