@@ -3,21 +3,41 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using MapMaker.Models.Library;
 
 namespace MapMaker.Models.Map
 {
+    [DataContract]
+    [KnownType(typeof(LibraryImage))]
+    [KnownType(typeof(MapObject))]
     public class MapBrush : SmartObject, IRendersBrush
     {
+        [DataMember(Name = nameof(BrushType), Order=0)]
         private BrushTypes _brushType;
-        private SmartCollection<GradientColorStop> _colors = new();
-        private double _endX = 1.0;
-        private double _endY;
-        private IRendersBrush? _nestedBrushRenderer;
+        
+        [DataMember(Name=nameof(StartX), Order=1)]
         private double _startX;
+        
+        [DataMember(Name=nameof(StartY), Order =2)]
         private double _startY;
+        
+        [DataMember(Name=nameof(EndX), Order=3)]
+        private double _endX = 1.0;
+        
+        [DataMember(Name=nameof(EndY), Order=4)]
+        private double _endY;
+        
+        [DataMember(Name=nameof(Colors), Order=1001)]
+        private SmartCollection<GradientColorStop> _colors = new();
+        
+        [DataMember(Name=nameof(NestedBrushRenderer), Order = 2001, EmitDefaultValue = false)]
+        private IRendersBrush? _nestedBrushRenderer;
+        
+        
 
         public MapBrush() : this(System.Windows.Media.Colors.Black)
         {

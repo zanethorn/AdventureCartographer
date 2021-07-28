@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 using MapMaker.Controllers;
 using MapMaker.Models.Library;
@@ -128,7 +129,15 @@ namespace MapMaker
             if (string.IsNullOrWhiteSpace(_lastFileSaveName))
                 OnSaveAs(sender, e);
             else
-                Task.Run(() => _mapController.SaveMap(_lastFileSaveName, _editorController.SelectedMap));
+            {
+                var progressDialog = new ProgressDialog();
+                progressDialog.Show();
+                Task.Run(async () =>
+                {
+                    await _mapController.SaveMap(_lastFileSaveName, _editorController.SelectedMap);
+                    Dispatcher.BeginInvoke(() => progressDialog.Dispose());
+                });
+            }
         }
 
         private void OnSaveAs(object sender, ExecutedRoutedEventArgs e)
@@ -258,7 +267,7 @@ namespace MapMaker
                         _editorController.SelectedMap,
                         _editorController.SelectedLayer,
                         newImage
-                        );
+                    );
                     _editorController.SelectedObject = newImage;
                     break;
                 }
@@ -268,7 +277,7 @@ namespace MapMaker
                     _mapController.AddLayer(
                         _editorController.SelectedMap,
                         newLayer
-                        );
+                    );
                     _editorController.SelectedLayer = newLayer;
                     break;
                 }
@@ -312,7 +321,7 @@ namespace MapMaker
                     _editorController.SelectedMap,
                     _editorController.SelectedLayer,
                     mapObject
-                    );
+                );
                 _editorController.SelectedObject = mapObject;
 
                 e.Handled = true;
@@ -335,7 +344,7 @@ namespace MapMaker
                         _editorController.SelectedMap,
                         _editorController.SelectedLayer,
                         mapObject
-                        );
+                    );
                     if (mapObject == _editorController.SelectedObject)
                         _editorController.SelectedObject = null;
                     break;
@@ -355,7 +364,7 @@ namespace MapMaker
                     _mapController.DeleteLayer(
                         _editorController.SelectedMap,
                         mapLayer
-                        );
+                    );
                     if (mapLayer == _editorController.SelectedLayer)
                         _editorController.SelectedLayer = _editorController.SelectedMap.Layers[ix];
                     break;
@@ -390,7 +399,7 @@ namespace MapMaker
                         _editorController.SelectedMap,
                         _editorController.SelectedLayer,
                         mapObject
-                        );
+                    );
                     break;
                 }
                 case MapLayer mapLayer:
@@ -398,7 +407,7 @@ namespace MapMaker
                     _mapController.MoveLayerUp(
                         _editorController.SelectedMap,
                         mapLayer
-                        );
+                    );
                     break;
                 }
             }
@@ -514,7 +523,7 @@ namespace MapMaker
             {
                 Name = $"UntitledLayer_{_editorController.SelectedMap.Layers.Count + 1}"
             };
-            _mapController.AddLayer(_editorController.SelectedMap,newLayer);
+            _mapController.AddLayer(_editorController.SelectedMap, newLayer);
         }
 
         private void OnControllerPropertyChanged(object? sender, PropertyChangedEventArgs e)

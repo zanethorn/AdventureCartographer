@@ -11,6 +11,8 @@ using MapMaker.Properties;
 
 namespace MapMaker.Models
 {
+    [Serializable]
+    [DataContract]
     public abstract class SmartObject : ISmartObject
     {
         [XmlIgnore]
@@ -19,6 +21,7 @@ namespace MapMaker.Models
         [Browsable(false)]
         private List<string> _propertyBacklog = new();
 
+        
         public event PropertyChangedEventHandler? PropertyChanged;
 
         [XmlIgnore]

@@ -1,20 +1,35 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace MapMaker.Models.Map
 {
+    [DataContract]
     public class MapShape : MapObject
     {
-        private double _eccentricity = 0.5;
-        private MapBrush _fillBrush = new();
-        private int _sides = 3;
-        private MapBrush _strokeBrush = new();
-        private double _strokeThickness = 0.01;
+        [DataMember(Name=nameof(Type), Order=1001)]
         private ShapeTypes _type;
+        
+        [DataMember(Name=nameof(Sides), Order = 1002)]
+        private int _sides = 3;
+        
+        [DataMember(Name=nameof(Eccentricity), Order=1003)]
+        private double _eccentricity = 0.5;
+        
+        [DataMember(Name=nameof(StrokeThickness), Order=1004)]
+        private double _strokeThickness = 0.01;
+        
+        [DataMember(Name = nameof(FillBrush), Order=2001)]
+        private MapBrush _fillBrush = new();
+        
+        [DataMember(Name = nameof(StrokeBrush), Order=3001)]
+        private MapBrush _strokeBrush = new();
+        
+        
 
         public MapShape()
         {

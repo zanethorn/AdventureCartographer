@@ -1,21 +1,32 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace MapMaker.Models.Map
 {
-    [XmlInclude(typeof(MapImage))]
+    [DataContract]
+    [KnownType(typeof(MapImage))]
+    [KnownType(typeof(MapShape))]
     public abstract class MapObject : SmartObject, IRendersBrush
     {
-        private int _height;
-        private Brush? _renderBrush;
-        private int _width;
+        [DataMember(Name = nameof(X), Order = 1)]
         private int _x;
+        
+        [DataMember(Name = nameof(Y), Order = 2)]
         private int _y;
+        
+        [DataMember(Name = nameof(Height), Order = 3)]
+        private int _height;
+        
+        [DataMember(Name = nameof(Width), Order = 4)]
+        private int _width;
+        
 
-        [XmlAttribute]
+        private Brush? _renderBrush;
+        
         public int X
         {
             get => _x;
@@ -27,8 +38,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(Offset));
             }
         }
-
-        [XmlAttribute]
+        
         public int Y
         {
             get => _y;
@@ -40,8 +50,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(Offset));
             }
         }
-
-        [XmlAttribute]
+        
         public int Width
         {
             get => _width;
@@ -53,8 +62,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(Size));
             }
         }
-
-        [XmlAttribute]
+        
         public int Height
         {
             get => _height;
@@ -66,9 +74,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(Size));
             }
         }
-
-        [XmlIgnore]
-        [Browsable(false)]
+        
         public Size Size
         {
             get => new(Width, Height);
@@ -79,9 +85,7 @@ namespace MapMaker.Models.Map
                 Height = (int) value.Height;
             }
         }
-
-        [XmlIgnore]
-        [Browsable(false)]
+        
         public Point Offset
         {
             get => new(X, Y);
@@ -92,9 +96,7 @@ namespace MapMaker.Models.Map
                 Y = (int) value.Y;
             }
         }
-
-        [XmlIgnore]
-        [Browsable(false)]
+        
         public Brush RenderedBrush => _renderBrush ??= GetRenderBrush();
 
         public abstract Brush GetRenderBrush();

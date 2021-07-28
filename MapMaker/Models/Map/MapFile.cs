@@ -1,21 +1,32 @@
-﻿using System.Xml.Serialization;
+﻿using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using MapMaker.Models.Library;
 using MonitoredUndo;
 
 namespace MapMaker.Models.Map
 {
+    [DataContract]
     public class MapFile : SmartObject, ISupportsUndo
     {
+        [DataMember(Name = nameof(Name), Order = 0)]
+        private string _name = "UntitledMap1";
+        
+        [DataMember(Name = nameof(PixelHeight), Order=1)]
+        private int _pixelHeight = 3500;
+        
+        [DataMember(Name=nameof(PixelWidth), Order=2)]
+        private int _pixelWidth = 3500;
+        
+        [DataMember(Name=nameof(ExportGrid), Order=1001)]
         private bool _exportGrid;
+        
+        [DataMember(Name=nameof(ImageFiles), Order=2001)]
         private SmartCollection<LibraryImage> _imageFiles = new();
 
+        [DataMember(Name=nameof(Layers), Order=int.MaxValue)]
         private SmartCollection<MapLayer> _layers = new();
-        private string _name = "UntitledMap1";
-        private int _pixelHeight = 3500;
-        private int _pixelWidth = 3500;
-
-
-        [XmlAttribute]
+        
+        
         public string Name
         {
             get => _name;
@@ -26,8 +37,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged();
             }
         }
-
-        [XmlAttribute]
+        
         public bool ExportGrid
         {
             get => _exportGrid;
@@ -38,8 +48,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged();
             }
         }
-
-        [XmlIgnore]
+        
         public int PixelWidth
         {
             get => _pixelWidth;
@@ -50,9 +59,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged();
             }
         }
-
-
-        [XmlIgnore]
+        
         public int PixelHeight
         {
             get => _pixelHeight;
@@ -63,9 +70,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged();
             }
         }
-
-
-        [XmlArray(nameof(Layers))]
+        
         public SmartCollection<MapLayer> Layers
         {
             get => _layers;
