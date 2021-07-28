@@ -12,6 +12,7 @@
     <converters:GridConverter x:Key="GridConverter" />
     <converters:EqualsIsVisibilityConverter x:Key="EqualsIsVisibilityConverter" />
     <converters:VisibleIfNotNullConverter x:Key="VisibleIfNotNullConverter" />
+    <converters:VisibleIfNullConverter x:Key="VisibleIfNullConverter" />
     <converters:FileSizeConverter x:Key="FileSizeConverter" />
     <converters:CollectionIndexConverter x:Key="CollectionIndexConverter" />
     <converters:ObjectEqualsConverter x:Key="ObjectEqualsConverter" />

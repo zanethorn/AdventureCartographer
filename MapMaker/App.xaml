@@ -6,16 +6,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Cursors/Cursors.xaml" />
-                <ResourceDictionary Source="Resources/Icons/Icons.xaml" />
                 <ResourceDictionary Source="Converters/Converters.xaml" />
                 <ResourceDictionary Source="Controllers/Controllers.xaml" />
-
-                <ResourceDictionary Source="Resources/Themes/Metro/Metro.MSControls.Core.Implicit.xaml" />
-                <ResourceDictionary Source="Resources/Themes/Metro/Metro.MSControls.Toolkit.Implicit.xaml" />
+                <ResourceDictionary Source="Resources/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-
+            
             <DataTemplate x:Key="ImageFileTemplate">
                 <views:ImageFileView />
             </DataTemplate>

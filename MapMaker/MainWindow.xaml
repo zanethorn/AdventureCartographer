@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MapMaker"
         xmlns:views="clr-namespace:MapMaker.Views"
+        xmlns:panels="clr-namespace:MapMaker.Views.Panels"
+        xmlns:editor="clr-namespace:MapMaker.Views.Editor"
         mc:Ignorable="d"
         Title="Adventure Cartographer"
         Height="450" Width="800"
@@ -123,20 +125,21 @@
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Command="Undo"
-                          CommandParameter="{Binding Source={StaticResource MapController}, Path=CanUndo }" />
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=CanUndo }" />
                 <MenuItem Command="Redo"
-                          CommandParameter="{Binding Source={StaticResource MapController}, Path=CanRedo }" />
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=CanRedo }" />
                 <Separator />
                 <MenuItem Command="{x:Static local:CustomCommands.Duplicate }"
                           Header="Duplicate" />
                 <MenuItem Command="Copy"
-                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=SelectedObject }" />
                 <MenuItem Command="Cut"
-                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
-                <MenuItem Command="Paste" />
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=SelectedObject }" />
+                <MenuItem Command="Paste" 
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=SelectedLayer}"/>
                 <Separator />
                 <MenuItem Command="Delete"
-                          CommandParameter="{Binding Source={StaticResource MapController}, Path=SelectedObject }" />
+                          CommandParameter="{Binding Source={StaticResource EditorController}, Path=SelectedObject }" />
                 <Separator />
                 <MenuItem Header="Preferences..." Command="local:CustomCommands.ShowPreferences" />
             </MenuItem>
@@ -157,52 +160,10 @@
                 <MenuItem Header="About..." Command="local:CustomCommands.ShowAbout" />
             </MenuItem>
         </Menu>
-        <StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Source={StaticResource MapController}, Path=SelectedTool}" />
-                </StackPanel>
-            </StatusBarItem>
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.X, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text="," />
-                    <TextBlock
-                        Text="{Binding Source={StaticResource MapController}, Path=SelectedTool.Position.Y, Converter={StaticResource ToIntConverter}}" />
-                </StackPanel>
-            </StatusBarItem>
-            <Separator />
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Map Offset:  " />
-                    <TextBlock
-                        Text="{Binding Source={StaticResource MapController}, Path=Offset.X, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text="," />
-                    <TextBlock
-                        Text="{Binding Source={StaticResource MapController}, Path=Offset.Y, Converter={StaticResource ToIntConverter}}" />
-                </StackPanel>
-            </StatusBarItem>
-            <Separator />
-            <StatusBarItem DataContext="{Binding Source={StaticResource MapController}, Path=SelectedObject}"
-                           Visibility="{Binding Converter={StaticResource VisibleIfNotNullConverter}}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding}" />
-                    <TextBlock Text=":  " />
-                    <TextBlock Text="{Binding Offset.X, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text="," />
-                    <TextBlock Text="{Binding Offset.Y, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text=" (" />
-                    <TextBlock Text="{Binding Size.Width, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text="x" />
-                    <TextBlock Text="{Binding Size.Height, Converter={StaticResource ToIntConverter}}" />
-                    <TextBlock Text=")" />
-                </StackPanel>
-            </StatusBarItem>
-        </StatusBar>
 
-        <views:ToolTray DockPanel.Dock="Left" />
-        <views:LibraryPanel DockPanel.Dock="Right" />
-        <views:MapEditor x:Name="Editor" DockPanel.ZIndex="-1" />
+        <panels:BottomStatusBar DockPanel.Dock="Bottom" />
+        <panels:ToolTray DockPanel.Dock="Left" />
+        <panels:LibraryPanel DockPanel.Dock="Right" />
+        <editor:MapEditor x:Name="Editor" DockPanel.ZIndex="-1" />
     </DockPanel>
 </Window>

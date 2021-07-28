@@ -12,6 +12,7 @@ using MapMaker.Controllers;
 using MapMaker.Models.Library;
 using MapMaker.Models.Map;
 using MapMaker.Views;
+using MapMaker.Views.Dialogs;
 using MonitoredUndo;
 using Ookii.Dialogs.Wpf;
 using Application = System.Windows.Application;

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:MapMaker.Views"
+             xmlns:panels="clr-namespace:MapMaker.Views.Panels"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              DataContext="{StaticResource LibraryController}">
@@ -21,7 +22,7 @@
         </ListView.Template>
         <ListView.ItemTemplate>
             <DataTemplate>
-                <views:ImageCollectionView />
+                <panels:ImageCollectionView />
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

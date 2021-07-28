@@ -34,8 +34,4 @@
       <Resource Include="Resources\Icons\*.png" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Resources\Themes" />
-    </ItemGroup>
-
 </Project>

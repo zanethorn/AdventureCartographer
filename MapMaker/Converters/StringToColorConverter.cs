@@ -11,7 +11,7 @@ namespace MapMaker.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ColorConverter.ConvertFromString((string) value) ?? throw new ArgumentNullException(nameof(value));
+            return ColorConverter.ConvertFromString(value as string) ?? throw new ArgumentNullException(nameof(value));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
