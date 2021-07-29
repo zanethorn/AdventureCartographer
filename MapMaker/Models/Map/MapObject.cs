@@ -10,6 +10,7 @@ namespace MapMaker.Models.Map
     [DataContract]
     [KnownType(typeof(MapImage))]
     [KnownType(typeof(MapShape))]
+    [KnownType(typeof(MapText))]
     public abstract class MapObject : SmartObject, IRendersBrush
     {
         [DataMember(Name = nameof(X), Order = 1)]

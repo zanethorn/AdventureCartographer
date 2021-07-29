@@ -508,7 +508,7 @@ namespace MapMaker
                 }
                 case MapLayer mapLayer:
                 {
-                    _mapController.MoveLayerDown(
+                    _mapController.MoveLayerBottom(
                         _editorController.SelectedMap,
                         mapLayer
                     );

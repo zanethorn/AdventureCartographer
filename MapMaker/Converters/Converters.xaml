@@ -24,4 +24,7 @@
     <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
     <converters:DoubleToPercentConverter x:Key="DoubleToPercentConverter" />
     <converters:EnumToIntConverter x:Key="EnumToIntConverter" />
+    <converters:FontStyleConverter x:Key="FontStyleConverter" />
+    <converters:FontWeightConverter x:Key="FontWeightConverter" />
+    <converters:FontStretchConverter x:Key="FontStretchConverter" />
 </ResourceDictionary>

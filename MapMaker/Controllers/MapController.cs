@@ -195,7 +195,7 @@ namespace MapMaker.Controllers
             using (new UndoBatch(mapFile, "Reorder Layer", true))
             {
                 var oldIndex = mapFile.Layers.IndexOf(mapLayer);
-                mapLayer.MapObjects.Move(oldIndex, oldIndex + 1);
+                mapFile.Layers.Move(oldIndex, oldIndex + 1);
             }
         }
 
@@ -204,7 +204,7 @@ namespace MapMaker.Controllers
             using (new UndoBatch(mapFile, "Reorder Layer", true))
             {
                 var oldIndex = mapFile.Layers.IndexOf(mapLayer);
-                mapLayer.MapObjects.Move(oldIndex, oldIndex - 1);
+                mapFile.Layers.Move(oldIndex, oldIndex - 1);
             }
         }
 
@@ -213,7 +213,7 @@ namespace MapMaker.Controllers
             using (new UndoBatch(mapFile, "Reorder Layer", true))
             {
                 var oldIndex = mapFile.Layers.IndexOf(mapLayer);
-                mapLayer.MapObjects.Move(oldIndex, mapFile.Layers.Count - 1);
+                mapFile.Layers.Move(oldIndex, mapFile.Layers.Count - 1);
             }
         }
 
@@ -222,7 +222,7 @@ namespace MapMaker.Controllers
             using (new UndoBatch(mapFile, "Reorder Layer", true))
             {
                 var oldIndex = mapFile.Layers.IndexOf(mapLayer);
-                mapLayer.MapObjects.Move(oldIndex, 0);
+                mapFile.Layers.Move(oldIndex, 0);
             }
         }
     }

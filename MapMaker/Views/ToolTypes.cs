@@ -5,9 +5,11 @@ namespace MapMaker.Models.Map
         Pointer,
         Pan,
 
-        Shape
-        //Text,
+        Shape,
+        Text,
         //Brush,
+        //Stamp,
+        //Tile,
         //Path
     }
 }

@@ -1,11 +1,15 @@
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using MapMaker.Models;
 using MapMaker.Models.Map;
 using MonitoredUndo;
+using Point = System.Windows.Point;
+using Size = System.Windows.Size;
 
 namespace MapMaker.Controllers
 {
@@ -13,7 +17,7 @@ namespace MapMaker.Controllers
     {
         private Point _cursorPosition;
         private MapController? _mapController;
-        private Point _offset;
+        private Point _offset = new Point(-760,-760);
 
         private double _scale = 0.5;
         private MapBrush? _selectedBrush;
@@ -24,6 +28,8 @@ namespace MapMaker.Controllers
         private ToolTypes _selectedTool;
         private ToolTrayPanels _selectedToolTray;
         private SettingsController? _settings;
+        private MapBrush _defaultBackgroundBrush = new MapBrush(Colors.Beige);
+        private MapBrush _defaultForegroundBrush = new MapBrush(Colors.Blue);
 
 
         private SettingsController Settings =>
@@ -149,6 +155,18 @@ namespace MapMaker.Controllers
                 _selectedBrush = value;
                 OnPropertyChanged();
             }
+        }
+
+        public MapBrush DefaultBackgroundBrush
+        {
+            get => _defaultBackgroundBrush;
+            set => _defaultBackgroundBrush = value;
+        }
+
+        public MapBrush DefaultForegroundBrush
+        {
+            get => _defaultForegroundBrush;
+            set => _defaultForegroundBrush = value;
         }
 
         public Task Init()

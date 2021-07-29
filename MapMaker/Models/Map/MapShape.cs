@@ -36,8 +36,7 @@ namespace MapMaker.Models.Map
             FillBrush = new MapBrush(Colors.Beige);
             StrokeBrush = new MapBrush(Colors.Blue);
         }
-
-        [XmlAttribute]
+        
         public ShapeTypes Type
         {
             get => _type;
@@ -49,8 +48,7 @@ namespace MapMaker.Models.Map
                 OnRenderBrushUpdated();
             }
         }
-
-        [XmlAttribute]
+        
         public int Sides
         {
             get => _sides;
@@ -62,8 +60,7 @@ namespace MapMaker.Models.Map
                 OnRenderBrushUpdated();
             }
         }
-
-        [XmlAttribute]
+        
         public double Eccentricity
         {
             get => _eccentricity;
@@ -75,8 +72,7 @@ namespace MapMaker.Models.Map
                 OnRenderBrushUpdated();
             }
         }
-
-        [XmlElement]
+        
         public MapBrush FillBrush
         {
             get => _fillBrush;
@@ -90,8 +86,7 @@ namespace MapMaker.Models.Map
                 OnRenderBrushUpdated();
             }
         }
-
-        [XmlElement]
+        
         public MapBrush StrokeBrush
         {
             get => _strokeBrush;

@@ -90,6 +90,13 @@
                 Grid.ColumnSpan="2"
                 DataContext="{Binding Image}"
                 Visibility="{Binding Source={StaticResource EditorController}, Path=SelectedObject, Converter={StaticResource VisibleIfTypeConverter}, ConverterParameter={x:Type map:MapImage}}" />
+            
+            <!-- Tools for Text -->
+            <panels:MapTextProperties
+                Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Visibility="{Binding Converter={StaticResource VisibleIfTypeConverter}, ConverterParameter={x:Type map:MapText}}" />
         </Grid>
     </StackPanel>
 </UserControl>

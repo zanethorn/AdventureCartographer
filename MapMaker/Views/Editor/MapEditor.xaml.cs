@@ -54,7 +54,7 @@ namespace MapMaker.Views.Editor
                             Size = new Size(
                                 imgFile.PixelWidth,
                                 imgFile.PixelHeight
-                            )
+                            ),
                         };
                         _mapController.AddObjectToLayer(
                             _editorController.SelectedMap,
@@ -135,8 +135,7 @@ namespace MapMaker.Views.Editor
                     }
                         break;
                     case ToolTypes.Shape:
-                    {
-                    }
+                    case ToolTypes.Text:
                         break;
                     default:
                         throw new InvalidEnumArgumentException();
@@ -161,6 +160,11 @@ namespace MapMaker.Views.Editor
                         cursor = Cursors.Pen;
                     }
                         break;
+                    case ToolTypes.Text:
+                    {
+                        cursor = Cursors.IBeam;
+                    }
+                        break;
                     default:
                         throw new InvalidEnumArgumentException();
                 }
@@ -180,8 +184,6 @@ namespace MapMaker.Views.Editor
             {
                 case ToolTypes.Pointer:
                 case ToolTypes.Pan:
-                {
-                }
                     break;
                 case ToolTypes.Shape:
                 {
@@ -189,7 +191,9 @@ namespace MapMaker.Views.Editor
                     {
                         Offset = _downPosition,
                         Size = new Size(3 * _settingsController.Settings.GridCellWidth,
-                            3 * _settingsController.Settings.GridCellWidth)
+                            3 * _settingsController.Settings.GridCellWidth),
+                        FillBrush = _editorController.DefaultBackgroundBrush,
+                        StrokeBrush = _editorController.DefaultForegroundBrush
                     };
                     _mapController.AddObjectToLayer(
                         _editorController.SelectedMap,
@@ -197,6 +201,23 @@ namespace MapMaker.Views.Editor
                         shape
                     );
                     _editorController.SelectedObject = shape;
+                }
+                    break;
+                case ToolTypes.Text:
+                {
+                    var obj = new MapText()
+                    {
+                        Offset = _downPosition,
+                        Size = new Size(3 * _settingsController.Settings.GridCellWidth,
+                            _settingsController.Settings.GridCellWidth),
+                        FillBrush = _editorController.DefaultBackgroundBrush
+                    };
+                    _mapController.AddObjectToLayer(
+                        _editorController.SelectedMap,
+                        _editorController.SelectedLayer,
+                        obj
+                    );
+                    _editorController.SelectedObject = obj;
                 }
                     break;
                 default:
@@ -229,8 +250,7 @@ namespace MapMaker.Views.Editor
                     break;
                 case ToolTypes.Pan:
                 case ToolTypes.Shape:
-                {
-                }
+                case ToolTypes.Text:
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
@@ -241,7 +261,7 @@ namespace MapMaker.Views.Editor
 
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
-            //Controller.SelectedTool.Up(e.GetPosition(FileView));
+            
         }
 
         private void OnCanCopy(object sender, CanExecuteRoutedEventArgs e)
@@ -273,5 +293,7 @@ namespace MapMaker.Views.Editor
 		{
             e.Handled = true;
 		}
-	}
+
+        
+    }
 }
