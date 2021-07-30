@@ -22,7 +22,9 @@
         </Style>
     </UserControl.Resources>
     <StackPanel>
-        <TextBlock Text="No Object Selected" Visibility="{Binding Converter={StaticResource VisibleIfNullConverter}}" />
+        <TextBlock Text="No Object Selected" 
+                   HorizontalAlignment="Center"
+                   Visibility="{Binding Converter={StaticResource VisibleIfNullConverter}}" />
         <Grid Visibility="{Binding Converter={StaticResource VisibleIfNotNullConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
@@ -30,6 +32,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="200" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -43,14 +46,25 @@
                     Text="{Binding}"
                     FontWeight="Bold" />
             </StackPanel>
+            
+            <Image 
+                Grid.Row="1" 
+                Grid.Column="0" 
+                Grid.ColumnSpan="2" 
+                Height="200"
+                Width="200"
+                Stretch="Uniform"
+                Source="{Binding Drawing}">
+                
+            </Image>
 
             <Label
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="0"
                 Target="{Binding ElementName=OffsetPanel}"
                 Content="Location:" />
             <StackPanel
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="1"
                 x:Name="OffsetPanel"
                 Orientation="Horizontal">
@@ -61,12 +75,12 @@
             </StackPanel>
 
             <Label
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="0"
                 Target="{Binding ElementName=SizePanel}"
                 Content="Size:" />
             <StackPanel
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="1"
                 x:Name="SizePanel"
                 Orientation="Horizontal">
@@ -78,14 +92,14 @@
 
             <!-- Tools for Shapes -->
             <panels:ShapePropertiesPanel
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Visibility="{Binding Converter={StaticResource VisibleIfTypeConverter}, ConverterParameter={x:Type map:MapShape}}" />
             
             <!-- Tools for Images -->
             <views:ImageFileView
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 DataContext="{Binding Image}"
@@ -93,7 +107,7 @@
             
             <!-- Tools for Text -->
             <panels:MapTextProperties
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Visibility="{Binding Converter={StaticResource VisibleIfTypeConverter}, ConverterParameter={x:Type map:MapText}}" />

@@ -12,7 +12,7 @@ using Point = System.Windows.Point;
 namespace MapMaker.Models.Map
 {
     [DataContract]
-    public class MapText : MapObject
+    public class MapText : MapObject, IHasFillBrush
     {
         private static readonly MapMaker.Converters.FontStyleConverter FontStyleConverter = new ();
         private static readonly MapMaker.Converters.FontWeightConverter FontWeightConverter = new ();

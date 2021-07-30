@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using MapMaker.Models.Library;
 using MonitoredUndo;
@@ -23,10 +25,18 @@ namespace MapMaker.Models.Map
         [DataMember(Name=nameof(ImageFiles), Order=2001)]
         private SmartCollection<LibraryImage> _imageFiles = new();
 
+        [DataMember(Name=nameof(ImageFiles), Order=3001)]
+        private SmartCollection<MapBrush> _brushes = new();
+
+        [DataMember(Name = nameof(FontFamily), Order = 4001)]
+        private ObservableCollection<string> _fonts = new();
+        
         [DataMember(Name=nameof(Layers), Order=int.MaxValue)]
         private SmartCollection<MapLayer> _layers = new();
+
         
-        
+
+
         public string Name
         {
             get => _name;
@@ -93,6 +103,28 @@ namespace MapMaker.Models.Map
             }
         }
 
+        public ObservableCollection<string> Fonts
+        {
+            get => _fonts;
+            set
+            {
+                if (_fonts == value) return;
+                _fonts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public SmartCollection<MapBrush> Brushes
+        {
+            get => _brushes;
+            set
+            {
+                if (_brushes == value) return;
+                _brushes = value;
+                OnPropertyChanged();
+            }
+        }
+
         public object GetUndoRoot()
         {
             return this;
@@ -105,6 +137,8 @@ namespace MapMaker.Models.Map
             var myClone = (MapFile) clone;
             myClone._layers = (SmartCollection<MapLayer>) _layers.Clone();
             myClone._imageFiles = (SmartCollection<LibraryImage>) _imageFiles.Clone();
+            myClone._brushes = (SmartCollection<MapBrush>) _brushes.Clone();
+            myClone._fonts = new ObservableCollection<string>(_fonts);
         }
     }
 }

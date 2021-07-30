@@ -29,8 +29,9 @@
     
     <TextBox 
         Grid.Row="0" 
-        Grid.Column="1" 
-        Text="{Binding Text, Mode=TwoWay}"/>
+        Grid.Column="0" 
+        Grid.ColumnSpan="2"
+        Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     
     <Label
         Grid.Row="1"
@@ -41,7 +42,7 @@
         x:Name="FillBrushButton"
         Grid.Row="1"
         Grid.Column="1"
-        Content="{Binding FillBrush}"/>
+        Brush="{Binding FillBrush, Mode=TwoWay}"/>
 
     <Label
         Grid.Row="2"
@@ -51,7 +52,22 @@
     <ComboBox x:Name="FontFamilyDropdown"
               Grid.Row="2"
               Grid.Column="1"
-               />
+              ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}"
+              SelectedValue="{Binding FontFamily, Mode=TwoWay}">
+        <ComboBox.ItemTemplate>
+            <DataTemplate>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Column="0" Text="{Binding }" />
+                    <TextBlock Grid.Column="1" Text="{Binding}" FontFamily="{Binding}" />
+                </Grid>
+            </DataTemplate>
+        </ComboBox.ItemTemplate>
+    </ComboBox>
     
     <Label
         Grid.Row="3"

@@ -108,6 +108,10 @@
         <CommandBinding
             Command="{x:Static local:CustomCommands.NewLayer}"
             Executed="OnNewLayer" />
+        
+        <CommandBinding
+            Command="{x:Static local:CustomCommands.NewBrush}"
+            Executed="OnNewBrush" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top" IsMainMenu="True">

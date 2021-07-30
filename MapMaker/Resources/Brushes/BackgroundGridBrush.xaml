@@ -8,7 +8,7 @@
                         <DrawingGroup>
                             <!-- checkerboard background -->
                             <GeometryDrawing
-                                Brush="{Binding Source={StaticResource SettingsController}, Path=BackgroundGridColor1, Converter={StaticResource BrushConverter}}">
+                                Brush="{Binding Source={StaticResource SettingsController}, Path=BackgroundGridColor1, Converter={StaticResource StringToBrushConverter}}">
                                 <GeometryDrawing.Geometry>
                                     <RectangleGeometry Rect="0,0,2,2" />
                                 </GeometryDrawing.Geometry>
@@ -16,7 +16,7 @@
     
                             <!-- two checkerboard foreground tiles -->
                             <GeometryDrawing
-                                Brush="{Binding Source={StaticResource SettingsController}, Path=BackgroundGridColor2, Converter={StaticResource BrushConverter}}">
+                                Brush="{Binding Source={StaticResource SettingsController}, Path=BackgroundGridColor2, Converter={StaticResource StringToBrushConverter}}">
                                 <GeometryDrawing.Geometry>
                                     <GeometryGroup>
                                         <RectangleGeometry Rect="0,0,1,1" />

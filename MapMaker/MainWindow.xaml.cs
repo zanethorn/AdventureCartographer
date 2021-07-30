@@ -525,6 +525,13 @@ namespace MapMaker
             };
             _mapController.AddLayer(_editorController.SelectedMap, newLayer);
         }
+        
+        private void OnNewBrush(object sender, ExecutedRoutedEventArgs e)
+        {
+            var brush = new MapBrush();
+            _mapController.AddBrush(_editorController.SelectedMap,brush);
+            _editorController.SelectedBrush = brush;
+        }
 
         private void OnControllerPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {

@@ -31,33 +31,39 @@ namespace MapMaker.Models.Map
         [DataMember(Name=nameof(EndY), Order=4)]
         private double _endY;
         
+        [DataMember(Name=nameof(EndY), Order=4)]
+        private string _name = string.Empty;
+        
         [DataMember(Name=nameof(Colors), Order=1001)]
         private SmartCollection<GradientColorStop> _colors = new();
         
         [DataMember(Name=nameof(NestedBrushRenderer), Order = 2001, EmitDefaultValue = false)]
         private IRendersBrush? _nestedBrushRenderer;
+
         
-        
+
 
         public MapBrush() : this(System.Windows.Media.Colors.Black)
         {
         }
 
 
-        public MapBrush(string color) : this(new[] {new GradientColorStop {Color = color}})
+        public MapBrush(string color) : this((Color)ColorConverter.ConvertFromString(color))
         {
         }
 
         public MapBrush(Color color) : this(new[] {new GradientColorStop {MediaColor = color}})
         {
+            var colorProperty = typeof(Colors).GetProperties()
+                .FirstOrDefault(p => Color.AreClose((Color)p.GetValue(null), color));
+            Name =  colorProperty != null ? colorProperty.Name : color.ToString();
         }
 
         public MapBrush(IEnumerable<GradientColorStop> colors)
         {
             Colors = new SmartCollection<GradientColorStop>(colors);
         }
-
-        [XmlAttribute]
+        
         public BrushTypes BrushType
         {
             get => _brushType;
@@ -69,8 +75,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(IRendersBrush.RenderedBrush));
             }
         }
-
-        [XmlAttribute]
+        
         public double StartX
         {
             get => _startX;
@@ -83,8 +88,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(IRendersBrush.RenderedBrush));
             }
         }
-
-        [XmlAttribute]
+        
         public double StartY
         {
             get => _startY;
@@ -97,8 +101,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(IRendersBrush.RenderedBrush));
             }
         }
-
-        [XmlAttribute]
+        
         public double EndX
         {
             get => _endX;
@@ -111,8 +114,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(IRendersBrush.RenderedBrush));
             }
         }
-
-        [XmlAttribute]
+        
         public double EndY
         {
             get => _endY;
@@ -125,9 +127,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(IRendersBrush.RenderedBrush));
             }
         }
-
-        [XmlIgnore]
-        [Browsable(false)]
+        
         public Point StartPoint
         {
             get => new(StartX, StartY);
@@ -137,9 +137,7 @@ namespace MapMaker.Models.Map
                 StartY = value.Y;
             }
         }
-
-        [XmlIgnore]
-        [Browsable(false)]
+        
         public Point EndPoint
         {
             get => new(EndX, EndY);
@@ -150,7 +148,37 @@ namespace MapMaker.Models.Map
             }
         }
 
-        [XmlArray]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name == value) return;
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash = 17;
+                hash = hash * 23 + BrushType.GetHashCode();
+                hash = hash * 23 + StartX.GetHashCode();
+                hash = hash * 23 + StartY.GetHashCode();
+                hash = hash * 23 + EndX.GetHashCode();
+                hash = hash * 23 + EndY.GetHashCode();
+
+                foreach (var color in Colors)
+                {
+                    hash = hash * 23 + color.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+
         public SmartCollection<GradientColorStop> Colors
         {
             get => _colors;
@@ -169,8 +197,7 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(LinearBrush));
             }
         }
-
-        [XmlElement]
+        
         public IRendersBrush? NestedBrushRenderer
         {
             get => _nestedBrushRenderer;
@@ -183,15 +210,13 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(LinearBrush));
             }
         }
-
-        [XmlIgnore]
+        
         public Brush LinearBrush => new LinearGradientBrush(
             new GradientStopCollection(Colors.Select(i => new GradientStop(i.MediaColor, i.Offset))),
             new Point(),
             new Point(1.0, 0.0)
         );
-
-        [XmlIgnore]
+        
         public Brush RenderedBrush => GetRenderBrush();
 
         public Brush GetRenderBrush()

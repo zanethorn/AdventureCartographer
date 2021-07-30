@@ -173,13 +173,11 @@ namespace MapMaker.Views.Editor
 
             if (!_offsetY) y = 0;
 
-
-            using (new UndoBatch(_editorController.SelectedMap, $"Resize {MapObject}", true))
-            {
-                MapObject.Offset = new Point(MapObject.Offset.X - x, MapObject.Offset.Y - y);
-                MapObject.Size = new Size(pixelWidth, pixelHeight);
-            }
-
+            _mapController.MoveResizeObject(
+                MapObject, 
+                new Point(MapObject.Offset.X - x, MapObject.Offset.Y - y),
+                new Size(pixelWidth, pixelHeight)
+                );
             e.Handled = true;
         }
 

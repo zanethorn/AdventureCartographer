@@ -14,6 +14,7 @@
              MouseLeave="OnMouseLeave"
              Drop="OnDrop"
              DataContext="{StaticResource EditorController}"
+             Cursor="{Binding Source={StaticResource EditorController}, Path=SelectedTool.Cursor}"
              x:Name="Editor">
     <UserControl.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Copy"

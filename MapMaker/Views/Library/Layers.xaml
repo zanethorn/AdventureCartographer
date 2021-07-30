@@ -11,9 +11,9 @@
              DataContext="{StaticResource EditorController}">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Image Source="{StaticResource EyeIcon}" Width="24" Margin="10,0,0,0" />
-            <Image Source="{StaticResource LockIcon}" Width="24" Margin="6,0,0,0" />
-            <Image Source="{StaticResource MaskIcon}" Width="24" Margin="6,0,0,0" />
+            <Image Source="{StaticResource EyeOutline}" Width="24" Margin="10,0,0,0" />
+            <Image Source="{StaticResource Lock}" Width="24" Margin="6,0,0,0" />
+            <Image Source="{StaticResource DramaMasks}" Width="24" Margin="6,0,0,0" />
             <TextBlock TextAlignment="Center" FontWeight="Bold" Width="200" Text="Name" />
         </StackPanel>
 
@@ -47,28 +47,28 @@
 
         <StackPanel Orientation="Horizontal">
             <Button Command="{x:Static mapMaker:CustomCommands.NewLayer}">
-                <Image Width="24" Source="{StaticResource PlusIcon}" />
+                <Image Width="24" Source="{StaticResource Plus}" />
             </Button>
             <Button Command="{x:Static mapMaker:CustomCommands.MoveUp}"
                     CommandParameter="{Binding SelectedLayer}">
-                <Image Width="24" Source="{StaticResource MoveUpIcon}" />
+                <Image Width="24" Source="{StaticResource ChevronUp}" />
             </Button>
             <Button Command="{x:Static mapMaker:CustomCommands.MoveDown}"
                     CommandParameter="{Binding SelectedLayer}">
-                <Image Width="24" Source="{StaticResource MoveDownIcon}" />
+                <Image Width="24" Source="{StaticResource ChevronDown}" />
             </Button>
             <Button Command="{x:Static mapMaker:CustomCommands.Duplicate}"
                     CommandParameter="{Binding SelectedLayer}">
-                <Image Width="24" Source="{StaticResource DuplicateIcon}" />
+                <Image Width="24" Source="{StaticResource ContentDuplicate}" />
             </Button>
             <Button Command="{x:Static mapMaker:CustomCommands.Merge}"
                     CommandParameter="{Binding SelectedLayer}">
-                <Image Width="24" Source="{StaticResource MergeIcon}" />
+                <Image Width="24" Source="{StaticResource DownloadMultiple}" />
             </Button>
 
             <Button HorizontalAlignment="Right" Command="Delete"
                     CommandParameter="{Binding SelectedLayer}">
-                <Image Width="24" Source="{StaticResource DeleteIcon}" />
+                <Image Width="24" Source="{StaticResource Delete}" />
             </Button>
         </StackPanel>
 

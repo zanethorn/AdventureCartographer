@@ -15,10 +15,10 @@
     <StatusBarItem>
         <StackPanel Orientation="Horizontal">
             <TextBlock
-                Text="{Binding Source={StaticResource EditorController}, Path=CursorPosition.X, Converter={StaticResource ToIntConverter}}" />
+                Text="{Binding Source={StaticResource EditorController}, Path=SelectedTool.Position.X, Converter={StaticResource ToIntConverter}}" />
             <TextBlock Text="," />
             <TextBlock
-                Text="{Binding Source={StaticResource EditorController}, Path=CursorPosition.Y, Converter={StaticResource ToIntConverter}}" />
+                Text="{Binding Source={StaticResource EditorController}, Path=SelectedTool.Position.Y, Converter={StaticResource ToIntConverter}}" />
         </StackPanel>
     </StatusBarItem>
     <Separator />

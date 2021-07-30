@@ -47,7 +47,7 @@
         x:Name="FillBrushButton"
         Grid.Row="1"
         Grid.Column="1"
-        Content="{Binding FillBrush}"/>
+        Brush="{Binding FillBrush, Mode=TwoWay}"/>
 
     <Label
         Grid.Row="2"
@@ -58,7 +58,7 @@
         x:Name="StrokeBrushButton"
         Grid.Row="2"
         Grid.Column="1"
-        Content="{Binding StrokeBrush}" />
+        Brush="{Binding StrokeBrush, Mode=TwoWay}" />
 
     <Label
         Grid.Row="3"
@@ -78,10 +78,11 @@
     <Label
         Grid.Row="4"
         Grid.Column="0"
-        Target="{Binding ElementName=SizePanel}"
+        Target="{Binding ElementName=NumberOFSides}"
         Content="# of Sides:"
         Visibility="{Binding Type, Converter={StaticResource ShouldShowSidesConverter}, FallbackValue=Collapsed}" />
     <xctk:IntegerUpDown
+        x:Name="NumberOFSides"
         Grid.Row="4"
         Grid.Column="1"
         Value="{Binding Sides, Mode=TwoWay}"
@@ -90,10 +91,11 @@
     <Label
         Grid.Row="5"
         Grid.Column="0"
-        Target="{Binding ElementName=SizePanel}"
+        Target="{Binding ElementName=Eccentricity}"
         Content="Eccentricity:"
         Visibility="{Binding Type, Converter={StaticResource ShouldShowEccentricityConverter}, FallbackValue=Collapsed}" />
     <xctk:DoubleUpDown
+        x:Name="Eccentricity"
         Grid.Row="5"
         Grid.Column="1"
         Minimum="0.01"

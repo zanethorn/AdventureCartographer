@@ -6,18 +6,41 @@
              xmlns:mapMaker="clr-namespace:MapMaker"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:map="clr-namespace:MapMaker.Models.Map"
+             xmlns:views="clr-namespace:MapMaker.Views"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance map:MapBrush}"
-             x:Name="self">
+             x:Name="self"
+             AllowDrop="True"
+             DataContext="{Binding RelativeSource={RelativeSource Self}, Path=Brush }"
+             Drop="OnDrop">
     <StackPanel>
-        <TextBlock Text="No Brush Selected" Visibility="{Binding Converter={StaticResource VisibleIfNullConverter}}" />
+        <TextBlock Text="No Brush Selected" 
+                   HorizontalAlignment="Center"
+                   Visibility="{Binding Converter={StaticResource VisibleIfNullConverter}}" />
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" Style="{StaticResource BrushSelector}"
+                      HorizontalAlignment="Stretch"
+                      SelectedValue="{Binding ElementName=self, Path=Brush, Mode=TwoWay}">
+            </ComboBox>
+            
+            <Button Grid.Column="1" Command="{x:Static mapMaker:CustomCommands.NewBrush}">
+                <Image Width="24" Source="{StaticResource Plus}" />
+            </Button>
+        </Grid>
+        
+        
         <Grid Visibility="{Binding Converter={StaticResource VisibleIfNotNullConverter}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -36,24 +59,42 @@
         <Label
             Grid.Row="1"
             Grid.Column="0"
+            Target="{Binding ElementName=NameTextBox}"
+            Content="Name:" />
+        <TextBox x:Name="NameTextBox"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  HorizontalAlignment="Stretch"
+                  Text="{Binding Name, Mode=TwoWay}" />
+        
+        <Label
+            Grid.Row="2"
+            Grid.Column="0"
             Target="{Binding ElementName=BrushTypes}"
             Content="Type:" />
         <ComboBox x:Name="BrushTypes"
-                  Grid.Row="1"
+                  Grid.Row="2"
                   Grid.Column="1"
                   SelectionChanged="OnBrushTypesChanged"
                   ItemsSource="{Binding Source={mapMaker:EnumBindingSource {x:Type map:BrushTypes}}}"
                   SelectedValue="{Binding BrushType, Mode=TwoWay}" />
 
         <xctk:ColorCanvas x:Name="ColorCanvas"
-                          Grid.Row="2"
+                          Grid.Row="3"
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
+                          Background="White"
                           SelectedColor="{Binding ElementName=self, Path=SelectedColorStop.MediaColor, Mode=TwoWay}" />
+        <views:ImageFileView x:Name="ImageFileView"
+                             Grid.Row="3"
+                             Grid.Column="0"
+                             Grid.ColumnSpan="2"
+                             DataContext="{Binding NestedBrushRenderer}"
+                             Visibility="Collapsed" />
 
         <ItemsControl
             x:Name="GradientEditor"
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Visibility="Collapsed"

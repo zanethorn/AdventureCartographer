@@ -1,0 +1,44 @@
+<#@ template language="C#" hostspecific="True" #>
+<#@ output extension=".xaml" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Globalization" #>
+<#
+    string TitleCase(string input)
+    {
+        var resultBuilder = new System.Text.StringBuilder();
+        foreach(var c in input)
+        {
+            // Replace anything, but letters and digits, with space
+            if(!Char.IsLetterOrDigit(c))
+            {
+                resultBuilder.Append(" ");
+            }
+            else 
+            { 
+                resultBuilder.Append(c); 
+            }
+        }
+
+        var result = resultBuilder.ToString();
+
+        // Make result string all lowercase, because ToTitleCase does not change all uppercase correctly
+        result = result.ToLower();
+
+        // Creates a TextInfo based on the "en-US" culture.
+        var myTI = new CultureInfo("en-US",false).TextInfo;
+
+        return myTI.ToTitleCase(result).Replace(" ", string.Empty);
+    }
+
+#>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+<# foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(Host.ResolvePath(Host.TemplateFile)), "*.png")
+        .Select(Path.GetFileName)) { #>
+        <BitmapImage x:Key="<#= TitleCase(Path.GetFileNameWithoutExtension(file)) #>" UriSource="<#= file #>" />
+<# } #>
+</ResourceDictionary>

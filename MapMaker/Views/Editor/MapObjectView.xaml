@@ -47,25 +47,25 @@
                       Header="Duplicate"
                       CommandParameter="{Binding }">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource DuplicateIcon}" />
+                    <Image Source="{StaticResource ContentDuplicate}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="ApplicationCommands.Copy"
                       CommandParameter="{Binding }">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource CopyIcon}" />
+                    <Image Source="{StaticResource ContentCopy}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="ApplicationCommands.Cut"
                       CommandParameter="{Binding}">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource CutIcon}" />
+                    <Image Source="{StaticResource ContentCut}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="ApplicationCommands.Delete"
                       CommandParameter="{Binding}">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource DeleteIcon}" />
+                    <Image Source="{StaticResource Delete}" />
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
@@ -73,28 +73,28 @@
                       Header="Move to Top"
                       CommandParameter="{Binding }">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource MoveTopIcon}" />
+                    <Image Source="{StaticResource ChevronTripleUp}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{x:Static mapMaker:CustomCommands.MoveUp}"
                       Header="Move Up"
                       CommandParameter="{Binding }">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource MoveUpIcon}" />
+                    <Image Source="{StaticResource ChevronUp}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{x:Static mapMaker:CustomCommands.MoveDown}"
                       Header="Move Down"
                       CommandParameter="{Binding }">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource MoveDownIcon}" />
+                    <Image Source="{StaticResource ChevronDown}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{x:Static mapMaker:CustomCommands.MoveToBottom}"
                       Header="Move to Bottom"
                       CommandParameter="{Binding }">
                 <MenuItem.Icon>
-                    <Image Source="{StaticResource MoveBottomIcon}" />
+                    <Image Source="{StaticResource ChevronTripleDown}" />
                 </MenuItem.Icon>
             </MenuItem>
         </ContextMenu>

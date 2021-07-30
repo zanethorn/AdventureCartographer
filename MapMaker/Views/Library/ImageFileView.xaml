@@ -15,7 +15,7 @@
     </UserControl.ContextMenu>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" MouseDown="OnMouseDown" Width="300">
         <Image Width="70" Height="70" Stretch="Uniform"
-               Source="{Binding Bitmap, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource DownloadingIcon}}" />
+               Source="{Binding Bitmap, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource ProgressDownload}}" />
         <StackPanel Width="230">
             <TextBlock FontWeight="Bold" Text="{Binding ShortName}" TextWrapping="NoWrap"
                        TextTrimming="CharacterEllipsis" />

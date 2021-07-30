@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using MapMaker.Models.Library;
 using MapMaker.Models.Map;
 
 namespace MapMaker.Views.Panels
@@ -14,22 +15,55 @@ namespace MapMaker.Views.Panels
         public static readonly DependencyProperty SelectedColorStopProperty =
             DependencyProperty.Register(nameof(SelectedColorStop), typeof(GradientColorStop), typeof(BrushEditor));
 
+        public static readonly DependencyProperty BrushProperty =
+            DependencyProperty.Register(nameof(Brush),typeof(MapBrush), typeof(BrushEditor),
+                new PropertyMetadata(OnBrushChangedCallback));
+        
+        private static void OnBrushChangedCallback(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var me = (BrushEditor) sender;
+            if (e.Property == BrushProperty)
+            {
+                me.SelectedColorStop = me.Brush.Colors[0];
+                if (me._owner == null || me._owner.Brush == me.Brush) return;
+                me._owner.Brush = me.Brush;
+            }
+        }
+        
+        public static BrushEditor Instance { get; private set; }
+
+
+        private BrushButton? _owner;
 
         public BrushEditor()
         {
+            Instance = this;
             InitializeComponent();
             ColorCanvas.SelectedColorChanged += OnSelectedColorChanged;
-            DataContextChanged += OnBrushChanged;
         }
 
         public GradientColorStop SelectedColorStop
         {
             get => (GradientColorStop) GetValue(SelectedColorStopProperty);
             set => SetValue(SelectedColorStopProperty, value);
-            //ColorCanvas.SelectedColor = value.MediaColor;
         }
 
-        public MapBrush Brush => (MapBrush) DataContext;
+        public MapBrush Brush
+        {
+            get => (MapBrush) GetValue(BrushProperty);
+            set
+            {
+                SetValue(BrushProperty, value);
+                
+            } 
+        }
+
+        public void TakeControl(BrushButton owner)
+        {
+            _owner = owner;
+            Brush = _owner.Brush;
+        }
+        
 
         private void OnDragStarted(object sender, DragStartedEventArgs e)
         {
@@ -67,11 +101,35 @@ namespace MapMaker.Views.Panels
                 Models.Map.BrushTypes.RadialGradient => Visibility.Visible,
                 _ => Visibility.Collapsed
             };
+
+            ColorCanvas.Visibility = Brush.BrushType switch
+            {
+                Models.Map.BrushTypes.Solid => Visibility.Visible,
+                Models.Map.BrushTypes.LinearGradient => Visibility.Visible,
+                Models.Map.BrushTypes.RadialGradient => Visibility.Visible,
+                _ => Visibility.Collapsed
+            };
+            
+            ImageFileView.Visibility = Brush.BrushType switch
+            {
+                Models.Map.BrushTypes.Image => Visibility.Visible,
+                _ => Visibility.Collapsed
+            };
         }
 
-        private void OnBrushChanged(object sender, DependencyPropertyChangedEventArgs e)
+        
+
+        private void OnDrop(object sender, DragEventArgs e)
         {
-            if (e.Property == DataContextProperty) SelectedColorStop = Brush.Colors[0];
+            if (e.Data.GetDataPresent(typeof(LibraryImage)))
+            {
+                var data = e.Data.GetData(typeof(LibraryImage));
+                if (data is LibraryImage imgFile)
+                {
+                    Brush.BrushType = Models.Map.BrushTypes.Image;
+                    Brush.NestedBrushRenderer = imgFile;
+                }
+            }
         }
     }
 }

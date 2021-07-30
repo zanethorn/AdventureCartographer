@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace MapMaker.Models.Map
 {
     [DataContract]
-    public class MapShape : MapObject
+    public class MapShape : MapObject, IHasFillBrush
     {
         [DataMember(Name=nameof(Type), Order=1001)]
         private ShapeTypes _type;
