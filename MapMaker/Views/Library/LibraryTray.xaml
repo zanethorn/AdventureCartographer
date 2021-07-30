@@ -60,15 +60,21 @@
                     VirtualizingPanel.IsVirtualizingWhenGrouping="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                                <views:BrushButton
-                                    Height="24"
-                                    Width="24"
-                                    Margin="0,0,10,0"
-                                    Brush="{Binding  }" />
-                                <TextBox Text="{Binding Name, Mode=TwoWay}"
-                                         HorizontalAlignment="Stretch" />
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Grid.Column="0"
+                                           Width="24"
+                                           Height="24"
+                                           Margin="0,0,10,0"
+                                    Fill="{Binding RenderedBrush}"
+                                    Stroke="Black"
+                                    StrokeThickness="1" />
+                                <TextBlock Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"
+                                         />
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
