@@ -26,6 +26,8 @@ namespace MapMaker
             new(nameof(ShowAbout), typeof(CustomCommands));
 
         public static RoutedCommand NewLayer { get; } = new(nameof(NewLayer), typeof(CustomCommands));
+        
+        public static RoutedCommand NewBrush { get; } = new(nameof(NewBrush), typeof(CustomCommands));
 
         public static RoutedCommand MoveUp { get; } = new(nameof(MoveUp), typeof(CustomCommands));
 

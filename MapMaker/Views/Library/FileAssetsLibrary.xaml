@@ -1,0 +1,40 @@
+<UserControl x:Class="MapMaker.Views.Library.FileAssetsLibrary"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:library="clr-namespace:MapMaker.Views.Library"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <ScrollViewer>
+        <StackPanel>
+            <Expander Header="Images">
+                <ListView
+                    ItemsSource="{Binding Source={StaticResource EditorController}, Path=SelectedMap.ImageFiles, IsAsync=True }"
+                    ItemTemplate="{StaticResource ImageFileTemplate}"
+                    VerticalContentAlignment="Top"
+                    SelectionMode="Single"
+                    VirtualizingPanel.IsContainerVirtualizable="True"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True" />
+            </Expander>
+            <Expander Header="Brushes">
+                <ListView
+                    ItemsSource="{Binding Source={StaticResource EditorController}, Path=SelectedMap.Brushes, IsAsync=True }"
+                    VerticalContentAlignment="Top"
+                    SelectionMode="Single"
+                    VirtualizingPanel.IsContainerVirtualizable="True"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <library:MapBrushView />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Expander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

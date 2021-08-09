@@ -15,7 +15,7 @@ namespace MapMaker.Views.Editor
 {
     public partial class MapObjectView : UserControl
     {
-        private static readonly BrushConverter _brushConverter = new();
+        private static readonly BrushConverter BrushConverter = new();
         private readonly EditorController _editorController;
         private readonly MapController _mapController;
 
@@ -61,7 +61,7 @@ namespace MapMaker.Views.Editor
 
         private void OnMouseEnter(object sender, MouseEventArgs e)
         {
-            ContentDisplay.Stroke = (Brush)_brushConverter.ConvertFrom(_settingsController.ControlHighlightColor);
+            ContentDisplay.Stroke = (Brush)BrushConverter.ConvertFrom(_settingsController.ControlHighlightColor)!;
         }
 
         private void OnMouseLeave(object sender, MouseEventArgs e)
@@ -72,7 +72,7 @@ namespace MapMaker.Views.Editor
         private void OnMouseClick(object sender, MouseButtonEventArgs e)
         {
             _editorController.SelectedObject = MapObject;
-            e.Handled = true;
+            //e.Handled = true;
         }
 
         private void OnDragStartedNW(object sender, DragStartedEventArgs e)
@@ -173,13 +173,11 @@ namespace MapMaker.Views.Editor
 
             if (!_offsetY) y = 0;
 
-
-            using (new UndoBatch(_editorController.SelectedMap, $"Resize {MapObject}", true))
-            {
-                MapObject.Offset = new Point(MapObject.Offset.X - x, MapObject.Offset.Y - y);
-                MapObject.Size = new Size(pixelWidth, pixelHeight);
-            }
-
+            _mapController.MoveResizeObject(
+                MapObject, 
+                new Point(MapObject.Offset.X - x, MapObject.Offset.Y - y),
+                new Size(pixelWidth, pixelHeight)
+                );
             e.Handled = true;
         }
 
@@ -199,16 +197,16 @@ namespace MapMaker.Views.Editor
             {
                 if (_editorController.SelectedObject == MapObject)
                     ContentDisplay.Stroke =
-                        (Brush) _brushConverter.ConvertFrom(_settingsController.Settings.ControlHighlightColor)!;
+                        (Brush) BrushConverter.ConvertFrom(_settingsController.Settings.ControlHighlightColor)!;
                 else
                     ContentDisplay.Stroke = Brushes.Transparent;
             }
         }
 
+        
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (_isDragging)
-                e.Handled = true;
         }
+        
     }
 }

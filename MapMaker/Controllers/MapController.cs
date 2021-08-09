@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using MapMaker.Models;
@@ -16,7 +17,7 @@ namespace MapMaker.Controllers
     {
         private const string KeyFileName = "map.xml";
         private const string ImageDirectory = "Resources/Images/";
-
+        private EditorController _editorController;
 
         public MapController()
         {
@@ -28,6 +29,9 @@ namespace MapMaker.Controllers
         {
             return Task.CompletedTask;
         }
+
+        private EditorController EditorController =>
+            _editorController ??= (EditorController) App.Current.FindResource(nameof(EditorController));
 
 
         public MapFile NewMap()
@@ -109,30 +113,27 @@ namespace MapMaker.Controllers
 
         public void AddLayer(MapFile mapFile, MapLayer mapLayer, int index = -1)
         {
-            using (new UndoBatch(mapFile, $"Add {mapLayer}", false))
-            {
-                if (index == -1)
-                    mapFile.Layers.Add(mapLayer);
-                else
-                    mapFile.Layers.Insert(index, mapLayer);
-            }
+            EditorController.BeginUndo($"Add {mapLayer}", true);
+            if (index == -1)
+                mapFile.Layers.Add(mapLayer);
+            else
+                mapFile.Layers.Insert(index, mapLayer);
         }
 
         public void DeleteLayer(MapFile mapFile, MapLayer mapLayer)
         {
-            using (new UndoBatch(mapFile, $"Delete {mapLayer}", false))
-            {
-                mapFile.Layers.Remove(mapLayer);
-            }
+            EditorController.BeginUndo($"Delete {mapLayer}", true);
+            mapFile.Layers.Remove(mapLayer);
         }
 
         public void AddObjectToLayer(MapFile mapFile, MapLayer mapLayer, MapObject mapObject)
         {
-            using (new UndoBatch(mapFile, $"Add {mapObject}", false))
-            {
-                mapLayer.MapObjects.Add(mapObject);
+            EditorController.BeginUndo($"Add {mapObject}", true);
+            mapLayer.MapObjects.Add(mapObject);
 
-                if (mapObject is MapImage mapImage)
+            switch (mapObject)
+            {
+                case MapImage mapImage:
                 {
                     var linkedBitmap = mapFile.ImageFiles.SingleOrDefault(f => f.Id == mapImage.Image.Id);
                     if (linkedBitmap == null)
@@ -142,88 +143,126 @@ namespace MapMaker.Controllers
                     }
 
                     mapImage.Image = linkedBitmap;
+                    break;
+                }
+                case MapShape mapShape:
+                {
+                    var fillBrush =
+                        mapFile.Brushes.SingleOrDefault(i => i.GetHashCode() == mapShape.FillBrush.GetHashCode());
+                    if (fillBrush == null)
+                    {
+                        fillBrush = mapShape.FillBrush;
+                        mapFile.Brushes.Add(fillBrush);
+                    }
+
+                    mapShape.FillBrush = fillBrush;
+
+                    var strokeBrush =
+                        mapFile.Brushes.SingleOrDefault(i => i.GetHashCode() == mapShape.StrokeBrush.GetHashCode());
+                    if (strokeBrush == null)
+                    {
+                        strokeBrush = mapShape.StrokeBrush;
+                        mapFile.Brushes.Add(strokeBrush);
+                    }
+
+                    mapShape.StrokeBrush = strokeBrush;
+                    break;
+                }
+                case MapText mapText:
+                {
+                    var fillBrush =
+                        mapFile.Brushes.SingleOrDefault(i => i.GetHashCode() == mapText.FillBrush.GetHashCode());
+                    if (fillBrush == null)
+                    {
+                        fillBrush = mapText.FillBrush;
+                        mapFile.Brushes.Add(fillBrush);
+                    }
+
+                    mapText.FillBrush = fillBrush;
+
+                    if (!mapFile.Fonts.Contains(mapText.FontFamily))
+                    {
+                        mapFile.Fonts.Add(mapText.FontFamily);
+                    }
+
+                    break;
                 }
             }
         }
 
         public void DeleteObjectFromLayer(MapFile mapFile, MapLayer mapLayer, MapObject mapObject)
         {
-            using (new UndoBatch(mapFile, $"Delete {mapObject}", false))
-            {
-                mapLayer.MapObjects.Remove(mapObject);
-            }
+            EditorController.BeginUndo($"Delete {mapObject}", true);
+            mapLayer.MapObjects.Remove(mapObject);
         }
 
         public void MoveObjectUp(MapFile mapFile, MapLayer mapLayer, MapObject mapObject)
         {
-            using (new UndoBatch(mapFile, "Reorder Object", true))
-            {
-                var oldIndex = mapLayer.MapObjects.IndexOf(mapObject);
-                mapLayer.MapObjects.Move(oldIndex, oldIndex + 1);
-            }
+            EditorController.BeginUndo("Reorder Object");
+            var oldIndex = mapLayer.MapObjects.IndexOf(mapObject);
+            mapLayer.MapObjects.Move(oldIndex, oldIndex + 1);
         }
 
         public void MoveObjectTop(MapFile mapFile, MapLayer mapLayer, MapObject mapObject)
         {
-            using (new UndoBatch(mapFile, "Reorder Object", true))
-            {
-                var oldIndex = mapLayer.MapObjects.IndexOf(mapObject);
-                mapLayer.MapObjects.Move(oldIndex, mapLayer.MapObjects.Count - 1);
-            }
+            EditorController.BeginUndo("Reorder Object");
+            var oldIndex = mapLayer.MapObjects.IndexOf(mapObject);
+            mapLayer.MapObjects.Move(oldIndex, mapLayer.MapObjects.Count - 1);
         }
 
         public void MoveObjectBottom(MapFile mapFile, MapLayer mapLayer, MapObject mapObject)
         {
-            using (new UndoBatch(mapFile, "Reorder Object", true))
-            {
-                var oldIndex = mapLayer.MapObjects.IndexOf(mapObject);
-                mapLayer.MapObjects.Move(oldIndex, 0);
-            }
+            EditorController.BeginUndo("Reorder Object");
+            var oldIndex = mapLayer.MapObjects.IndexOf(mapObject);
+            mapLayer.MapObjects.Move(oldIndex, 0);
         }
 
         public void MoveObjectDown(MapFile mapFile, MapLayer mapLayer, MapObject mapObject)
         {
-            using (new UndoBatch(mapFile, "Reorder Object", true))
-            {
-                var oldIndex = mapLayer.MapObjects.IndexOf(mapObject);
-                mapLayer.MapObjects.Move(oldIndex, oldIndex - 1);
-            }
+            EditorController.BeginUndo("Reorder Object");
+            var oldIndex = mapLayer.MapObjects.IndexOf(mapObject);
+            mapLayer.MapObjects.Move(oldIndex, oldIndex - 1);
         }
 
         public void MoveLayerUp(MapFile mapFile, MapLayer mapLayer)
         {
-            using (new UndoBatch(mapFile, "Reorder Layer", true))
-            {
-                var oldIndex = mapFile.Layers.IndexOf(mapLayer);
-                mapLayer.MapObjects.Move(oldIndex, oldIndex + 1);
-            }
+            EditorController.BeginUndo("Reorder Layer");
+            var oldIndex = mapFile.Layers.IndexOf(mapLayer);
+            mapFile.Layers.Move(oldIndex, oldIndex + 1);
         }
 
         public void MoveLayerDown(MapFile mapFile, MapLayer mapLayer)
         {
-            using (new UndoBatch(mapFile, "Reorder Layer", true))
-            {
-                var oldIndex = mapFile.Layers.IndexOf(mapLayer);
-                mapLayer.MapObjects.Move(oldIndex, oldIndex - 1);
-            }
+            EditorController.BeginUndo("Reorder Layer");
+            var oldIndex = mapFile.Layers.IndexOf(mapLayer);
+            mapFile.Layers.Move(oldIndex, oldIndex - 1);
         }
 
         public void MoveLayerTop(MapFile mapFile, MapLayer mapLayer)
         {
-            using (new UndoBatch(mapFile, "Reorder Layer", true))
-            {
-                var oldIndex = mapFile.Layers.IndexOf(mapLayer);
-                mapLayer.MapObjects.Move(oldIndex, mapFile.Layers.Count - 1);
-            }
+            EditorController.BeginUndo("Reorder Layer");
+            var oldIndex = mapFile.Layers.IndexOf(mapLayer);
+            mapFile.Layers.Move(oldIndex, mapFile.Layers.Count - 1);
         }
 
         public void MoveLayerBottom(MapFile mapFile, MapLayer mapLayer)
         {
-            using (new UndoBatch(mapFile, "Reorder Layer", true))
-            {
-                var oldIndex = mapFile.Layers.IndexOf(mapLayer);
-                mapLayer.MapObjects.Move(oldIndex, 0);
-            }
+            EditorController.BeginUndo("Reorder Layer");
+            var oldIndex = mapFile.Layers.IndexOf(mapLayer);
+            mapFile.Layers.Move(oldIndex, 0);
+        }
+
+        public void AddBrush(MapFile mapFile, MapBrush brush)
+        {
+            EditorController.BeginUndo("Create Brush", true);
+            mapFile.Brushes.Add(brush);
+        }
+
+        public void MoveResizeObject(MapObject mapObject, Point location, Size newSize)
+        {
+            EditorController.BeginUndo($"Move/ Resize {mapObject}");
+            mapObject.Offset = location;
+            mapObject.Size = newSize;
         }
     }
 }

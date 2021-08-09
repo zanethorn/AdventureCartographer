@@ -14,6 +14,7 @@
              MouseLeave="OnMouseLeave"
              Drop="OnDrop"
              DataContext="{StaticResource EditorController}"
+             Cursor="{Binding Source={StaticResource EditorController}, Path=SelectedTool.Cursor}"
              x:Name="Editor">
     <UserControl.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Copy"
@@ -24,21 +25,25 @@
     </UserControl.CommandBindings>
     <Canvas Background="{StaticResource BackgroundGridBrush}" ClipToBounds="True">
 
-        <Slider x:Name="ScaleSlider"
-            Canvas.Top="20"
-                Canvas.Right="20"
-                Canvas.ZIndex="10000"
-                Cursor="Arrow"
-                Maximum="4"
-                Minimum="0.05"
-                MinHeight="300"
-                Value="{Binding Source={StaticResource EditorController}, Path=Scale, Mode=TwoWay}"
-                Orientation="Vertical"
-                Background="Gainsboro"
-                Foreground="LightSlateGray"
-                MouseDown="IgnoreMouse"
-                MouseMove="IgnoreMouse"
-                MouseUp="IgnoreMouse"/>
+        <StackPanel Canvas.Top="20"
+                    Canvas.Right="20"
+                    Canvas.ZIndex="10000"
+                    Background="Gainsboro">
+            <Slider x:Name="ScaleSlider"
+                    Cursor="Arrow"
+                    Maximum="4"
+                    Minimum="0.05"
+                    MinHeight="300"
+                    Value="{Binding Source={StaticResource EditorController}, Path=Scale, Mode=TwoWay}"
+                    Orientation="Vertical"
+                    
+                    Foreground="LightSlateGray"
+                    MouseDown="IgnoreMouse"
+                    MouseMove="IgnoreMouse"
+                    MouseUp="IgnoreMouse"/>
+            <TextBlock Text="{Binding Source={StaticResource EditorController}, Path=Scale, Converter={StaticResource DoubleToPercentConverter}}" />
+        </StackPanel>
+        
 
         <editor:MapFileView x:Name="FileView"
                             Canvas.ZIndex="0"

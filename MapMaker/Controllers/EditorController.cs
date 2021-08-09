@@ -1,30 +1,55 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using MapMaker.Models;
 using MapMaker.Models.Map;
+using MapMaker.Tools;
+using MapMaker.Views.Editor;
 using MonitoredUndo;
+using Point = System.Windows.Point;
+using Size = System.Windows.Size;
 
 namespace MapMaker.Controllers
 {
     public class EditorController : SmartObject
     {
-        private Point _cursorPosition;
+        private ITool _selectedTool;
         private MapController? _mapController;
-        private Point _offset;
+        private Point _offset = new Point(-760,-760);
 
         private double _scale = 0.5;
         private MapBrush? _selectedBrush;
         private MapLayer? _selectedLayer;
         private MapFile? _selectedMap;
         private MapObject? _selectedObject;
-
-        private ToolTypes _selectedTool;
+        
         private ToolTrayPanels _selectedToolTray;
         private SettingsController? _settings;
+        private MapBrush _defaultBackgroundBrush = new (Colors.Beige);
+        private MapBrush _defaultForegroundBrush = new (Colors.Blue);
 
+        private string? _lastUndoCaller;
+        private UndoBatch? _currentUndoBatch;
+        private List<ITool> _tools;
+
+        public EditorController()
+        {
+            _selectedBrush = _defaultBackgroundBrush;
+            _selectedTool = new Pointer();
+            _tools = new List<ITool>()
+            {
+                _selectedTool,
+                new Pan(),
+                new Shape(),
+                new Text()
+            };
+        }
 
         private SettingsController Settings =>
             _settings ??= (SettingsController) Application.Current.FindResource(nameof(SettingsController))!;
@@ -35,15 +60,11 @@ namespace MapMaker.Controllers
         public bool CanUndo => UndoService.Current[SelectedMap].CanUndo;
         public bool CanRedo => UndoService.Current[SelectedMap].CanRedo;
 
-        public Cursor Cursor => SelectedTool switch
-        {
-            ToolTypes.Pointer => Cursors.Arrow,
-            ToolTypes.Pan => Cursors.Hand,
-            ToolTypes.Shape => Cursors.Arrow,
-            _ => throw new InvalidEnumArgumentException()
-        };
+        public IEnumerable<ChangeSet> UndoHistory => UndoService.Current[SelectedMap].UndoStack;
 
-        public ToolTypes SelectedTool
+        public IEnumerable<ITool> Tools => _tools;
+
+        public ITool SelectedTool
         {
             get => _selectedTool;
             set
@@ -53,18 +74,6 @@ namespace MapMaker.Controllers
                 OnPropertyChanged();
             }
         }
-
-        public Point CursorPosition
-        {
-            get => _cursorPosition;
-            set
-            {
-                if (value.Equals(_cursorPosition)) return;
-                _cursorPosition = value;
-                OnPropertyChanged();
-            }
-        }
-
 
         public double Scale
         {
@@ -110,11 +119,20 @@ namespace MapMaker.Controllers
                 _selectedMap = value;
                 OnPropertyChanged();
                 SelectedLayer = value.Layers[0];
-                OnPropertyChanged(nameof(CanUndo));
-                OnPropertyChanged(nameof(CanRedo));
-                DispatchNotifications();
+                
+                UndoService.Current[value].UndoStackChanged+= delegate
+                {
+                    OnUpdateUndoStack();
+                };
+                UndoService.Current[value].RedoStackChanged+= delegate
+                {
+                    OnUpdateUndoStack();
+                };
+                OnUpdateUndoStack();
             }
         }
+
+       
 
         public MapLayer SelectedLayer
         {
@@ -136,6 +154,7 @@ namespace MapMaker.Controllers
             {
                 if (Equals(value, _selectedObject)) return;
                 _selectedObject = value;
+                EndUndo();
                 OnPropertyChanged();
             }
         }
@@ -151,6 +170,28 @@ namespace MapMaker.Controllers
             }
         }
 
+        public MapBrush DefaultBackgroundBrush
+        {
+            get => _defaultBackgroundBrush;
+            set
+            {
+                if (_defaultBackgroundBrush == value) return;
+                _defaultBackgroundBrush = value;
+                OnPropertyChanged();
+            } 
+        }
+
+        public MapBrush DefaultForegroundBrush
+        {
+            get => _defaultForegroundBrush;
+            set
+            {
+                if (_defaultForegroundBrush == value) return;
+                _defaultForegroundBrush = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Task Init()
         {
             SelectedMap = MapController.NewMap();
@@ -161,11 +202,10 @@ namespace MapMaker.Controllers
         {
             if (CanUndo)
             {
+                _currentUndoBatch?.Dispose();
+                _currentUndoBatch = null;
                 UndoService.Current[SelectedMap].Undo();
-
-                OnPropertyChanged(nameof(CanUndo));
-                OnPropertyChanged(nameof(CanRedo));
-                DispatchNotifications();
+                OnUpdateUndoStack();
             }
         }
 
@@ -173,12 +213,35 @@ namespace MapMaker.Controllers
         {
             if (CanRedo)
             {
+                _currentUndoBatch?.Dispose();
+                _currentUndoBatch = null;
                 UndoService.Current[SelectedMap].Redo();
-
-                OnPropertyChanged(nameof(CanUndo));
-                OnPropertyChanged(nameof(CanRedo));
-                DispatchNotifications();
+                OnUpdateUndoStack();
             }
+        }
+
+        public void BeginUndo(string description, [CallerMemberName] string? callerName = null)
+        {
+            BeginUndo(description, false, callerName);
+        }
+
+        public void BeginUndo(string description, bool startNewBatch, [CallerMemberName] string? propertyName = null)
+        {
+            if (_lastUndoCaller != propertyName)
+                startNewBatch = true;
+            _lastUndoCaller = propertyName;
+            if (!startNewBatch) return;
+            
+            _currentUndoBatch?.Dispose();
+            _currentUndoBatch = new UndoBatch(SelectedMap, description, true);
+            OnUpdateUndoStack();
+        }
+
+        public void EndUndo()
+        {
+            _currentUndoBatch?.Dispose();
+            _currentUndoBatch = null;
+            OnUpdateUndoStack();
         }
 
         public Size SnapToGrid(Size input)
@@ -217,6 +280,14 @@ namespace MapMaker.Controllers
             return new Point(
                 modX / w > 0.5 ? baseX + w : baseX,
                 modY / w > 0.5 ? baseY + w : baseY);
+        }
+        
+        private void OnUpdateUndoStack()
+        {
+            OnPropertyChanged(nameof(CanUndo));
+            OnPropertyChanged(nameof(CanRedo));
+            OnPropertyChanged(nameof(UndoHistory));
+            DispatchNotifications();
         }
 
         public object GetUndoRoot()

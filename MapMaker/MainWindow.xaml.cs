@@ -508,7 +508,7 @@ namespace MapMaker
                 }
                 case MapLayer mapLayer:
                 {
-                    _mapController.MoveLayerDown(
+                    _mapController.MoveLayerBottom(
                         _editorController.SelectedMap,
                         mapLayer
                     );
@@ -524,6 +524,13 @@ namespace MapMaker
                 Name = $"UntitledLayer_{_editorController.SelectedMap.Layers.Count + 1}"
             };
             _mapController.AddLayer(_editorController.SelectedMap, newLayer);
+        }
+        
+        private void OnNewBrush(object sender, ExecutedRoutedEventArgs e)
+        {
+            var brush = new MapBrush();
+            _mapController.AddBrush(_editorController.SelectedMap,brush);
+            _editorController.SelectedBrush = brush;
         }
 
         private void OnControllerPropertyChanged(object? sender, PropertyChangedEventArgs e)

@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+        <BitmapImage x:Key="BrushOff" UriSource="brush-off.png" />
+        <BitmapImage x:Key="Brush" UriSource="brush.png" />
+        <BitmapImage x:Key="ChevronDown" UriSource="chevron-down.png" />
+        <BitmapImage x:Key="ChevronTripleDown" UriSource="chevron-triple-down.png" />
+        <BitmapImage x:Key="ChevronTripleUp" UriSource="chevron-triple-up.png" />
+        <BitmapImage x:Key="ChevronUp" UriSource="chevron-up.png" />
+        <BitmapImage x:Key="ContentCopy" UriSource="content-copy.png" />
+        <BitmapImage x:Key="ContentCut" UriSource="content-cut.png" />
+        <BitmapImage x:Key="ContentDuplicate" UriSource="content-duplicate.png" />
+        <BitmapImage x:Key="ContentPaste" UriSource="content-paste.png" />
+        <BitmapImage x:Key="CursorDefault" UriSource="cursor-default.png" />
+        <BitmapImage x:Key="CursorPointer" UriSource="cursor-pointer.png" />
+        <BitmapImage x:Key="CursorText" UriSource="cursor-text.png" />
+        <BitmapImage x:Key="Delete" UriSource="delete.png" />
+        <BitmapImage x:Key="DownloadMultiple" UriSource="download-multiple.png" />
+        <BitmapImage x:Key="DramaMasks" UriSource="drama-masks.png" />
+        <BitmapImage x:Key="EyeOffOutline" UriSource="eye-off-outline.png" />
+        <BitmapImage x:Key="EyeOutline" UriSource="eye-outline.png" />
+        <BitmapImage x:Key="EyedropperVariant" UriSource="eyedropper-variant.png" />
+        <BitmapImage x:Key="Eyedropper" UriSource="eyedropper.png" />
+        <BitmapImage x:Key="FormatColorFill" UriSource="format-color-fill.png" />
+        <BitmapImage x:Key="FormatTextRotationNone" UriSource="format-text-rotation-none.png" />
+        <BitmapImage x:Key="GuyFawkesMask" UriSource="guy-fawkes-mask.png" />
+        <BitmapImage x:Key="HandRight" UriSource="hand-right.png" />
+        <BitmapImage x:Key="LockOpen" UriSource="lock-open.png" />
+        <BitmapImage x:Key="Lock" UriSource="lock.png" />
+        <BitmapImage x:Key="MinusBox" UriSource="minus-box.png" />
+        <BitmapImage x:Key="Palette" UriSource="palette.png" />
+        <BitmapImage x:Key="Pan" UriSource="pan.png" />
+        <BitmapImage x:Key="PlusBox" UriSource="plus-box.png" />
+        <BitmapImage x:Key="Plus" UriSource="plus.png" />
+        <BitmapImage x:Key="ProgressDownload" UriSource="progress-download.png" />
+        <BitmapImage x:Key="PuzzleEditOutline" UriSource="puzzle-edit-outline.png" />
+        <BitmapImage x:Key="RulerSquareCompass" UriSource="ruler-square-compass.png" />
+        <BitmapImage x:Key="Ruler" UriSource="ruler.png" />
+        <BitmapImage x:Key="ShapePolygonPlus" UriSource="shape-polygon-plus.png" />
+</ResourceDictionary>

@@ -18,10 +18,6 @@ namespace MapMaker.Views.Editor
         private readonly LibraryController _libraryController;
         private readonly MapController _mapController;
         private readonly SettingsController _settingsController;
-        private Point _downPosition;
-        private Point _lastPosition;
-        private Point _upPosition;
-        private Point _lastScreenPosition;
 
         public MapEditor()
         {
@@ -54,7 +50,7 @@ namespace MapMaker.Views.Editor
                             Size = new Size(
                                 imgFile.PixelWidth,
                                 imgFile.PixelHeight
-                            )
+                            ),
                         };
                         _mapController.AddObjectToLayer(
                             _editorController.SelectedMap,
@@ -96,152 +92,22 @@ namespace MapMaker.Views.Editor
         
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            var screenPosition = e.GetPosition(this);
-            var thisPosition = e.GetPosition(FileView);
-            _editorController.CursorPosition = thisPosition;
-            Cursor cursor = Cursors.Arrow;
-            
-            void Pan()
-            {
-                var screenOffset = _lastScreenPosition - screenPosition;
-                cursor = Cursors.ScrollAll;
-                _editorController.Offset -= screenOffset;
-            }
-            var moveOffset = _lastPosition -thisPosition;
-
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                switch (_editorController.SelectedTool)
-                {
-                    case ToolTypes.Pointer:
-                    {
-                        if (_editorController.SelectedObject != null)
-                        {
-                            using (new UndoBatch(_editorController.SelectedMap,
-                                $"Move {_editorController.SelectedObject}", true))
-                            {
-                                _editorController.SelectedObject.Offset -= moveOffset;
-                            }
-                        }
-                        else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
-                        {
-                            Pan();
-                        }
-                    }
-                        break;
-                    case ToolTypes.Pan:
-                    {
-                        Pan();
-                    }
-                        break;
-                    case ToolTypes.Shape:
-                    {
-                    }
-                        break;
-                    default:
-                        throw new InvalidEnumArgumentException();
-                }
-            }
-            else
-            {
-                switch (_editorController.SelectedTool)
-                {
-                    case ToolTypes.Pointer:
-                    {
-                        if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) cursor = Cursors.Hand;
-                    }
-                        break;
-                    case ToolTypes.Pan:
-                    {
-                        cursor = Cursors.Hand;
-                    }
-                        break;
-                    case ToolTypes.Shape:
-                    {
-                        cursor = Cursors.Pen;
-                    }
-                        break;
-                    default:
-                        throw new InvalidEnumArgumentException();
-                }
-            }
-
-            Cursor = cursor;
-            _lastPosition = thisPosition;
-            _lastScreenPosition = screenPosition;
+            _editorController.SelectedTool.Move(e.GetPosition(FileView));
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            _downPosition = e.GetPosition(FileView);
-            _editorController.CursorPosition = _downPosition;
-
-            switch (_editorController.SelectedTool)
-            {
-                case ToolTypes.Pointer:
-                case ToolTypes.Pan:
-                {
-                }
-                    break;
-                case ToolTypes.Shape:
-                {
-                    var shape = new MapShape
-                    {
-                        Offset = _downPosition,
-                        Size = new Size(3 * _settingsController.Settings.GridCellWidth,
-                            3 * _settingsController.Settings.GridCellWidth)
-                    };
-                    _mapController.AddObjectToLayer(
-                        _editorController.SelectedMap,
-                        _editorController.SelectedLayer,
-                        shape
-                    );
-                    _editorController.SelectedObject = shape;
-                }
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
-
-            _lastPosition = _downPosition;
+            _editorController.SelectedTool.Down(e.GetPosition(FileView));
         }
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            _upPosition = e.GetPosition(FileView);
-            var moveOffset = _lastPosition - _upPosition;
-            _editorController.CursorPosition = _upPosition;
-
-            switch (_editorController.SelectedTool)
-            {
-                case ToolTypes.Pointer:
-                {
-                    if (_editorController.SelectedObject != null)
-                    {
-                        using (new UndoBatch(_editorController.SelectedMap,
-                            $"Move {_editorController.SelectedObject}", true))
-                        {
-                            _editorController.SelectedObject.Offset =
-                                _editorController.SnapToGrid(_editorController.SelectedObject.Offset - moveOffset);
-                        }
-                    }
-                }
-                    break;
-                case ToolTypes.Pan:
-                case ToolTypes.Shape:
-                {
-                }
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
-
-            _lastPosition = _upPosition;
+            _editorController.SelectedTool.Up(e.GetPosition(FileView));
         }
 
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
-            //Controller.SelectedTool.Up(e.GetPosition(FileView));
+            
         }
 
         private void OnCanCopy(object sender, CanExecuteRoutedEventArgs e)
@@ -273,5 +139,7 @@ namespace MapMaker.Views.Editor
 		{
             e.Handled = true;
 		}
-	}
+
+        
+    }
 }

@@ -12,8 +12,8 @@ namespace MapMaker.Views.Dialogs
 
         public Color Color
         {
-            get => Picker.SelectedColor;
-            set => Picker.SelectedColor = value;
+            get => ColorCanvas.SelectedColor.GetValueOrDefault();
+            set => ColorCanvas.SelectedColor = value;
         }
 
         private void OnDefault(object sender, RoutedEventArgs e)

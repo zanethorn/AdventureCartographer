@@ -35,11 +35,22 @@ namespace MapMaker.Models.Map
                 OnPropertyChanged(nameof(MediaColor));
             }
         }
-        
+
         public Color MediaColor
         {
             get => (Color) ColorConverter.ConvertFromString(Color);
             set => Color = value.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash = 17;
+                hash = hash * 23 + Color.GetHashCode();
+                hash = hash * 23 + Offset.GetHashCode();
+                return hash;
+            }
         }
     }
 }
