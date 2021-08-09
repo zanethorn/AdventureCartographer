@@ -231,7 +231,7 @@ namespace MapMaker.Models.Map
                 ),
                 BrushTypes.RadialGradient => new RadialGradientBrush(
                     new GradientStopCollection(Colors.Select(i => new GradientStop(i.MediaColor, i.Offset)))),
-                BrushTypes.Image => NestedBrushRenderer!.GetRenderBrush(),
+                BrushTypes.Image =>NestedBrushRenderer!.GetRenderBrush(),
                 BrushTypes.Object => NestedBrushRenderer!.GetRenderBrush(),
                 _ => throw new ArgumentOutOfRangeException()
             };

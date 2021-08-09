@@ -11,32 +11,31 @@ namespace MapMaker.Models.Map
     [DataContract]
     public class MapShape : MapObject, IHasFillBrush
     {
-        [DataMember(Name=nameof(Type), Order=1001)]
+        [DataMember(Name = nameof(Type), Order = 1001)]
         private ShapeTypes _type;
-        
-        [DataMember(Name=nameof(Sides), Order = 1002)]
+
+        [DataMember(Name = nameof(Sides), Order = 1002)]
         private int _sides = 3;
-        
-        [DataMember(Name=nameof(Eccentricity), Order=1003)]
+
+        [DataMember(Name = nameof(Eccentricity), Order = 1003)]
         private double _eccentricity = 0.5;
-        
-        [DataMember(Name=nameof(StrokeThickness), Order=1004)]
+
+        [DataMember(Name = nameof(StrokeThickness), Order = 1004)]
         private double _strokeThickness = 0.01;
-        
-        [DataMember(Name = nameof(FillBrush), Order=2001)]
+
+        [DataMember(Name = nameof(FillBrush), Order = 2001)]
         private MapBrush _fillBrush = new();
-        
-        [DataMember(Name = nameof(StrokeBrush), Order=3001)]
+
+        [DataMember(Name = nameof(StrokeBrush), Order = 3001)]
         private MapBrush _strokeBrush = new();
-        
-        
+
 
         public MapShape()
         {
             FillBrush = new MapBrush(Colors.Beige);
             StrokeBrush = new MapBrush(Colors.Blue);
         }
-        
+
         public ShapeTypes Type
         {
             get => _type;
@@ -48,7 +47,7 @@ namespace MapMaker.Models.Map
                 OnRenderBrushUpdated();
             }
         }
-        
+
         public int Sides
         {
             get => _sides;
@@ -60,7 +59,7 @@ namespace MapMaker.Models.Map
                 OnRenderBrushUpdated();
             }
         }
-        
+
         public double Eccentricity
         {
             get => _eccentricity;
@@ -72,7 +71,7 @@ namespace MapMaker.Models.Map
                 OnRenderBrushUpdated();
             }
         }
-        
+
         public MapBrush FillBrush
         {
             get => _fillBrush;
@@ -86,7 +85,7 @@ namespace MapMaker.Models.Map
                 OnRenderBrushUpdated();
             }
         }
-        
+
         public MapBrush StrokeBrush
         {
             get => _strokeBrush;
@@ -118,8 +117,8 @@ namespace MapMaker.Models.Map
         {
             Geometry geometry = Type switch
             {
-                ShapeTypes.Rectangle => new RectangleGeometry(new Rect(-1, -1, 2, 2)),
-                ShapeTypes.Ellipse => new EllipseGeometry(new Point(0, 0), 1, 1),
+                ShapeTypes.Rectangle => new RectangleGeometry(new Rect(0, 0, 1, 1)),
+                ShapeTypes.Ellipse => new EllipseGeometry(new Point(0, 0), 1, Eccentricity),
                 ShapeTypes.Polygon => new PathGeometry(new[]
                     {new PathFigure(new Point(1, 0), GetPolygonPoints(Sides), true)}),
                 ShapeTypes.Star => new PathGeometry(new[]
@@ -128,8 +127,14 @@ namespace MapMaker.Models.Map
             };
             if (geometry.CanFreeze)
                 geometry.Freeze();
-            return new DrawingBrush(new GeometryDrawing(FillBrush.GetRenderBrush(),
-                new Pen(StrokeBrush.GetRenderBrush(), _strokeThickness), geometry));
+
+            return new DrawingBrush(
+                new GeometryDrawing(
+                    FillBrush.GetRenderBrush(),
+                    new Pen(StrokeBrush.GetRenderBrush(), _strokeThickness),
+                    geometry
+                )
+            );
         }
 
         public override string ToString()

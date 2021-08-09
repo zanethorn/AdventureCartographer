@@ -6,14 +6,11 @@
            xmlns:local="clr-namespace:MapMaker.Views.Panels"
            mc:Ignorable="d"
            d:DesignHeight="300" d:DesignWidth="300">
-
+    
     <StatusBarItem>
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{Binding Source={StaticResource EditorController}, Path=SelectedTool}" />
-        </StackPanel>
-    </StatusBarItem>
-    <StatusBarItem>
-        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Source={StaticResource EditorController}, Path=SelectedTool.Name}" />
+            <TextBlock Text="  " />
             <TextBlock
                 Text="{Binding Source={StaticResource EditorController}, Path=SelectedTool.Position.X, Converter={StaticResource ToIntConverter}}" />
             <TextBlock Text="," />

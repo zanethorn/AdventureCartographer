@@ -7,6 +7,8 @@ namespace MapMaker.Tools
 {
     public interface ITool: INotifyPropertyChanged
     {
+        string Name { get; }
+        
         Cursor Cursor { get; }
         
         BitmapImage Icon { get; }

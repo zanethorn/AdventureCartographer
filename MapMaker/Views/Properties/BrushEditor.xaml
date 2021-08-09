@@ -10,7 +10,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance map:MapBrush}"
-             x:Name="self"
+             x:Name="Self"
              AllowDrop="True"
              DataContext="{Binding RelativeSource={RelativeSource Self}, Path=Brush }"
              Drop="OnDrop">
@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" Style="{StaticResource BrushSelector}"
                       HorizontalAlignment="Stretch"
-                      SelectedValue="{Binding ElementName=self, Path=Brush, Mode=TwoWay}">
+                      SelectedValue="{Binding ElementName=Self, Path=Brush, Mode=TwoWay}">
             </ComboBox>
             
             <Button Grid.Column="1" Command="{x:Static mapMaker:CustomCommands.NewBrush}">
@@ -84,7 +84,7 @@
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
                           Background="White"
-                          SelectedColor="{Binding ElementName=self, Path=SelectedColorStop.MediaColor, Mode=TwoWay}" />
+                          SelectedColor="{Binding ElementName=Self, Path=SelectedColorStop.MediaColor, Mode=TwoWay}" />
         <views:ImageFileView x:Name="ImageFileView"
                              Grid.Row="3"
                              Grid.Column="0"

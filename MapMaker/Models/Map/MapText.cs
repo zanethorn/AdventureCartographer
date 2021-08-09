@@ -19,7 +19,7 @@ namespace MapMaker.Models.Map
         private static readonly MapMaker.Converters.FontStretchConverter FontStretchConverter = new ();
         
         [DataMember(Name = nameof(Text), Order = 1001)]
-        private string _text="string.Empty";
+        private string _text="New Text";
         
         [DataMember(Name = nameof(Text), Order = 1002)]
         private string _fontFamily = "Ariel";

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:MapMaker.Views"
              xmlns:panels="clr-namespace:MapMaker.Views.Panels"
+             xmlns:library="clr-namespace:MapMaker.Views.Library"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Expander ExpandDirection="Left" IsExpanded="True">
@@ -38,46 +39,8 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Header="File Images">
-                <ListView
-                    ItemsSource="{Binding Source={StaticResource EditorController}, Path=SelectedMap.ImageFiles, IsAsync=True }"
-                    ItemTemplate="{StaticResource ImageFileTemplate}"
-                    VerticalContentAlignment="Top"
-                    SelectionMode="Single"
-                    VirtualizingPanel.IsContainerVirtualizable="True"
-                    VirtualizingPanel.IsVirtualizing="True"
-                    ScrollViewer.VerticalScrollBarVisibility="Visible"
-                    VirtualizingPanel.IsVirtualizingWhenGrouping="True" />
-            </TabItem>
-            <TabItem Header="File Brushes">
-                <ListView
-                    ItemsSource="{Binding Source={StaticResource EditorController}, Path=SelectedMap.Brushes, IsAsync=True }"
-                    VerticalContentAlignment="Top"
-                    SelectionMode="Single"
-                    VirtualizingPanel.IsContainerVirtualizable="True"
-                    VirtualizingPanel.IsVirtualizing="True"
-                    ScrollViewer.VerticalScrollBarVisibility="Visible"
-                    VirtualizingPanel.IsVirtualizingWhenGrouping="True">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Rectangle Grid.Column="0"
-                                           Width="24"
-                                           Height="24"
-                                           Margin="0,0,10,0"
-                                    Fill="{Binding RenderedBrush}"
-                                    Stroke="Black"
-                                    StrokeThickness="1" />
-                                <TextBlock Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"
-                                         />
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+            <TabItem Header="File Assets">
+                <library:FileAssetsLibrary />
             </TabItem>
             <TabItem Header="Layers">
                 <panels:LayerPanel />

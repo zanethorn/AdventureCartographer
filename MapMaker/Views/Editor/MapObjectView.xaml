@@ -12,8 +12,9 @@
              DataContextChanged="OnDataContextChanged"
              MouseEnter="OnMouseEnter"
              MouseLeave="OnMouseLeave"
-             MouseMove="OnMouseMove"
-             MouseLeftButtonDown="OnMouseClick">
+             Cursor="Arrow"
+             MouseDown="OnMouseClick"
+             MouseMove="OnMouseMove">
     <UserControl.Resources>
         <Style TargetType="Thumb">
             <Setter Property="Width"

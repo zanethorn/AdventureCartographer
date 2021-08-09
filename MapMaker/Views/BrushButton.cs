@@ -1,22 +1,25 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using MapMaker.Controllers;
 using MapMaker.Models.Map;
 using MapMaker.Views.Panels;
 
 namespace MapMaker.Views
 {
-    public partial class BrushButton : Button
+    public partial class BrushButton : ButtonBase
     {
         public static readonly DependencyProperty BrushProperty =
             DependencyProperty.Register(nameof(Brush),typeof(MapBrush), typeof(BrushButton));
         
-        private readonly EditorController _editorController;
+        private EditorController? _editorController;
+        
+        protected EditorController EditorController =>
+            _editorController ??= (EditorController) FindResource(nameof(EditorController));
 
         public BrushButton()
         {
-            InitializeComponent();
-            _editorController = (EditorController) FindResource(nameof(EditorController));
+            
         }
 
         public MapBrush Brush
@@ -24,11 +27,13 @@ namespace MapMaker.Views
             get => (MapBrush) GetValue(BrushProperty);
             set => SetValue(BrushProperty, value);
         }
-        
-        private void BrushButton_OnClick(object sender, RoutedEventArgs e)
+
+        protected override void OnClick()
         {
+            base.OnClick();
             BrushEditor.Instance.TakeControl(this);
-            _editorController.SelectedToolTray = ToolTrayPanels.Brush;
+            EditorController.SelectedToolTray = ToolTrayPanels.Brush;
         }
+
     }
 }

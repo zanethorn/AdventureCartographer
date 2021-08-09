@@ -17,7 +17,7 @@ namespace MapMaker.Tools
 
         protected override void OnUp(Point position)
         {
-            Cursor = Cursors.IBeam;
+            Cursor = Cursors.Cross;
             base.OnUp(position);
         }
 

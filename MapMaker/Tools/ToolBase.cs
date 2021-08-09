@@ -35,6 +35,8 @@ namespace MapMaker.Tools
         public BitmapImage Icon { get; }
         public Point Position => _lastPosition;
 
+        public string Name => GetType().Name;
+        
         public Cursor Cursor
         {
             get => _cursor;
@@ -51,6 +53,7 @@ namespace MapMaker.Tools
             _isDown = false;
             OnUp(position);
             _lastPosition = position;
+            OnPropertyChanged(nameof(Position));
         }
 
         public void Down(Point position)
@@ -58,12 +61,14 @@ namespace MapMaker.Tools
             _isDown = true;
             OnDown(position);
             _lastPosition = position;
+            OnPropertyChanged(nameof(Position));
         }
 
         public void Move(Point position)
         {
             OnMove(position);
             _lastPosition = position;
+            OnPropertyChanged(nameof(Position));
         }
 
         public override string ToString()
